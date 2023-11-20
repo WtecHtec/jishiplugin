@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset='utf-8'>
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <title>Page Title</title>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/scenejs/1.10.3/scene.min.js" integrity="sha512-PP1q0tn9zVJqBvsSqozE5XOH/O2KE7Jp8Wt66YFfkaKyY0Uj9xZwEiNOw7G9Ks26xXXwSDp6U5lhW8ZL/XGHxw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://daybrush.com/scenejs-timeline/release/latest/dist/timeline.pkgd.min.js"></script>
+</head>
+<body>
+  <div class="frame" id="frame"></div>
+  <script>
+    const scene = new Scene({
+      'x': {},
+    }, {
+    duration: 10,
+    selector: (selector) => {
+      console.log("[data-timeline] " + selector )
+    } 
+  });
+    const timeline = new Timeline(scene, document.getElementById('frame'), {
+        keyboard: false,
+    });
+    timeline.on("select", (e) => {
+        console.log('dddd', e.selectedItem);
+    });
+  </script>
+</body>
+</html>

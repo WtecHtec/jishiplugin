@@ -1,5 +1,5 @@
 
-jsDesign.showUI(__html__,{ width: 260, height: 123 });
+jsDesign.showUI(__html__,{ width: 1080, height: 600 });
 
 
 function hex2rgb(hex) {
