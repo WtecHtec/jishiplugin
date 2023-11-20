@@ -1,0 +1,605 @@
+<style>
+	body {
+		margin: 0;
+		background-color: #fff;
+		padding: 12px;
+	}
+
+	.radio-container {
+		display: inline-block;
+		position: relative;
+		padding-left: 15px;
+		cursor: pointer;
+		font-size: 12px;
+		user-select: none;
+	}
+
+	.radio-container input {
+		position: absolute;
+		opacity: 0;
+		cursor: pointer;
+	}
+
+	.radio-checkmark {
+		position: absolute;
+		top: 3px;
+		left: 0;
+		height: 12px;
+		width: 12px;
+		background-color: #ccc;
+		border-radius: 50%;
+	}
+
+	.radio-container:hover input~.radio-checkmark {
+		background-color: #bbb;
+	}
+
+	.radio-container input:checked~.radio-checkmark {
+		background-color: #2196F3;
+	}
+
+	.radio-checkmark:after {
+		content: "";
+		position: absolute;
+		display: none;
+	}
+
+	.radio-container input:checked~.radio-checkmark:after {
+		display: block;
+	}
+
+	.radio-container .radio-checkmark:after {
+		top: 4px;
+		left: 4px;
+		width: 4px;
+		height: 4px;
+		border-radius: 50%;
+		background: white;
+	}
+
+
+
+	.dropdown {
+		position: relative;
+		/* display: inline-block; */
+	}
+
+	.dropdown select {
+		appearance: none;
+		background-color: #f1f1f1;
+		border: none;
+		cursor: pointer;
+		padding: 8px 16px;
+		outline: none;
+		font-size: 12px;
+		color: #333;
+		border-radius: 4px;
+		width: 100%;
+	}
+
+	.dropdown::before {
+		content: '▼';
+		position: absolute;
+		right: 8px;
+		top: 50%;
+		transform: translateY(-50%);
+		pointer-events: none;
+		font-size: 10px;
+		color: #333;
+	}
+
+
+	.button {
+		display: inline-block;
+		background-color: #007BFF;
+		color: white;
+		padding: 8px 16px;
+		font-size: 16px;
+		border: none;
+		border-radius: 4px;
+		cursor: pointer;
+		text-decoration: none;
+		transition: background-color 0.3s, box-shadow 0.3s;
+		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	}
+
+	.button:hover {
+		background-color: #0056B3;
+		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+	}
+
+	.button:active {
+		background-color: #004085;
+		box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+	}
+
+	.mini-button {
+		padding: 4px 8px;
+		font-size: 8px;
+	}
+
+
+
+	.title {
+		color: #333;
+		font-size: 12px;
+		margin-bottom: 4px;
+	}
+
+	.border {
+		border: 1px solid #f5f5f5;
+		box-sizing: border-box;
+		padding: 4px;
+		margin-bottom: 8px;
+	}
+
+	.max-height {
+		height: 300px;
+		max-height: 300px;
+	}
+
+	.ppt_container {
+		display: flex;
+	}
+
+	.ppt_meun {
+		width: 200px;
+		flex-shrink: 0;
+		overflow: auto;
+		padding: 0 8px;
+		border-right: 1px solid #f5f5f5;
+	}
+
+	.list-item {
+		display: flex;
+		align-items: center;
+		background-color: #f1f1f1;
+		color: #333;
+		padding: 8px 16px;
+		margin-bottom: 4px;
+		font-size: 16px;
+		border-radius: 4px;
+		cursor: pointer;
+		text-decoration: none;
+		transition: background-color 0.3s;
+	}
+
+	.list-item:hover {
+		background-color: #e1e1e1;
+	}
+
+	.list-item.active {
+		background-color: #0056B3;
+		color: #fff;
+	}
+
+	.content {
+		flex: 1;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background-color: #f2f2f2;
+		position: relative;
+	}
+
+	.del_icon {
+		position: absolute;
+		width: 20px;
+		height: 20px;
+		right: 40px;
+		top: 20px;
+		cursor: pointer;
+	}
+
+	.content_main {
+		background-color: #fff;
+		width: 300px;
+		height: 168px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.content_show {
+		width: 300px;
+		height: 168px;
+	}
+</style>
+<div class="body_container">
+	<div class="border">
+		<div class="title"> ppt尺寸 </div>
+		<div class="dropdown">
+			<select id="layoutselect">
+				<option value="0">16x9（10x5.625英寸）</option>
+				<option value="1">16x10（10x6.25英寸）</option>
+				<option value="2">4x3（10 x 7.5英寸）</option>
+			</select>
+		</div>
+	</div>
+	<div class="border">
+		<div class="title"> ppt页面 <a href="#" id="addppt" class="button mini-button"> 插入</a> </div>
+		<div class="max-height ppt_container">
+			<div class="ppt_meun" id="ppt_meun">
+				<!-- <div class="list-item active" data-id="1">Item 1</div>
+				<div class="list-item" data-id="2">Item 2</div>
+				<div class="list-item" data-id="3">Item 3</div>
+				<div class="list-item" data-id="4">Item 4</div> -->
+			</div>
+			<div class="content">
+				<img class="del_icon" id="delicon" style="display: none;"
+					src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAAAAXNSR0IArs4c6QAABOtJREFUeF7tnVtO40AQRe1EoNkEaD5hF7CywMrIrAI+EWwCgRKPnEzQJHLcVdUPuuyTnwilH+VT112+bSe0Da9ZE2hnffQcfIMAZi4CBIAAZk5g5ofPCoAAZk5g5ofPCoAApk3g+fevu90Rbrf7d+1rsVjfvn6std28tJ/sCtAnvt1sVk3b2hJ/ksGuaR5v3z4fvCRWGuckBfB8ffnQNs1KCkHTbmpCmJwAXq4unlKd9eeEMSURTEYAqZf80KowFRFMQgC75G+3T6GkJf+869Zd2/7xfG2QTADfV9vJKZ8fMOVFXmzY/YrQLBbF3UKsQ4kSQOllNzZJU+0fU46iBPByfdlNFaq74+q69c371702brMAclot7UHQfk/g5u1TnU91hwNsBFCf7BBAfTkpGhECKIq7vskQQH05KRoRAiiKu77JEEB9OSkaEQIoiru+yRBAfTkpGhECKIq7vskQQH05KRoRAiiKu77JEEB9OSkaUVkB/NRDGEWR+pqsqAB6NNwOrkcg1mcCzHcDuStYSfIjH0uLFkAIA6tEiFD4c+vZHR65yf/7AAhAkobxNgggnqHrERDAWPr6GrhcPh6++5frG0FHIRSeEwGcEUC3WNyfPhad+1G1oWTk/l4CAhgQwBiUXF8PG5szp/AQwJAABs7+b2uaaZNqVACZ5uyPCQEMCGBs1yvXkjxUcv4PLZfjQQAIINtvE7jdCGIFSONsEYCCIyVAAevQNFddZAUwJGOgCyuAgiMrgAIWK4AB1rkNr4w/UMUKoMgTK4ACFiuAARYrgBwaF4FyVmMtKQEKjpQABSxKgAEWJUAOjRIgZ0UJSMOqoQQYQLITaIB20oW7gdwN5G7gqQa4BohfWfoRsIEKjlwDKGBhAw2wsIFyaJQAOStsYBpW2EALR2yghdpxH2wgNhAbiA3M8x/LsIGKFRobqICFDTTAwgbKoWED5aywgWlYYQMtHLGBFmrYwCA1SkAQkagBLkCEad8IF6CAhQswwMIFyKFRAuSscAFpWFECLBxxARZquIAgNUpAEJGoAS5AhAkXoMB03JQSYEb33ZHnAQYYUgLihdWPQAlQcGQjSAGLjSADLDaC5NAoAXJWbASlYcVGkIUjLsBCjY2gIDVKQBCRqAEuQISJjSAFJjaCzLBwAXJ0lAA5K1xAGla4AAtHXICFGi4gSI0SEEQkaoALEGHCBSgw4QLMsHABcnSUADkrXEAaVrgAC0dcgIUaLiBIjRIQRCRqgAsQYcIFKDDhAsywcAFydJQAOatJuoCxBzT538Fycbi9BhgVwPXlQ9s0KzkGWcufEF0fGd8LGMpP161v3r/uhz7KZT2bkTmfM4kOAYycnKdnxm7p32xWTdveyc5pfauhs/Hl6uKp9Jz6yId7uC0BR4fTdevd3xkTP4ivn7fAnJSAVHJ3Og4CcJq4VGEjgFQknY6DAJwmLlXYCCAVSafjIACniUsVNgJIRdLpOAjAaeJShY0AUpF0Og4CcJq4VGEjgFQknY7jWwCZb5Q4zakqbNcCyPVwhoqg88ZjTz/FHlr2u4F9gDnvlccCqL1/6KfpYuMvIoCDCPr3HE/qxEKorv+/29vdcvl4+/qxv9Wd6VVMAJniZ9hIAgggEqD37gjAewYj40cAkQC9d0cA3jMYGT8CiATovTsC8J7ByPgRQCRA793/AgM04sx0C3NDAAAAAElFTkSuQmCC" />
+				<div class="content_main" id="content_main">
+					<img alt="ppt show" class="content_show" id="pptshow" style="display: none;">
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="border">
+		<div class="title"> 导出状态 </div>
+		<label class="radio-container">不可编辑
+			<input type="radio" name="editable" value="no" checked>
+			<span class="radio-checkmark"></span>
+		</label>
+		<label class="radio-container">可编辑
+			<input type="radio" name="editable" value="yes">
+			<span class="radio-checkmark"></span>
+		</label>
+	</div>
+
+	<a href="#" class="button" id="exportPPT"> 立即生成PPT</a>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+	integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+	crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+
+	const exportPPT = document.getElementById('exportPPT')
+	const radiosdom = document.getElementsByName("editable");
+	const layoutselect = document.getElementById('layoutselect')
+	const addppt = document.getElementById('addppt')
+	const pptmenu = document.getElementById('ppt_meun');
+	const delicon = document.getElementById('delicon')
+	const pptshow = document.getElementById('pptshow')
+	const contentMainDom = document.getElementById('content_main')
+
+	let pptIndex = 0
+	let layoutIndex = 0
+	let pptDatas = []
+	let sortPptDatas = []
+	let addTimer = null
+	let updateItemTimer = null
+	let targetWidth = 300
+	let targetHeight = 168
+
+	let gening = false;
+	let gencommitiing = false
+
+	//设置配置
+	const ops = {
+		animation: 1000,
+		// 选中
+		onChoose: function (evt) {
+
+			const { item, oldIndex } = evt
+			console.log(evt, pptIndex, oldIndex);
+			// if (pptIndex === oldIndex) return
+			pptIndex = oldIndex
+			$('.list-item.active').removeClass('active')
+			$(item).addClass('active')
+			const { imgUrl, rect } = pptDatas[sortPptDatas[pptIndex]]
+			pptshow.src = imgUrl
+			const [w, h] = scaleImage(rect.width, rect.height, targetWidth, targetHeight)
+			pptshow.style.width = `${w}px`
+			pptshow.style.height = `${h}px`
+		},
+		// onAdd: function (evt) {
+		// 	console.log('evt--- onAdd', evt)
+		// },
+		//拖动结束
+		onEnd: function (evt) {
+			//获取拖动后的排序
+			const arr = sortable.toArray();
+			sortPptDatas = [...arr]
+			console.log('sortPptDatas---', sortPptDatas)
+		},
+	};
+	//初始化
+	const sortable = Sortable.create(pptmenu, ops);
+
+	const layoutsconfig = [
+		{
+			value: 'LAYOUT_16x9',
+			width: 10,
+			height: 5.625,
+		},
+		{
+			value: 'LAYOUT_16x10',
+			width: 10,
+			height: 6.25,
+		},
+		{
+			value: 'LAYOUT_4x3',
+			width: 10,
+			height: 7.5,
+		},
+	]
+	function getSelectValue(selectdom) {
+		const index = selectdom.selectedIndex;
+		return selectdom.options[index].value;
+	}
+	// 获取编辑状态值
+	function getRadioValue(radiosdom) {
+		for (let i = 0; i < radiosdom.length; i++) {
+			if (radiosdom[i].checked) {
+				return radiosdom[i].value
+			}
+		}
+	}
+
+
+
+	delicon.addEventListener('click', () => {
+		const arr = sortable.toArray();
+		sortPptDatas = [...arr]
+		const index = sortPptDatas[pptIndex]
+		// sortPptDatas.splice(pptIndex, 1)
+		$('.list-item.active').css('display', 'none')
+
+		console.log('	pptDatas[index]--', pptDatas, index, pptDatas[index])
+		pptDatas[index].show = false
+		const status = pptDatas.every(({ show }) => !show)
+		if (status) {
+			delicon.style.display = 'none'
+			pptshow.style.display = 'none'
+			return
+		}
+		let newIndex = pptIndex + 1
+		if (newIndex < sortPptDatas.length - 1) {
+			pptIndex = newIndex
+		} else {
+			pptIndex = pptIndex - 1
+		}
+		$('.list-item.active').removeClass('active')
+		$('.list-item').eq(pptIndex).addClass('active')
+		const { imgUrl } = pptDatas[sortPptDatas[pptIndex]]
+		pptshow.src = imgUrl
+		// let showItems = ``
+		// sortPptDatas.forEach((item) => {
+		// 	const { name, show, realindex } = pptDatas[item]
+		// 	if (show) {
+		// 		showItems = `${showItems}<div class="list-item active" data-id="${realindex}">${name}</div>`
+		// 	}
+		// })
+		// $('#ppt_meun').append(showItems)
+		// requestAnimationFrame(() => {
+		// 	sortPptDatas = [...sortable.toArray()]
+		// })
+
+
+	})
+
+	$('#layoutselect').change(e => {
+		const index = getSelectValue(layoutselect)
+		if (layoutIndex === index) return
+		layoutIndex = index
+		const { width, height } = layoutsconfig[index]
+		targetWidth = width * 10 * 3
+		targetHeight = height * 10 * 3
+		contentMainDom.style.width = `${targetWidth}px`
+		contentMainDom.style.height = `${targetHeight}px`
+		if (pptDatas && pptDatas.length) {
+			const { rect } = pptDatas[sortPptDatas[pptIndex]]
+			const [w, h] = scaleImage(rect.width, rect.height, targetWidth, targetHeight)
+			pptshow.style.width = `${w}px`
+			pptshow.style.height = `${h}px`
+		}
+	})
+
+	addppt.addEventListener('click', () => {
+		if (!addTimer) {
+			parent.postMessage({
+				pluginMessage: {
+					type: 'addppt:action',
+					pluginId: "1_ZQp2EwQPLwdJ2ifcvUZ",
+				}
+			}, '*')
+		}
+		addTimer = setTimeout(() => {
+			clearTimeout(addTimer)
+			addTimer = null
+		}, 1000)
+	})
+
+	exportPPT.addEventListener('click', () => {
+		if (gening) return
+		gening = true
+		exportPPT.innerText = '正在生成PPT...'
+		console.log(sortPptDatas, pptDatas)
+		const radioval = getRadioValue(radiosdom)
+		if (radioval === 'no') creatNotPpt(sortPptDatas, pptDatas)
+		if (radioval === 'yes') {
+			createEditPpt()
+		}
+	})
+
+	function createEditPpt() {
+		parent.postMessage({
+			pluginMessage: {
+				type: 'createppt:init',
+				pluginId: "1_ZQp2EwQPLwdJ2ifcvUZ",
+				datas: pptDatas,
+			}
+		}, '*')
+	}
+
+	function creatNotPpt(sortPptDatas, pptDatas) {
+		const pres = new PptxGenJS();
+		const { width, height, value } = layoutsconfig[layoutIndex]
+		pres.layout = value
+		sortPptDatas.forEach(item => {
+			const { show, name, imgbytes, rect } = pptDatas[item]
+			if (show) {
+				// 2. 增加一页ppt到ppt实例
+				let slide = pres.addSlide(name || '-');
+				const [w, h] = scaleImage(rect.width, rect.height, width, height)
+				const x = (width - w) / 2
+				const y = (height - h) / 2
+				console.log(' x, y, w, h,', x, y, w, h,)
+				slide.addImage({ data: uint8ArrayToBase64(imgbytes), x, y, w, h, })
+			}
+		});
+		// 4. 保存ppt到本地
+		pres.writeFile({ fileName: "export.pptx" }).then(fileName => {
+			gening = false
+			exportPPT.innerText = '立即生成PPT'
+		});
+	}
+
+	function exportEditPpt(datas) {
+		const pres = new PptxGenJS();
+		const { width: layoutw, height: layouth, value } = layoutsconfig[layoutIndex]
+		pres.layout = value
+
+		function dg(slide, item, x, y, scale, parentBox, parentxy) {
+			if (!item) return;
+			const { type, width, height, fontSize, characters, color, absoluteBoundingBox, imgbytes, children } = item
+			const w = width * scale
+			const h = height * scale
+			const realx = absoluteBoundingBox.x - parentBox.x + parentxy.x
+			const realy = absoluteBoundingBox.y - parentBox.y + parentxy.y
+			const itemx = Math.abs(realx) * scale + x
+			const itemy = Math.abs(realy) * scale + y
+			if (type === 'image') {
+				// console.log(' image === x: itemx, y: itemy, w, h,', x, y, scale, absoluteBoundingBox, parentBox, imgbytes, itemx, itemy, w, h,)
+				slide.addImage({ data: uint8ArrayToBase64(imgbytes), x: itemx, y: itemy, w, h, })
+			} else if (type === 'text') {
+				// slide.addText(` ${characters} Hello World!`, { x: 1.5, y: 1.5, fontSize: 18, color: '363636' });
+				console.log(' image === x: itemx, y: itemy, w, h,', x, y, scale, itemx, itemy)
+				slide.addText(characters, { x: itemx, y: itemy, color: color || '000000', fontSize: fontSize * 0.75, });
+			} else {
+				if (type === 'paint') {
+					console.log('paint =====', color, itemx, itemy, w, h)
+					slide.addShape(pres.ShapeType.rect, { fill: { color: color || 'ffffff', }, x: itemx, y: itemy, w, h, });
+				}
+				if (children && children.length) {
+					for (let i = 0; i < children.length; i++) {
+						dg(slide, children[i], x, y, scale, absoluteBoundingBox, { x: realx, y: realy })
+					}
+				}
+			}
+		}
+
+		sortPptDatas.forEach(item => {
+			const { show, name } = pptDatas[item]
+			if (show) {
+				// 2. 增加一页ppt到ppt实例
+				let slide = pres.addSlide(name || '-');
+				const { type, width, height, absoluteBoundingBox } = datas[item]
+				const [w, h, scale] = scaleImage(width, height, layoutw, layouth)
+				const x = (layoutw - w) / 2
+				const y = (layouth - h) / 2
+				dg(slide, datas[item], x, y, scale, absoluteBoundingBox, { x: 0, y: 0 })
+			}
+		})
+		// 4. 保存ppt到本地
+		pres.writeFile({ fileName: "export.pptx" }).then(fileName => {
+			gening = false
+			gencommitiing = false
+			exportPPT.innerText = '立即生成PPT'
+		});
+	}
+
+	window.onmessage = (event) => {
+		const { pluginId, pluginMessage } = event.data
+		if (pluginId !== "1_ZQp2EwQPLwdJ2ifcvUZ") return
+		if (!pluginMessage) return
+		const { type, datas } = pluginMessage
+		// console.log("收到来自主线程脚本的消息", event.data, event.data.pluginMessage)
+		switch (type) {
+			case 'addppt:commit':
+				console.log('------------', pluginMessage)
+				if (!updateItemTimer) {
+					addPptItem(datas)
+				}
+				updateItemTimer = setTimeout(() => {
+					clearTimeout(updateItemTimer)
+					updateItemTimer = null
+				}, 1000);
+				break
+			case 'createppt:commit':
+				console.log('datas--- yes', datas)
+				if (gencommitiing) return
+				gencommitiing = true
+				exportEditPpt(datas)
+				break
+		}
+	}
+
+	function addPptItem(datas) {
+		if (pptshow.style.display === 'none') {
+			pptshow.style.display = 'inline-block'
+			delicon.style.display = 'inline-block'
+		}
+		const { name, imgbytes, rect } = datas
+
+		const arr = sortable.toArray();
+		pptIndex = arr.length
+
+		$('.list-item.active').removeClass('active')
+		$('#ppt_meun').append(`<div class="list-item active" data-id="${pptDatas.length}">${name || '-'}</div>`)
+		const imgUrl = createImgUrl(imgbytes);
+		pptshow.src = imgUrl
+		const [w, h] = scaleImage(rect.width, rect.height, targetWidth, targetHeight)
+		pptshow.style.width = `${w}px`
+		pptshow.style.height = `${h}px`
+		pptDatas.push({
+			realindex: pptDatas.length,
+			show: true,
+			imgUrl,
+			...datas
+		});
+		requestAnimationFrame(() => {
+			sortPptDatas = [...sortable.toArray()]
+		})
+	}
+
+	function createImgUrl(datas) {
+		const blob = new Blob([datas], { type: 'image/png' });
+		const imageUrl = URL.createObjectURL(blob);
+		return imageUrl
+	}
+
+	function uint8ArrayToBase64(uint8Array) {
+		let binary = '';
+		const len = uint8Array.byteLength;
+
+		for (let i = 0; i < len; i++) {
+			binary += String.fromCharCode(uint8Array[i]);
+		}
+
+		return `image/png;base64,${btoa(binary)}`;
+	}
+
+	function scaleImage(originalWidth, originalHeight, targetWidth, targetHeight) {
+		if (originalWidth < targetWidth && originalHeight < targetHeight) {
+			return [originalWidth, originalHeight, 1];
+		}
+		// 计算宽度和高度的缩放比例
+		const widthScale = targetWidth / originalWidth;
+		const heightScale = targetHeight / originalHeight;
+
+		// 选择较小的缩放比例，以保持宽高比不变
+		const scale = Math.min(widthScale, heightScale);
+
+		// 计算新的宽度和高度
+		const newWidth = originalWidth * scale;
+		const newHeight = originalHeight * scale;
+
+		return [newWidth, newHeight, scale];
+	}
+
+</script>

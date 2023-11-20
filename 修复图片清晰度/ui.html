@@ -1,0 +1,201 @@
+
+<style>
+    body {
+        margin: 0;
+        background-color: #fff;
+        padding: 12px;
+    }
+    span {
+      font-size: 16px;
+      line-height: 16px;
+      color: rgba(232, 86, 86, 1);
+     
+    }
+    .container {
+
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 12px 0;
+    }
+    .canvas-container {
+      display:  none;
+    }
+
+</style>
+<div class="body_container">
+  <!-- <span> 为了更好的体验,请规范使用图片命名,以免误伤数据。例如:头像.png </span>  -->
+  <div class="container">
+    <button id="clarity"> 提高清晰度 </button>
+  </div>
+  <span id="warn" style="display: none;"></span> 
+  <canvas id="canvas" style="width: 100%; height: 100%; display: none;"></canvas>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
+<script>
+
+let msgDatas = null
+const clarity = document.getElementById('clarity')
+const warn = document.getElementById('warn')
+const canvasDom = document.getElementById('canvas')
+
+
+
+
+clarity.addEventListener('click', () => {
+  console.log('sss', fabric)
+  if (!msgDatas)  {
+    warn.innerText = `*未检测到图片数据!!!`;
+    warn.style.display = 'block'
+    return
+  }
+
+  const { pluginId, pluginMessage: { datas,  rect: { width, height }, type, }, } = msgDatas
+
+  // canvasDom.style.width = `${width}px` 
+  // canvasDom.style.height = `${height}px` 
+  // canvasDom.width = `${width}` 
+  // canvasDom.height = `${height}` 
+
+
+  const canvas = new fabric.Canvas('canvas',);
+
+  const blob = new Blob([datas], { type: 'image/png' });
+  const imageUrl = URL.createObjectURL(blob);
+
+  // 加载图像
+  fabric.Image.fromURL(imageUrl, async  (image) => {
+
+    // 将图像添加到canvas上
+    canvas.add(image);
+
+    console.log('image---1', image.toDataURL())
+
+    // 创建一个锐化滤镜
+    const sharpenMatrix = [
+      -1, -1, -1, 
+      -1 , 9, -1,
+      -1 ,-1, -1,
+    ];
+    const sharpenFilter = new fabric.Image.filters.Convolute({
+      matrix: sharpenMatrix
+    });
+
+    // 将锐化滤镜应用到图像上
+    image.filters.push(sharpenFilter);
+    image.applyFilters();
+    
+    const { width, height } = image;
+    canvasDom.width = `${width}` 
+    canvasDom.height = `${height}` 
+
+    console.log('image----1', image)
+    console.log('image---',  image.toDataURL())
+
+    // 更新canvas
+    canvas.renderAll();
+
+    const newBytes = await encode(canvasDom)      
+    parent.postMessage({
+      pluginMessage: {
+        pluginId: 'o9g2F02HEiP86uynkYIvq',
+        type: 'createImage',
+        datas: newBytes,
+      }
+    }, '*')
+    
+    // console.log('newBytes====', newBytes)
+
+    // const img = new Image();
+    // img.src = image.toDataURL();
+    // const myCanvas = canvasDom.getContext('2d');
+    // img.onload = () => {
+
+    //   myCanvas.drawImage(img, 0, 0);
+    //   const newBytes = await encode(canvasDom)      
+    //   parent.postMessage({
+    //     pluginMessage: {
+    //       pluginId: 'o9g2F02HEiP86uynkYIvq',
+    //       type: 'createImage',
+    //       datas: newBytes,
+    //     }
+    //   }, '*')
+    // };
+   
+
+
+    
+ 
+  });
+  
+
+})
+
+window.onmessage = async (event) => { 
+  const { pluginId, pluginMessage: { datas,  rect: { width, height }, type, }, } = event.data;
+  console.log('event.data===', event.data)
+  if ( pluginId !== 'o9g2F02HEiP86uynkYIvq') return;
+  if ( type === 'notype') {
+    warn.innerText = `*当前选择不符合图片命名规范！！！！！`;
+    warn.style.display = 'block'
+    return
+  } else {
+    warn.style.display = 'none'
+    msgDatas = {...event.data}
+  }
+}
+
+// function base64ToUint8Array(base64String) {
+//     let padding = '='.repeat((4 - base64String.length % 4) % 4);
+//     let base64 = (base64String + padding)
+//         .replace(/\-/g, '+')
+//         .replace(/_/g, '/');
+
+//     let rawData = customAtob(base64);
+//     let outputArray = new Uint8Array(rawData.length);
+
+//     for (var i = 0; i < rawData.length; ++i) {
+//         outputArray[i] = rawData.charCodeAt(i);
+//     }
+//     return outputArray;
+// }
+
+// function customAtob(base64) {
+//   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+//   const len = base64.length;
+//   let result = '';
+
+//   for (let i = 0; i < len; i += 4) {
+//     const encoded1 = chars.indexOf(base64[i]);
+//     const encoded2 = chars.indexOf(base64[i + 1]);
+//     const encoded3 = chars.indexOf(base64[i + 2]);
+//     const encoded4 = chars.indexOf(base64[i + 3]);
+
+//     const byte1 = (encoded1 << 2) | (encoded2 >> 4);
+//     const byte2 = ((encoded2 & 15) << 4) | (encoded3 >> 2);
+//     const byte3 = ((encoded3 & 3) << 6) | encoded4;
+
+//     result += String.fromCharCode(byte1);
+//     if (encoded3 !== 64) result += String.fromCharCode(byte2);
+//     if (encoded4 !== 64) result += String.fromCharCode(byte3);
+//   }
+
+//   return result;
+// }
+
+
+async function encode(canvas) {
+  return await new Promise((resolve, reject) => {
+    canvas.toBlob(blob => {
+      const reader = new FileReader()
+      reader.onload = () => resolve(new Uint8Array(reader.result))
+      reader.onerror = () => reject(new Error('Could not read from blob'))
+      reader.readAsArrayBuffer(blob)
+    })
+  })
+}
+
+    
+
+</script>

@@ -1,0 +1,223 @@
+<style>
+	body {
+		margin: 0;
+		background-color: #fff;
+	}
+
+	.body_container {
+		position: relative;
+		width: 100%;
+		height: 100%;
+	}
+
+	.flow_container {
+		width: 100%;
+		height: 100%;
+		box-sizing: border-box;
+	}
+
+	.flow_menu {
+		position: fixed;
+		top: 8px;
+		right: 14px;
+		height: 40px;
+		z-index: 9999;
+	}
+
+	.button {
+		display: inline-block;
+		background-color: #007BFF;
+		color: white;
+		padding: 8px 16px;
+		font-size: 16px;
+		border: none;
+		border-radius: 4px;
+		cursor: pointer;
+		text-decoration: none;
+		transition: background-color 0.3s, box-shadow 0.3s;
+		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	}
+
+	.button:hover {
+		background-color: #0056B3;
+		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+	}
+
+	.button:active {
+		background-color: #004085;
+		box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+	}
+
+	.mini-button {
+		padding: 4px 12px;
+		font-size: 12px;
+	}
+</style>
+<div class="body_container">
+	<div id="app" class="flow_container"></div>
+	<div class="flow_menu">
+		<div class="button mini-button" id="del"> 清空 </div>
+		<div class="button mini-button" id="download"> 同步 </div>
+	</div>
+</div>
+<!--LogicFlow core包css-->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@logicflow/core/dist/style/index.css" />
+<!--LogicFlow extension包css-->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@logicflow/extension@1.2.18/lib/style/index.css" />
+<!--LogicFlow core包js-->
+<script src="https://cdn.jsdelivr.net/npm/@logicflow/core/dist/logic-flow.js"></script>
+<!--LogicFlow的插件支持单个引入，这里以菜单插件为例-->
+<!-- <script src="https://cdn.jsdelivr.net/npm/@logicflow/extension@1.2.18/lib/MiniMap.jss"></script> -->
+
+<script src="https://cdn.jsdelivr.net/npm/@logicflow/extension@1.2.18/lib/Snapshot.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@logicflow/extension@1.2.18/lib/DndPanel.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+	integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+	crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+
+	const download = document.getElementById('download')
+	const del = document.getElementById('del')
+
+	const lf = new LogicFlow({
+		container: document.querySelector("#app"),
+		grid: true,
+		plugins: [DndPanel, Snapshot],
+		keyboard: {
+			enabled: true,
+			shortcuts: [
+				{
+					keys: ["backspace"],
+					callback: () => {
+						const elements = lf.getSelectElements(true);
+						lf.clearSelectElements();
+						elements.edges.forEach((edge) => lf.deleteEdge(edge.id));
+						elements.nodes.forEach((node) => lf.deleteNode(node.id));
+					}
+				}
+			]
+		}
+	});
+
+
+	lf.setPatternItems([
+		{
+			type: "rect",
+			label: "矩形",
+			text: "矩形",
+			icon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAENJREFUOE9jZKAQMIL0C0293fCfkcGeFLMY/zMcfJet2gA2QHDa7f3vs1QdSTEApmfUAFXH0TAYPmFAcWYiJROhqwUAyXpuEdkRtgsAAAAASUVORK5CYII="
+		},
+		{
+			type: "polygon",
+			label: "棱形",
+			icon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAANdJREFUOE+VU+0RgjAMfcEJ5FyhcwjjiEMIQ4jjgHN0BQ8nkHoJVy4cbYH+oyHvKykhcS4vW4wjiuFu6thvFCvkT1uD8JC6QxMDWQEw689NjSdC87mZnsEc4eq/NekCYGYNMMZqM8C5tZ1mDVmTTBw6bYlCl6lguabVUN5alwppK2Ri6aFwdqkAIBY49W9lyq0mXWdicnhLiGwjI5Q8sr0g3DNUhgTgqA0JEQAvlwActeHlzwBHbXj53LdYpD3T0PIXAN4GJ5sMkh+YWvX1W9gYQ5ah19P6A+5elpk6mnCVAAAAAElFTkSuQmCC"
+		},
+		{
+			type: 'text',
+			label: '文字',
+			text: "文字",
+			icon: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAGtJREFUOE9jZKAQMFKonwFugOC02/sZGRgciDHwPwPDgfdZqo4gtSguEJl+G8WA////J4AVMTIuQDf4TabqAQwD0BUJTb3dABJ7l60KprEBvGEwagADw2gYQMKAiYnhACzVkZyQiMkXFOdGAFRrNxFsvxpDAAAAAElFTkSuQmCC'
+		},
+		{
+			type: 'diamond',
+			label: '条件判断',
+			icon: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAALVJREFUOE/tk9ENwjAMRM/dgIoVMgftOJQhSIegjNMwR1ZAZYMa2ZKrEpogPpHIZ2w/n50LoXD219hI+H50IZdGJcBuiKPEH51r/4Cf3UE9RAajn07Of/2Maw/Ul+hzkE0jSTEBzdQ5jZcM9QaQbiCcK0JrFhZLz4yRgZC6UgGaMEN9nxbb7AaRnchdVSFIAwVYVwJuRPC5zyMQZngGDqbwBaDklfR084sKADbOMsKnb7sFE6VP83V2Eegga+0AAAAASUVORK5CYII=',
+		},
+		{
+			type: "circle",
+			label: "圆",
+			icon: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAM1JREFUOE+tk+ERgjAMhV9wAj1X6ByWccQhgCHEccA5uoKHE0i89IxWoCgH/IAf7fuS90gICx+K6fcXZ+Ws62CTBM3taJqxuwOACDtGzYAXEOPKhAMBFoyyPZkiBH0BdmdXyOUNoexXFPCDkQswhLwBKr5nJp2KZVu5OizwAVSOE0Ia86pQtdhmxmv9S9v7VV0hYRceIO3Ltx9QzMoAMLeDsOA6FryNJSHOCVL8h7Ow3iBp4j4gQi6jrGP8+t92bE4ml0kXSQB/L9Pc7X4CH9aWEUIGXbsAAAAASUVORK5CYII=',
+		},
+		{
+			type: "ellipse",
+			label: "椭圆",
+			icon: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAANJJREFUOE+tkuENgkAMhV9xAokr3BzCOOIQwhDiOOAct4LBCaSmTYqHCEeC/dXkrl/fvXeEjUUb5/F/wOHms75HBsLF1DHQSr8jVI+T095qpCC9+lIHGVV3dqVdEqj0L8aFGPfwbADIMBOOz8LlS77oEgAGUYDKZjRd4VZ5ktae7e4AEHmx7aYsVKGAb1mxaPe1b8zQjweBrBhAnpAQcklkZGJozhxEtodJTGKUJESeAMLM5yKeuC6JiKECIEDz12JUSYJ28SPF3v7rfFXuS+DNgDdH4mURUxb6fAAAAABJRU5ErkJggg==',
+		},
+	]);
+
+	console.log('lf--', lf)
+	lf.render({
+		nodes: [
+			{
+				id: "1",
+				type: "rect",
+				x: 100,
+				y: 100,
+				text: "节点1",
+			},
+			{
+				id: "2",
+				type: "circle",
+				x: 300,
+				y: 200,
+				text: "节点2",
+			},
+		],
+		edges: [
+			{
+				sourceNodeId: "1",
+				targetNodeId: "2",
+				type: "polyline",
+				text: "连线",
+			},
+		],
+	});
+
+	download.addEventListener('click', () => {
+		lf.extension.snapshot.useGlobalRules = false;
+		const { nodes } = lf.getGraphRawData()
+		if (!nodes || !nodes.length) return;
+		lf.getSnapshotBlob().then(async (res) => {
+			console.log('lf.getGraphRawData()',)
+			const { height, width, data } = res;
+			const newBytes = await encodeUint8ByBlob(data)
+			parent.postMessage({
+				pluginMessage: {
+					pluginId: 'GP7FyyyRrtLBFJiZiK_7C',
+					type: 'createflow',
+					datas: {
+						bytes: newBytes,
+						grapdatas: JSON.stringify(lf.getGraphRawData()),
+						height,
+						width,
+					},
+				}
+			}, '*')
+		}).catch(err => {
+			console.log(err)
+		})
+	})
+
+	del.addEventListener('click', () => {
+		lf.clearData();
+	})
+
+	window.onmessage = async (event) => {
+		const { pluginId, pluginMessage: { datas, type, }, } = event.data;
+		if (pluginId !== 'GP7FyyyRrtLBFJiZiK_7C') return;
+		if (type === 'grapdatas') {
+			const { nodes } = lf.getGraphRawData()
+			if (nodes.length) return
+			if (datas) {
+				try {
+					lf.renderRawData(JSON.parse(datas))
+				} catch (error) {
+					console.error(error)
+				}
+
+			}
+		}
+
+	}
+
+	function encodeUint8ByBlob(blob) {
+		return new Promise((resolve, reject) => {
+			const reader = new FileReader()
+			reader.onload = () => resolve(new Uint8Array(reader.result))
+			reader.onerror = () => reject(new Error('Could not read from blob'))
+			reader.readAsArrayBuffer(blob)
+		})
+
+	}
+
+</script>
