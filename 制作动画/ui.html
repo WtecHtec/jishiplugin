@@ -15,8 +15,11 @@
 
     .menu_container {
       height: 50px;
-      background-color: rosybrown;
+      background-color: rgba(0, 0, 0, 0.7);
       border-bottom: 1px solid #f5f5f5;
+      display: flex;
+      align-items: center;
+      padding-left: 10px;
     }
 
 
@@ -25,12 +28,6 @@
       display: flex;
     }
 
-    .node_data_set {
-      width: 180px;
-      overflow: auto;
-      background-color:aliceblue;
-      height: 100%;
-    }
 
     .node_framer {
       flex: 1;
@@ -38,10 +35,60 @@
       overflow: auto;
     }
 
+
+    .button {
+      display: inline-block;
+      background-color: #007BFF;
+      color: white;
+      padding: 8px 16px;
+      font-size: 16px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background-color 0.3s, box-shadow 0.3s;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .button:hover {
+      background-color: #0056B3;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    .button:active {
+      background-color: #004085;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+    }
+
+    .mini-button {
+      padding: 4px 8px;
+      font-size: 12px;
+    }
+
+
+    .stylish-input {
+      background-color: #f0f0f0;
+      border: none;
+      border-radius: 4px;
+      box-shadow: inset 0 0 0 2px #ccc;
+      font-size: 16px;
+      padding: 8px 12px;
+      outline: none;
+      transition: box-shadow 0.3s, background-color 0.3s;
+    }
+
+    .stylish-input:focus {
+      background-color: #fff;
+      box-shadow: inset 0 0 0 2px #0077cc;
+    }
+
     .node_value_container {
       width: 180px;
       height: 100%;
-      background-color: beige;
+      background-color: rgba(0, 0, 0, 0.7);
+      padding: 8px;
+      overflow: hidden;
+      box-sizing: border-box;
     }
     .node_framer .scenejs-editor-add {
       visibility: hidden;
@@ -52,35 +99,200 @@
     .node_framer .scenejs-editor-remove {
       visibility: hidden;
     }
-   
+    .node_framer .opt {
+      position: absolute;
+      top: 0;
+      cursor: pointer;
+      left: 8px;
+    }
+    .node_framer .opt.next { 
+      left: 24px;
+    }
+    .node_framer .del {
+      color: #F15C5C;
+
+    }
+    .node_framer .add {
+      color: #fff;
+    }
+    .node_framer .maker {
+      color: #fff;
+    }
+    
 </style>
 <div class="body_container">
-  <div class="menu_container"></div>
+  <div class="menu_container">
+    <div class="button mini-button" id="addnode">添加元素</div>
+  </div>
   <div class="node_container">
-    <div class="node_data_set"></div>
+    <!-- <div class="node_data_set"></div> -->
     <div class="node_framer" id="node_framer"></div>
-    <div class="node_value_container"></div>
+    <div class="node_value_container">
+      <input type="number" id="propvalue" class="stylish-input" style="display: none; width: 100%;" />
+    </div>
   </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/scenejs/1.10.3/scene.min.js" integrity="sha512-PP1q0tn9zVJqBvsSqozE5XOH/O2KE7Jp8Wt66YFfkaKyY0Uj9xZwEiNOw7G9Ks26xXXwSDp6U5lhW8ZL/XGHxw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="https://daybrush.com/scenejs-timeline/release/latest/dist/timeline.pkgd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
-  const property_config = {
-    x: {},
-    y: {},
-    w: {},
-    h: {},
-  }
-  const scene = new Scene(property_config, {
+  const globDatas = {}
+  const cache = {}
+  let currentSelectedTime = 0
+  let currentSelectedItem = null
+  let curRelectedProperty = null
+</script>
+<script>
+  // 初始时间轴
+  const scene = new Scene({
+    time: {
+      0: {},
+      10: {},
+    }
+  }, {
     duration: 10,
-    selector: (selector) => {
-      console.log("[data-timeline] " + selector )
-    } 
+    easing: "ease-in-out",
   });
-    const timeline = new Timeline(scene, document.getElementById('node_framer'), {
-        keyboard: true,
-    });
-    timeline.on("select", (e) => {
-        console.log(e.selectedItem);
-    });
+  const timeline = new Timeline(scene, document.getElementById('node_framer'), {
+      keyboard: false,
+  });
+  timeline.on("select", (e) => {
+      const { selectedItem, selectedProperty, selectedTime } = e
+      console.log('selectedItem, selectedProperty, selectedTime', selectedItem, selectedProperty, selectedTime)
+      currentSelectedTime = selectedTime
+      if (selectedProperty !== curRelectedProperty) {
+        $('#propvalue').hide()
+      }
+      currentSelectedItem = selectedItem
+      curRelectedProperty = selectedProperty
+      if (currentSelectedItem.items[selectedTime]) {
+        $('#propvalue').show().val(currentSelectedItem.items[selectedTime].properties.value)
+      } else {
+        $('#propvalue').hide()
+      }
+  });
+  scene.on("animate", e => {
+    console.log(e.frames, e );
+    parent.postMessage({
+      pluginMessage: {
+        type: 'animation:frame',
+        pluginId: "a4fIbuyegeVH2F2k0TKRA",
+        datas: e.frames,
+      }
+    }, '*')
+  });
+</script>
+<script>
+  let addTimer = null;
+  $('#addnode').on('click', () => {
+    console.log('click--->create:frame')
+    if (!addTimer) {
+			parent.postMessage({
+				pluginMessage: {
+					type: 'create:frame',
+					pluginId: "a4fIbuyegeVH2F2k0TKRA",
+				}
+			}, '*')
+		}
+		addTimer = setTimeout(() => {
+			clearTimeout(addTimer)
+			addTimer = null
+		}, 1000)
+  })
+
+  $('#propvalue').on('blur', (e) => {
+    console.log(e, $('#propvalue').val(), currentSelectedItem, currentSelectedTime )
+    if (currentSelectedItem && !Number.isNaN(Number(currentSelectedTime))) {
+      const nvalue = Number($('#propvalue').val())
+      currentSelectedItem.set(currentSelectedTime, {
+        value: nvalue,
+      })
+    }
+  })
+
+  $('.scenejs-editor-values-area').on('click', (e) => {
+    console.log(e)
+    const { dataset: {  type, opttype, id, pid, key, optkey } } = e.target
+    if (type === 'opt') {
+      if (opttype === 'add') {
+        const current = scene.getItem(pid).getItem(key)
+        const keys = Object.keys(current.items)
+        const name = `${key}_${keys.length}`
+        // console.log('fff-', globDatas[pid])
+        const item = new Scene.SceneItem({ 0: {
+          value: globDatas[pid].properties[key],
+        }});
+        const cid = `${id}///${name}`
+        current.setItem(name, item)
+        timeline.update(true);
+        requestAnimationFrame(() => {
+          $(`.scenejs-editor-value[data-id="${cid}"]`)
+            .append(`<div class="opt del" data-type="opt" data-opttype="del" data-id="${cid}" data-pid="${pid}" data-key="${key}" data-optkey="${name}">×</div>
+            <div class="opt maker next" data-type="opt" data-opttype="maker" data-id="${cid}" data-pid="${pid}" data-key="${key}" data-optkey="${name}">✦</div>`)
+        })
+      } else if (opttype === 'del') {
+        if (pid) {
+          const current = scene.getItem(pid).getItem(key)
+          current.removeItem(id)
+          timeline.update(true);
+        } else {
+          delete globDatas[id]
+          scene.removeItem(id)
+          timeline.update(true);
+        }
+      } else if (opttype === 'maker') {
+        const curTime = scene.getTime();
+        console.log('handelex', curTime, optkey)
+        const current = scene.getItem(pid).getItem(key).getItem(optkey)
+        const items = current.items
+        if ( curTime < 0) return
+        if ( items[curTime]) {
+          current.removeFrame(curTime)
+        } else {
+          current.set(curTime,  { value: globDatas[pid].properties[key]  })
+        }
+        timeline.update(true);
+      }
+    }
+  })
+</script>
+<script>
+  function createFrame(datas) {
+    const { name, id, properties } = datas
+    const itemName = `${name.trim()}#_#${id}`
+    if (cache[id]) return
+    const sceneObj = {}
+    const nodeOptIds = []
+    for( let key in properties) {
+      sceneObj[key] =  (i) => ({ option: { id }})
+      nodeOptIds.push( {
+        key,
+        id: `${itemName}///${key}`,
+        pid: itemName
+      })
+    }
+    const itemScene = new Scene(sceneObj);
+    // scene.newItem(`itemName${Math.random()}`)
+    scene.setItem(itemName, itemScene)
+    globDatas[itemName] = Object.assign({}, datas)
+    timeline.update(true);
+    requestAnimationFrame(() => {
+      $(`.scenejs-editor-value[data-id="${itemName}"]`).append(`<div class="opt del" data-type="opt" data-opttype="del" data-id="${itemName}">×</div>`)
+      nodeOptIds.forEach(({ id, pid, key })=> {
+        $(`.scenejs-editor-value[data-id="${id}"]`).append(`<div class="opt add" data-type="opt" data-opttype="add"  data-id="${id}" data-pid="${pid}" data-key="${key}">＋</div>`)
+      })
+    })
+  }
+</script>
+<script>
+  	window.onmessage = (event) => {
+      const { pluginId, pluginMessage: { type, datas } }= event.data;
+      if ( pluginId !== 'a4fIbuyegeVH2F2k0TKRA') return;
+      if (type === 'create:frame:done') {
+        createFrame(datas)
+      }
+
+    }
 </script>

@@ -6,44 +6,34 @@
 	<meta http-equiv='X-UA-Compatible' content='IE=edge'>
 	<title>Page Title</title>
 	<meta name='viewport' content='width=device-width, initial-scale=1'>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/scenejs/1.10.3/scene.min.js"
+  <style>
+     .node_framer .scenejs-editor-add {
+      visibility: hidden;
+    }    
+    .node_framer .scenejs-editor-values-area input {
+      visibility: hidden;
+      display: none;
+    }
+    .node_framer .scenejs-editor-remove {
+      visibility: hidden;
+    } 
+  </style>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/scenejs/1.10.3/scene.min.js"
 		integrity="sha512-PP1q0tn9zVJqBvsSqozE5XOH/O2KE7Jp8Wt66YFfkaKyY0Uj9xZwEiNOw7G9Ks26xXXwSDp6U5lhW8ZL/XGHxw=="
 		crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 	<script src="https://daybrush.com/scenejs-timeline/release/latest/dist/timeline.pkgd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+	integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+	crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 
 <body>
 	<button onclick="handelex()"> x</button>
-	<div class="frame" id="frame"></div>
-	<div class="frame" id="frame1"></div>
+	<div class="node_framer" id="frame"></div>
 	<script>
-		const kk = new Scene.SceneItem({
-			0: {
-				display: "none",
-			},
-			1: {
-				display: "block",
-				opacity: 0,
-			},
-		});
-		const scene = new Scene({
-			".top .stick1": {
-				2: "transform: rotate(0deg)",
-				2.5: "transform: rotate(-20deg)",
-				3: "transform: rotate(0deg)",
-				10: "transform: rotate(-10deg)",
-			},
-			".stick1 .rect": i => ({
-				'kk': kk
-			}),
-			".stick1 .rect///kk": {
-				2: "transform: rotate(0deg)",
-				2.5: "transform: rotate(-20deg)",
-				3: "transform: rotate(0deg)",
-				10: "transform: rotate(-10deg)",
-			}
 
-		}, {
+		const scene = new Scene({}, {
 			id: 'x',
 			duration: 10,
 			easing: "ease-in-out",
@@ -61,42 +51,35 @@
 		});
 		function handelex() {
 			console.log('handelex', scene.getTime())
-			const item = new Scene.SceneItem({
-				0: {
-					display: "none",
-				},
-				1: {
-					display: "block",
-					opacity: 0,
-				},
+			const item = new Scene({
+        x: (i) => {
+        },
 			});
-
-			scene.setItem('.stick1 .rect///kk', item)
+			scene.setItem('.stick1', item)
+ 
 			timeline.update(true);
+      // requestAnimationFrame(() =>{
+        // $('.scenejs-editor-value[data-id=".stick1 .rect///x"]').append('<div style="position: absolute;top: 0;">+</div>')
+      //   const itemscene = scene.getItem(".stick1 .rect").items['x']
+      //   console.log('ffff', itemscene)
+      //   const item = new Scene({
+      //   x: {
+      //     0: {
+			// 		display: "none",
+      //     opacity: 1,
+			// 	},
+			// 	1: {
+			// 		display: "block",
+			// 		opacity: 0,
+			// 	},
+      //   },
+			// });
+			// // itemscene.setItem('x', item)
+      // itemscene.newItem('x')
+      // timeline.update(true);
+      // })
 		}
 
-
-		const scene1 = new Scene({
-			".top .stick1": {
-				2: "transform: rotate(0deg)",
-				2.5: "transform: rotate(-20deg)",
-				3: "transform: rotate(0deg)",
-				3.5: "transform: rotate(-10deg)",
-			},
-
-		}, {
-			id: 'x',
-			duration: 10,
-			easing: "ease-in-out",
-		});
-		scene1.on("animate", e => {
-			console.log('scene1', e.frames);
-			// {a: Frame, b: Frame}
-			console.log(e.frames);
-		});
-		const timeline1 = new Timeline(scene1, document.getElementById('frame1'), {
-			keyboard: true,
-		});
 		document.getElementsByClassName('scenejs-editor-play')[0].addEventListener('click', (e) => {
 			console.log(e)
 			e.stopPropagation()
