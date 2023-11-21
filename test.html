@@ -1,30 +1,108 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-  <meta charset='utf-8'>
-  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-  <title>Page Title</title>
-  <meta name='viewport' content='width=device-width, initial-scale=1'>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/scenejs/1.10.3/scene.min.js" integrity="sha512-PP1q0tn9zVJqBvsSqozE5XOH/O2KE7Jp8Wt66YFfkaKyY0Uj9xZwEiNOw7G9Ks26xXXwSDp6U5lhW8ZL/XGHxw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <script src="https://daybrush.com/scenejs-timeline/release/latest/dist/timeline.pkgd.min.js"></script>
+	<meta charset='utf-8'>
+	<meta http-equiv='X-UA-Compatible' content='IE=edge'>
+	<title>Page Title</title>
+	<meta name='viewport' content='width=device-width, initial-scale=1'>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/scenejs/1.10.3/scene.min.js"
+		integrity="sha512-PP1q0tn9zVJqBvsSqozE5XOH/O2KE7Jp8Wt66YFfkaKyY0Uj9xZwEiNOw7G9Ks26xXXwSDp6U5lhW8ZL/XGHxw=="
+		crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script src="https://daybrush.com/scenejs-timeline/release/latest/dist/timeline.pkgd.min.js"></script>
 </head>
+
 <body>
-  <div class="frame" id="frame"></div>
-  <script>
-    const scene = new Scene({
-      'x': {},
-    }, {
-    duration: 10,
-    selector: (selector) => {
-      console.log("[data-timeline] " + selector )
-    } 
-  });
-    const timeline = new Timeline(scene, document.getElementById('frame'), {
-        keyboard: false,
-    });
-    timeline.on("select", (e) => {
-        console.log('dddd', e.selectedItem);
-    });
-  </script>
+	<button onclick="handelex()"> x</button>
+	<div class="frame" id="frame"></div>
+	<div class="frame" id="frame1"></div>
+	<script>
+		const kk = new Scene.SceneItem({
+			0: {
+				display: "none",
+			},
+			1: {
+				display: "block",
+				opacity: 0,
+			},
+		});
+		const scene = new Scene({
+			".top .stick1": {
+				2: "transform: rotate(0deg)",
+				2.5: "transform: rotate(-20deg)",
+				3: "transform: rotate(0deg)",
+				10: "transform: rotate(-10deg)",
+			},
+			".stick1 .rect": i => ({
+				'kk': kk
+			}),
+			".stick1 .rect///kk": {
+				2: "transform: rotate(0deg)",
+				2.5: "transform: rotate(-20deg)",
+				3: "transform: rotate(0deg)",
+				10: "transform: rotate(-10deg)",
+			}
+
+		}, {
+			id: 'x',
+			duration: 10,
+			easing: "ease-in-out",
+		});
+		scene.on("animate", e => {
+			console.log(e.frames);
+			// {a: Frame, b: Frame}
+			console.log(e.frames);
+		});
+		const timeline = new Timeline(scene, document.getElementById('frame'), {
+			keyboard: true,
+		});
+		timeline.on("select", (e) => {
+			console.log('dddd', e);
+		});
+		function handelex() {
+			console.log('handelex', scene.getTime())
+			const item = new Scene.SceneItem({
+				0: {
+					display: "none",
+				},
+				1: {
+					display: "block",
+					opacity: 0,
+				},
+			});
+
+			scene.setItem('.stick1 .rect///kk', item)
+			timeline.update(true);
+		}
+
+
+		const scene1 = new Scene({
+			".top .stick1": {
+				2: "transform: rotate(0deg)",
+				2.5: "transform: rotate(-20deg)",
+				3: "transform: rotate(0deg)",
+				3.5: "transform: rotate(-10deg)",
+			},
+
+		}, {
+			id: 'x',
+			duration: 10,
+			easing: "ease-in-out",
+		});
+		scene1.on("animate", e => {
+			console.log('scene1', e.frames);
+			// {a: Frame, b: Frame}
+			console.log(e.frames);
+		});
+		const timeline1 = new Timeline(scene1, document.getElementById('frame1'), {
+			keyboard: true,
+		});
+		document.getElementsByClassName('scenejs-editor-play')[0].addEventListener('click', (e) => {
+			console.log(e)
+			e.stopPropagation()
+		})
+
+	</script>
 </body>
+
 </html>
