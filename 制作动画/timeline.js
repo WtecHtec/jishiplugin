@@ -1097,14 +1097,14 @@ version: 0.3.0
 				return function (e) {
 					function t(e, t) {
 						!
-						function (e) {
-							for (var t in e) {
-								var n = e[t];
-								"function" != typeof n || n.__bound || Ne.hasOwnProperty(t) || ((e[t] = n.bind(e)).__bound = !0)
-							}
-						}(this),
-						et.call(this, e, t, Se),
-						$e.call(this, e, t)
+							function (e) {
+								for (var t in e) {
+									var n = e[t];
+									"function" != typeof n || n.__bound || Ne.hasOwnProperty(t) || ((e[t] = n.bind(e)).__bound = !0)
+								}
+							}(this),
+							et.call(this, e, t, Se),
+							$e.call(this, e, t)
 					} (e = Be({
 						constructor: t
 					},

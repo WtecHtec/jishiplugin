@@ -1,47 +1,61 @@
-
 <!DOCTYPE html>
 <html>
+
 <head>
-  <meta charset='utf-8'>
-  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-  <title>Page Title</title>
-  <meta name='viewport' content='width=device-width, initial-scale=1'>
-  <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
-  <script src='main.js'></script>
+	<meta charset='utf-8'>
+	<meta http-equiv='X-UA-Compatible' content='IE=edge'>
+	<title>Page Title</title>
+	<meta name='viewport' content='width=device-width, initial-scale=1'>
+	<!-- <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
+	<script src='main.js'></script> -->
 </head>
-<body>
-  
-  <canvas id="bitmap"></canvas>
-<img id="image">
-<script type="module">
-       import gifencoder from 'https://cdn.jsdelivr.net/npm/gifencoder@2.0.1/+esm'
-  var canvas = document.getElementById('bitmap');
-  var context = canvas.getContext("2d");
-  console.log('context---', gifencoder)
-  var my_gradient = context.createLinearGradient(0, 0, 300, 0);
-  my_gradient.addColorStop(0, "black");
-  my_gradient.addColorStop(1, "white");
 
+<>
+	<script src="./libs/b64.js"></script>
+	<script src="./libs/LZWEncoder.js"></script>
+	<script src="./libs/NeuQuant.js"></script>
+	<script src="./libs/GIFEncoder.js"></script>
+	<canvas id="bitmap"></canvas>
+	<img id="image">
+	<div class="showGIF" id="showGIF">
+		<div id="gif"></div>
+	</div>
+	<script src="https://cdn.bootcdn.net/ajax/libs/gifshot/0.3.2/gifshot.js"> </script>
+	<script>
+		const imgsList = [
+			'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAAAAXNSR0IArs4c6QAABOtJREFUeF7tnVtO40AQRe1EoNkEaD5hF7CywMrIrAI+EWwCgRKPnEzQJHLcVdUPuuyTnwilH+VT112+bSe0Da9ZE2hnffQcfIMAZi4CBIAAZk5g5ofPCoAAZk5g5ofPCoAApk3g+fevu90Rbrf7d+1rsVjfvn6std28tJ/sCtAnvt1sVk3b2hJ/ksGuaR5v3z4fvCRWGuckBfB8ffnQNs1KCkHTbmpCmJwAXq4unlKd9eeEMSURTEYAqZf80KowFRFMQgC75G+3T6GkJf+869Zd2/7xfG2QTADfV9vJKZ8fMOVFXmzY/YrQLBbF3UKsQ4kSQOllNzZJU+0fU46iBPByfdlNFaq74+q69c371702brMAclot7UHQfk/g5u1TnU91hwNsBFCf7BBAfTkpGhECKIq7vskQQH05KRoRAiiKu77JEEB9OSkaEQIoiru+yRBAfTkpGhECKIq7vskQQH05KRoRAiiKu77JEEB9OSkaUVkB/NRDGEWR+pqsqAB6NNwOrkcg1mcCzHcDuStYSfIjH0uLFkAIA6tEiFD4c+vZHR65yf/7AAhAkobxNgggnqHrERDAWPr6GrhcPh6++5frG0FHIRSeEwGcEUC3WNyfPhad+1G1oWTk/l4CAhgQwBiUXF8PG5szp/AQwJAABs7+b2uaaZNqVACZ5uyPCQEMCGBs1yvXkjxUcv4PLZfjQQAIINtvE7jdCGIFSONsEYCCIyVAAevQNFddZAUwJGOgCyuAgiMrgAIWK4AB1rkNr4w/UMUKoMgTK4ACFiuAARYrgBwaF4FyVmMtKQEKjpQABSxKgAEWJUAOjRIgZ0UJSMOqoQQYQLITaIB20oW7gdwN5G7gqQa4BohfWfoRsIEKjlwDKGBhAw2wsIFyaJQAOStsYBpW2EALR2yghdpxH2wgNhAbiA3M8x/LsIGKFRobqICFDTTAwgbKoWED5aywgWlYYQMtHLGBFmrYwCA1SkAQkagBLkCEad8IF6CAhQswwMIFyKFRAuSscAFpWFECLBxxARZquIAgNUpAEJGoAS5AhAkXoMB03JQSYEb33ZHnAQYYUgLihdWPQAlQcGQjSAGLjSADLDaC5NAoAXJWbASlYcVGkIUjLsBCjY2gIDVKQBCRqAEuQISJjSAFJjaCzLBwAXJ0lAA5K1xAGla4AAtHXICFGi4gSI0SEEQkaoALEGHCBSgw4QLMsHABcnSUADkrXEAaVrgAC0dcgIUaLiBIjRIQRCRqgAsQYcIFKDDhAsywcAFydJQAOatJuoCxBzT538Fycbi9BhgVwPXlQ9s0KzkGWcufEF0fGd8LGMpP161v3r/uhz7KZT2bkTmfM4kOAYycnKdnxm7p32xWTdveyc5pfauhs/Hl6uKp9Jz6yId7uC0BR4fTdevd3xkTP4ivn7fAnJSAVHJ3Og4CcJq4VGEjgFQknY6DAJwmLlXYCCAVSafjIACniUsVNgJIRdLpOAjAaeJShY0AUpF0Og4CcJq4VGEjgFQknY7jWwCZb5Q4zakqbNcCyPVwhoqg88ZjTz/FHlr2u4F9gDnvlccCqL1/6KfpYuMvIoCDCPr3HE/qxEKorv+/29vdcvl4+/qxv9Wd6VVMAJniZ9hIAgggEqD37gjAewYj40cAkQC9d0cA3jMYGT8CiATovTsC8J7ByPgRQCRA793/AgM04sx0C3NDAAAAAElFTkSuQmCC',
+			'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAANdJREFUOE+VU+0RgjAMfcEJ5FyhcwjjiEMIQ4jjgHN0BQ8nkHoJVy4cbYH+oyHvKykhcS4vW4wjiuFu6thvFCvkT1uD8JC6QxMDWQEw689NjSdC87mZnsEc4eq/NekCYGYNMMZqM8C5tZ1mDVmTTBw6bYlCl6lguabVUN5alwppK2Ri6aFwdqkAIBY49W9lyq0mXWdicnhLiGwjI5Q8sr0g3DNUhgTgqA0JEQAvlwActeHlzwBHbXj53LdYpD3T0PIXAN4GJ5sMkh+YWvX1W9gYQ5ah19P6A+5elpk6mnCVAAAAAElFTkSuQmCC',
+		]
+		createGIF()
+		function createGIF() {
+			gifshot.createGIF(
+				{
+					gifWidth: 563, // GIF宽度
+					gifHeight: 395, // GIF高度
+					images: imgsList, // 需要的图片数组
+					interval: 0.1, // 每帧捕获之间等待的时间（以秒为单位）
+					numFrames: 10, // 用于创建GIF的帧数
+					frameDuration: 1, // 每帧停留的时间（10=1s）
+					fontWeight: "normal", // 覆盖动画GIF的文本字体粗细
+					fontSize: "16px", // 覆盖动画GIF的文本字体大小
+					fontFamily: "sans-serif", // 字体类型
+					fontColor: "#ffffff", // 字体颜色
+					textAlign: "center", // 文本的水平对齐方式
+					textBaseline: "bottom", // 文本的垂直对齐方式
+					sampleInterval: 10, // 创建调色板时要跳过多少像素。默认值为10。“少”为佳，但较慢。
+					numWorkers: 2, // 要使用多少个网络工作者来处理GIF动画帧。默认值为2。
+				},
+				function (obj) {
+					if (!obj.error) {
+						var image = obj.image,
+							animatedImage = document.createElement("img");
+						animatedImage.src = image;
+						document.getElementById("gif").appendChild(animatedImage);
+					}
+				}
+			);
+		}
+	</script>
+	</body>
 
-  context.fillStyle = my_gradient//"rgb(255,255,255)";  
-  context.fillRect(0,0,canvas.width, canvas.height); //GIF can't do transparent so do white
-
-
-
-  var encoder = new gifencoder(400, 500);
-  encoder.setRepeat(0); //auto-loop
-  encoder.setDelay(500);
-  console.log(encoder.start());
-  
-  
-  context.fillStyle = "rgb(200,0,0)";  
-  context.fillRect (10, 10, 75, 50);  
-  console.log(encoder.addFrame(context, true));
-  context.fillStyle = "rgb(20,0,200)";  
-  context.fillRect (30, 30, 55, 50);  
-  console.log(encoder.addFrame(context, true));
-  encoder.finish();
-  document.getElementById('image').src = 'data:image/gif;base64,'+encode64(encoder.stream().getData())
-</script>
-</body>
 </html>
