@@ -1815,7 +1815,6 @@
 						ut(t, e);
 						var n = t.prototype;
 						return n.renderKeytimes = function () {
-							// // console.log('----- renderKeytimes 绘制时间线', this.props.maxTime)
 							for (var e = this.props.maxTime,
 								t = [], n = 0; n <= e; ++n) t.push(Ye("div", {
 									key: n,
@@ -1938,7 +1937,6 @@
 									t = e.time,
 									n = e.value,
 									r = e.maxTime;
-								// console.log('keyframe--------')
 								return Ye("div", {
 									className: Et("keyframe" + (e.selected ? " select" : "")),
 									"data-time": t,
@@ -1960,7 +1958,6 @@
 									t = e.time,
 									n = e.nextTime,
 									r = e.maxTime;
-								// console.log('----------- keyframe-group',)
 								return Ye("div", {
 									className: Et("keyframe-group" + (e.selected ? " select" : "")),
 									"data-time": t,
@@ -2051,7 +2048,6 @@
 									r = p.length,
 									v = e.length,
 									y = 0;
-								// // console.log('t.frames----', JSON.stringify(p), t.frames)
 								if (2 <= r && !v) {
 									for (var i = 0,
 										o = 1; o < r; ++o) {
@@ -2965,7 +2961,6 @@
 									pinch: function (e) {
 										var t = e.scale,
 											e = e.datas;
-										// console.log("SCALE", t),
 										n.setZoom(e.zoom * t)
 									}
 								})
@@ -2987,7 +2982,6 @@
 								var t = e.parentElement.parentElement,
 									e = parseFloat(e.getAttribute("data-time") || "0"),
 									t = t.getAttribute("data-id") || "";
-								// console.log('---- selectByKeyframe 选择帧', t, e)
 								this.setTime(e),
 									this.select(t, e)
 							},
@@ -3023,7 +3017,6 @@
 														})) ? r[e] : n).props.propertiesInfo, c = n.item, f = c.getDelay())
 										},
 										drag: function (e) {
-											// // console.log(e, u.getDistTime(t));
 											var t = e.distX,
 												n = e.deltaX,
 												r = e.deltaY,
@@ -3039,8 +3032,8 @@
 												f = 0,
 												i || (t = s, n = o, r = a, e = u.getTime(n), n = u.scrollArea.keyframesArea.keyframesList, r = Nt(n.map(function (e) {
 													return e.getElement()
-												}), r), u.setTime(e), // console.log('--- dragend', e), -1 < r && u.select(n[r].props.id, e), t.preventDefault()),
-													Jt(i, s, o, a, l)
+												}), r), u.setTime(e), -1 < r && u.select(n[r].props.id, e), t.preventDefault()),
+												Jt(i, s, o, a, l)
 										}
 									})
 								})
@@ -3145,7 +3138,6 @@
 <script>
 	const globDatas = {}
 	const globPropDatas = {}
-	const cache = {}
 	let currentSelectedTime = 0
 	let currentSelectedItem = null
 	let curRelectedProperty = null
@@ -3293,6 +3285,8 @@
 					current.removeItem(id)
 					timeline.update(false);
 				} else {
+					console.log('id---', id)
+					globDatas[id] = null
 					delete globDatas[id]
 					scene.removeItem(id)
 					timeline.update(false);
@@ -3379,7 +3373,7 @@
 	function createFrame(datas) {
 		const { name, id, properties } = datas
 		const itemName = `${name.trim()}#_#${id}`
-		if (cache[id]) return
+		if (globDatas[itemName]) return
 		const sceneObj = {}
 		const nodeOptIds = []
 		for (let key in properties) {
