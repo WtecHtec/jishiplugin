@@ -22,7 +22,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/scenejs/1.10.3/scene.min.js"
 		integrity="sha512-PP1q0tn9zVJqBvsSqozE5XOH/O2KE7Jp8Wt66YFfkaKyY0Uj9xZwEiNOw7G9Ks26xXXwSDp6U5lhW8ZL/XGHxw=="
 		crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-	<script src="https://daybrush.com/scenejs-timeline/release/latest/dist/timeline.pkgd.min.js"></script>
+	<!-- <script src="https://daybrush.com/scenejs-timeline/release/latest/dist/timeline.pkgd.min.js"></script> -->
+  <script src="./timeline.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
 	integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
 	crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -33,7 +34,13 @@
 	<div class="node_framer" id="frame"></div>
 	<script>
 
-		const scene = new Scene({}, {
+		const scene = new Scene({
+      'tst': { 0: {
+        value: '#fff'
+      }, 10: {
+        value: '#05f'
+      }}
+    }, {
 			id: 'x',
 			duration: 10,
 			easing: "ease-in-out",
