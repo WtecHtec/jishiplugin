@@ -194,7 +194,7 @@
 
 	window.onmessage = async (event) => {
 		const { pluginId, pluginMessage: { datas, type, }, } = event.data;
-		if (pluginId !== 'GP7FyyyRrtLBFJiZiK_7C') return;
+		// if (pluginId !== 'GP7FyyyRrtLBFJiZiK_7C') return;
 		if (type === 'grapdatas') {
 			const { nodes } = lf.getGraphRawData()
 			if (nodes.length) return

@@ -217,7 +217,8 @@
 		</div>
 	</div>
 	<div class="border">
-		<div class="title"> ppt页面 <div id="addppt" class="button mini-button"> 插入</div> </div>
+		<div class="title"> ppt页面 <div id="addppt" class="button mini-button"> 插入</div>
+		</div>
 		<div class="max-height ppt_container">
 			<div class="ppt_meun" id="ppt_meun">
 				<!-- <div class="list-item active" data-id="1">Item 1</div>
@@ -278,7 +279,7 @@
 	let gening = false;
 	let gencommitiing = false
 
-  let pptId = 0
+	let pptId = 0
 
 	//设置配置
 	const ops = {
@@ -290,7 +291,7 @@
 			console.log(evt, pptIndex, oldIndex);
 			// if (pptIndex === oldIndex) return
 			pptIndex = oldIndex
-      pptId = sortPptDatas[pptIndex]
+			pptId = sortPptDatas[pptIndex]
 			$('.list-item.active').removeClass('active')
 			$(item).addClass('active')
 			const { imgUrl, rect } = pptDatas[sortPptDatas[pptIndex]]
@@ -347,9 +348,9 @@
 
 	delicon.addEventListener('click', () => {
 		const arr = sortable.toArray();
-		sortPptDatas =  arr
-    
-    console.log('sortPptDatas----', sortPptDatas)
+		sortPptDatas = arr
+
+		console.log('sortPptDatas----', sortPptDatas)
 		const index = pptId
 		// sortPptDatas.splice(pptIndex, 1)
 		$('.list-item.active').css('display', 'none')
@@ -362,22 +363,22 @@
 			pptshow.style.display = 'none'
 			return
 		}
-    const newIndex =  sortPptDatas.findIndex( id => Number(id) === Number(pptId))
-    
-    pptIndex = newIndex - 1
-    if (pptIndex < 0) {
-      for (let i = 0; i < sortPptDatas.length; i++) {
-        if (pptDatas[sortPptDatas[i]].show) {
-          pptIndex = i
-          break
-        }
-      }
-    }
-    console.log('sortPptDatas[pptIndex]---', sortPptDatas, sortPptDatas[pptIndex],  newIndex, pptId,  pptIndex)
+		const newIndex = sortPptDatas.findIndex(id => Number(id) === Number(pptId))
+
+		pptIndex = newIndex - 1
+		if (pptIndex < 0) {
+			for (let i = 0; i < sortPptDatas.length; i++) {
+				if (pptDatas[sortPptDatas[i]].show) {
+					pptIndex = i
+					break
+				}
+			}
+		}
+		console.log('sortPptDatas[pptIndex]---', sortPptDatas, sortPptDatas[pptIndex], newIndex, pptId, pptIndex)
 		$('.list-item.active').removeClass('active')
 		$(`.list-item[data-id="${sortPptDatas[pptIndex]}"]`).addClass('active')
 		const { imgUrl } = pptDatas[sortPptDatas[pptIndex]]
-    pptId = sortPptDatas[pptIndex]
+		pptId = sortPptDatas[pptIndex]
 		pptshow.src = imgUrl
 		// let showItems = ``
 		// sortPptDatas.forEach((item) => {
@@ -527,7 +528,7 @@
 
 	window.onmessage = (event) => {
 		const { pluginId, pluginMessage } = event.data
-		if (pluginId !== "1_ZQp2EwQPLwdJ2ifcvUZ") return
+		// if (pluginId !== "1_ZQp2EwQPLwdJ2ifcvUZ") return
 		if (!pluginMessage) return
 		const { type, datas } = pluginMessage
 		// console.log("收到来自主线程脚本的消息", event.data, event.data.pluginMessage)
@@ -560,7 +561,7 @@
 
 		const arr = sortable.toArray();
 		pptIndex = arr.length
-    pptId = pptDatas.length
+		pptId = pptDatas.length
 
 		$('.list-item.active').removeClass('active')
 		$('#ppt_meun').append(`<div class="list-item active" data-id="${pptDatas.length}">${name || '-'}</div>`)
@@ -573,7 +574,7 @@
 			realindex: pptDatas.length,
 			show: true,
 			imgUrl,
-		}) , datas);
+		}), datas);
 		requestAnimationFrame(() => {
 			sortPptDatas = sortable.toArray()
 		})

@@ -3418,7 +3418,7 @@
 
 	window.onmessage = (event) => {
 		const { pluginId, pluginMessage: { type, datas } } = event.data;
-		if (pluginId !== 'a4fIbuyegeVH2F2k0TKRA') return;
+		// if (pluginId !== 'a4fIbuyegeVH2F2k0TKRA') return;
 		if (type === 'create:frame:done') {
 			createFrame(datas)
 		} else if (type === 'export:target:done') {
