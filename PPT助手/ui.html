@@ -306,7 +306,7 @@
 		onEnd: function (evt) {
 			//获取拖动后的排序
 			const arr = sortable.toArray();
-			sortPptDatas = [...arr]
+			sortPptDatas = arr
 			console.log('sortPptDatas---', sortPptDatas)
 		},
 	};
@@ -347,7 +347,7 @@
 
 	delicon.addEventListener('click', () => {
 		const arr = sortable.toArray();
-		sortPptDatas = [...arr]
+		sortPptDatas =  arr
     
     console.log('sortPptDatas----', sortPptDatas)
 		const index = pptId
@@ -569,14 +569,13 @@
 		const [w, h] = scaleImage(rect.width, rect.height, targetWidth, targetHeight)
 		pptshow.style.width = `${w}px`
 		pptshow.style.height = `${h}px`
-		pptDatas.push({
+		pptDatas.push(Object.assign({
 			realindex: pptDatas.length,
 			show: true,
 			imgUrl,
-			...datas
-		});
+		}) , datas);
 		requestAnimationFrame(() => {
-			sortPptDatas = [...sortable.toArray()]
+			sortPptDatas = sortable.toArray()
 		})
 	}
 
