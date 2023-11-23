@@ -217,7 +217,7 @@
 		</div>
 	</div>
 	<div class="border">
-		<div class="title"> ppt页面 <a href="#" id="addppt" class="button mini-button"> 插入</a> </div>
+		<div class="title"> ppt页面 <div id="addppt" class="button mini-button"> 插入</div> </div>
 		<div class="max-height ppt_container">
 			<div class="ppt_meun" id="ppt_meun">
 				<!-- <div class="list-item active" data-id="1">Item 1</div>
@@ -278,6 +278,8 @@
 	let gening = false;
 	let gencommitiing = false
 
+  let pptId = 0
+
 	//设置配置
 	const ops = {
 		animation: 1000,
@@ -288,6 +290,7 @@
 			console.log(evt, pptIndex, oldIndex);
 			// if (pptIndex === oldIndex) return
 			pptIndex = oldIndex
+      pptId = sortPptDatas[pptIndex]
 			$('.list-item.active').removeClass('active')
 			$(item).addClass('active')
 			const { imgUrl, rect } = pptDatas[sortPptDatas[pptIndex]]
@@ -345,11 +348,13 @@
 	delicon.addEventListener('click', () => {
 		const arr = sortable.toArray();
 		sortPptDatas = [...arr]
-		const index = sortPptDatas[pptIndex]
+    
+    console.log('sortPptDatas----', sortPptDatas)
+		const index = pptId
 		// sortPptDatas.splice(pptIndex, 1)
 		$('.list-item.active').css('display', 'none')
 
-		console.log('	pptDatas[index]--', pptDatas, index, pptDatas[index])
+		console.log('	pptDatas[index]--', pptId, pptDatas, index, pptDatas[index])
 		pptDatas[index].show = false
 		const status = pptDatas.every(({ show }) => !show)
 		if (status) {
@@ -357,15 +362,22 @@
 			pptshow.style.display = 'none'
 			return
 		}
-		let newIndex = pptIndex + 1
-		if (newIndex < sortPptDatas.length - 1) {
-			pptIndex = newIndex
-		} else {
-			pptIndex = pptIndex - 1
-		}
+    const newIndex =  sortPptDatas.findIndex( id => Number(id) === Number(pptId))
+    
+    pptIndex = newIndex - 1
+    if (pptIndex < 0) {
+      for (let i = 0; i < sortPptDatas.length; i++) {
+        if (pptDatas[sortPptDatas[i]].show) {
+          pptIndex = i
+          break
+        }
+      }
+    }
+    console.log('sortPptDatas[pptIndex]---', sortPptDatas, sortPptDatas[pptIndex],  newIndex, pptId,  pptIndex)
 		$('.list-item.active').removeClass('active')
-		$('.list-item').eq(pptIndex).addClass('active')
+		$(`.list-item[data-id="${sortPptDatas[pptIndex]}"]`).addClass('active')
 		const { imgUrl } = pptDatas[sortPptDatas[pptIndex]]
+    pptId = sortPptDatas[pptIndex]
 		pptshow.src = imgUrl
 		// let showItems = ``
 		// sortPptDatas.forEach((item) => {
@@ -548,6 +560,7 @@
 
 		const arr = sortable.toArray();
 		pptIndex = arr.length
+    pptId = pptDatas.length
 
 		$('.list-item.active').removeClass('active')
 		$('#ppt_meun').append(`<div class="list-item active" data-id="${pptDatas.length}">${name || '-'}</div>`)
