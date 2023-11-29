@@ -1,0 +1,89 @@
+
+<style>
+  body {
+      margin: 0;
+      background-color: #fff;
+      padding: 12px;
+      box-sizing: border-box;
+      width: 100%;
+      height: 100%;
+  }
+
+  .button {
+		display: inline-block;
+		background-color: #007BFF;
+		color: white;
+		padding: 8px 16px;
+		font-size: 16px;
+		border: none;
+		border-radius: 4px;
+		cursor: pointer;
+		text-decoration: none;
+		transition: background-color 0.3s, box-shadow 0.3s;
+		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	}
+
+	.button:hover {
+		background-color: #0056B3;
+		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+	}
+
+	.button:active {
+		background-color: #004085;
+		box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+	}
+
+  .mini-button {
+		padding: 4px 8px;
+		font-size: 12px;
+	}
+
+  .opt_desc {
+    font-size: 12px;
+    margin: 6px 0 6px 0;
+    color: #333;
+  }
+
+  .time_container {
+    background-color: #f2f2f2;
+    width: 100%;
+    height: 46px;
+  }
+</style>
+<div class="body_container">
+  <div class="button mini-button" id="addTag"> 点亮记忆！ </div>
+  <div class="opt_desc" id="optNode"> 当前操作节点： </div>
+  <div class="time_container"></div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+	integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+	crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+
+let currentNode = {}
+
+$('#addTag').on('click', () => {
+  parent.postMessage({
+    pluginMessage: {
+      type: 'addTag:action',
+      datas: { id: currentNode.id }
+    }
+  }, '*')
+})
+
+window.onmessage = (event) => {
+		const { pluginId, pluginMessage } = event.data
+		// if (pluginId !== "1_ZQp2EwQPLwdJ2ifcvUZ") return
+		if (!pluginMessage) return
+		const { type, datas } = pluginMessage
+    console.log('pluginMessage---', pluginMessage)
+    if (type === 'selectionchange:commit') {
+      if (!datas) return
+      currentNode = datas
+      $('#optNode').html(`当前操作节点：${currentNode.name}`)
+    }
+}
+
+    
+
+</script>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Beautiful Timeline</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body {
+  font-family: Arial, sans-serif;
+}
+
+.timeline {
+  list-style: none;
+  padding: 0;
+  position: relative;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 30px;
+  width: 2px;
+  background-color: #ccc;
+}
+
+.timeline-item {
+  padding: 10px 0;
+  position: relative;
+}
+
+.timeline-date {
+  display: inline-block;
+  width: 80px;
+  font-weight: bold;
+  color: #999;
+}
+
+.timeline-content {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #f1f1f1;
+  border-radius: 5px;
+  position: relative;
+  margin-left: 40px;
+}
+
+.timeline-content::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: -10px;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 5px 0 5px 10px;
+  border-color: transparent transparent transparent #f1f1f1;
+  transform: translateY(-50%);
+}
+  </style>
+</head>
+<body>
+  <ul class="timeline">
+    <li class="timeline-item">
+      <div class="timeline-date">2020-01-01</div>
+      <div class="timeline-content">This is the content for event 1.</div>
+    </li>
+    <li class="timeline-item">
+      <div class="timeline-date">2020-02-01</div>
+      <div class="timeline-content">This is the content for event 2.</div>
+    </li>
+    <li class="timeline-item">
+      <div class="timeline-date">2020-03-01</div>
+      <div class="timeline-content">This is the content for event 3.</div>
+    </li>
+  </ul>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const timelineItems = document.querySelectorAll(".timeline-item");
+  
+      timelineItems.forEach((item) => {
+        item.addEventListener("click", function (event) {
+          const content = event.currentTarget.querySelector(".timeline-content");
+          content.style.display = content.style.display === "none" ? "inline-block" : "none";
+        });
+      });
+    });
+  </script>
+</body>
+</html>
