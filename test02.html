@@ -3,90 +3,58 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Beautiful Timeline</title>
+  <title>Simple Heatmap</title>
   <link rel="stylesheet" href="styles.css">
   <style>
-    body {
-  font-family: Arial, sans-serif;
+    .heatmap {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+  grid-gap: 4px;
+  width: 200px;
+  height: 200px;
 }
 
-.timeline {
-  list-style: none;
-  padding: 0;
-  position: relative;
-}
-
-.timeline::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 30px;
-  width: 2px;
-  background-color: #ccc;
-}
-
-.timeline-item {
-  padding: 10px 0;
-  position: relative;
-}
-
-.timeline-date {
-  display: inline-block;
-  width: 80px;
-  font-weight: bold;
-  color: #999;
-}
-
-.timeline-content {
-  display: inline-block;
-  padding: 10px 20px;
-  background-color: #f1f1f1;
-  border-radius: 5px;
-  position: relative;
-  margin-left: 40px;
-}
-
-.timeline-content::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: -10px;
-  width: 0;
-  height: 0;
-  border-style: solid;
-  border-width: 5px 0 5px 10px;
-  border-color: transparent transparent transparent #f1f1f1;
-  transform: translateY(-50%);
+.heatmap-cell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 12px;
+  color: white;
+  border-radius: 3px;
 }
   </style>
 </head>
 <body>
-  <ul class="timeline">
-    <li class="timeline-item">
-      <div class="timeline-date">2020-01-01</div>
-      <div class="timeline-content">This is the content for event 1.</div>
-    </li>
-    <li class="timeline-item">
-      <div class="timeline-date">2020-02-01</div>
-      <div class="timeline-content">This is the content for event 2.</div>
-    </li>
-    <li class="timeline-item">
-      <div class="timeline-date">2020-03-01</div>
-      <div class="timeline-content">This is the content for event 3.</div>
-    </li>
-  </ul>
+  <div class="heatmap">
+    <!-- 用 JavaScript 动态生成热力图单元格 -->
+  </div>
   <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      const timelineItems = document.querySelectorAll(".timeline-item");
-  
-      timelineItems.forEach((item) => {
-        item.addEventListener("click", function (event) {
-          const content = event.currentTarget.querySelector(".timeline-content");
-          content.style.display = content.style.display === "none" ? "inline-block" : "none";
-        });
-      });
-    });
+    const heatmapData = [
+  [10, 20, 30, 40, 50],
+  [50, 40, 30, 20, 10],
+  [10, 20, 30, 40, 50],
+  [50, 40, 30, 20, 10],
+  [10, 20, 30, 40, 50],
+];
+
+function getColor(value) {
+  const colors = ['#d7191c', '#fdae61', '#ffffbf', '#a6d96a', '#1a9641'];
+  const index = Math.floor(value / 20);
+  return colors[index];
+}
+
+const heatmap = document.querySelector('.heatmap');
+
+heatmapData.forEach((row) => {
+  row.forEach((value) => {
+    const cell = document.createElement('div');
+    cell.className = 'heatmap-cell';
+    cell.style.backgroundColor = getColor(value);
+    cell.textContent = value;
+    heatmap.appendChild(cell);
+  });
+});
   </script>
 </body>
 </html>

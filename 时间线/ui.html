@@ -42,18 +42,76 @@
     font-size: 12px;
     margin: 6px 0 6px 0;
     color: #333;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 
   .time_container {
     background-color: #f2f2f2;
     width: 100%;
     height: 46px;
+    display: flex;
+    flex-wrap: wrap;
+    overflow: auto;
+    cursor: pointer;
   }
+
+  /* 自定义滚动条的样式 */
+  .scrollable::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    .scrollable::-webkit-scrollbar-track {
+      background-color: #f1f1f1;
+      border-radius: 5px;
+    }
+
+    .scrollable::-webkit-scrollbar-thumb {
+      background-color: #d0d0d0;
+      border-radius: 5px;
+    }
+
+    .scrollable::-webkit-scrollbar-thumb:hover {
+      background-color: #b0b0b0;
+    }
+
+  .time-item {
+    width: 10px;
+    height: 10px;
+    margin: 2px;
+    box-sizing: border-box;
+    background-color: #004085;
+  }
+  .time-item:hover {
+    transform: scale(1.5);
+  }
+  .time-active {
+    transform: scale(1.5)
+  }
+  .btn-container {
+    display: flex;
+    justify-content: space-between;
+  }
+  .time-show {
+    font-size: 12px;
+    margin-top: 4px;
+    color: #666;
+  }
+
 </style>
 <div class="body_container">
-  <div class="button mini-button" id="addTag"> 点亮记忆！ </div>
+  <div class="btn-container">
+    <div class="button mini-button" id="addTag"> 点亮记忆！ </div>
+    <div class="button mini-button" id="perview"> 前往查看 </div>
+    <div class="button mini-button" id="replace"> 替换覆盖 </div>
+  </div>
+  
   <div class="opt_desc" id="optNode"> 当前操作节点： </div>
-  <div class="time_container"></div>
+  <div class="time_container scrollable" id="timeContainer"></div>
+  <div class="time-show" id="time-show">
+    历史瞬间：---
+  </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
 	integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
@@ -61,6 +119,8 @@
 <script>
 
 let currentNode = {}
+let currentTimeIndex = -1
+let opttype = ''
 
 $('#addTag').on('click', () => {
   parent.postMessage({
@@ -71,17 +131,98 @@ $('#addTag').on('click', () => {
   }, '*')
 })
 
+$('#perview').on('click', () => {
+
+  parent.postMessage({
+    pluginMessage: {
+      type: 'perview:action',
+      datas: { id: currentNode.timeline.lines[currentTimeIndex].id }
+    }
+  }, '*')
+})
+
+$('#replace').on('click', () => {
+  let targetid = ''
+  let id = ''
+  if (currentTimeIndex !== -1) {
+    targetid =  currentNode.id
+    id = currentNode.timeline.lines[currentTimeIndex].id
+  } else {
+    targetid = currentNode.timeline.soucer
+    id = currentNode.id
+  }
+  parent.postMessage({
+    pluginMessage: {
+      type: 'replace:action',
+      datas: {   targetid, id,  }
+    }
+  }, '*')
+})
+
+$('#timeContainer').on('click', (e) => {
+  console.log(e)
+  const { dataset: { type, index } } = e.target
+  if (type === 'timeitem') {
+    try {
+      $('.time-active').removeClass('time-active')
+      $(e.target).addClass('time-active')
+      $('#time-show').show().html(`历史瞬间：${currentNode.timeline.lines[index].time}`)
+      $('#replace').attr('title', `(${currentNode.timeline.lines[index].name}) ⇥ (${currentNode.name})`).show()
+      $('#perview').show()
+      currentTimeIndex = index
+    } catch (error) {
+      
+    }
+  }
+})
+
 window.onmessage = (event) => {
 		const { pluginId, pluginMessage } = event.data
 		// if (pluginId !== "1_ZQp2EwQPLwdJ2ifcvUZ") return
 		if (!pluginMessage) return
 		const { type, datas } = pluginMessage
+    opttype = ''
+    currentTimeIndex = -1
+    $('#time-show').hide()
+    $('#replace').hide()
+    $('#perview').hide()
     console.log('pluginMessage---', pluginMessage)
     if (type === 'selectionchange:commit') {
       if (!datas) return
       currentNode = datas
-      $('#optNode').html(`当前操作节点：${currentNode.name}`)
+      $('#optNode').attr('title', `${currentNode.name}`).html(`当前操作节点：${currentNode.name}`)
+      if (Array.isArray(currentNode.timeline.lines)) {
+        let html = ''
+        currentNode.timeline.lines.forEach((item, index) => {
+          html = `${html} <div class="time-item" data-type="timeitem" data-index="${index}" style="background-color: ${randomColdColor()};"></div>`
+        })
+        $('#timeContainer').html(html)
+      } else {
+        $('#timeContainer').html('')
+      }
+      if (currentNode.timeline.soucer) {
+        opttype = 'soucer'
+        $('#replace').attr('title', `(${currentNode.name}) ⇥ (${currentNode.timeline.soucername})`).show()
+      }
     }
+}
+
+
+function randomColdColor() {
+  // 生成较低的红色分量（0-128）
+  const red = Math.floor(Math.random() * 128);
+
+  // 生成较高的绿色和蓝色分量（128-255）
+  const green = Math.floor(Math.random() * 128 + 128);
+  const blue = Math.floor(Math.random() * 128 + 128);
+
+  // 将 RGB 分量转换为十六进制颜色代码
+  const hexRed = red.toString(16).padStart(2, '0');
+  const hexGreen = green.toString(16).padStart(2, '0');
+  const hexBlue = blue.toString(16).padStart(2, '0');
+
+  // 返回十六进制颜色字符串
+  return `#${hexRed}${hexGreen}${hexBlue}`;
 }
 
     
