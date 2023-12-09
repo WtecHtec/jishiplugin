@@ -1,0 +1,249 @@
+
+<style>
+    body {
+      margin: 0;
+      background-color: #fff;
+    }
+
+
+  .border {
+		box-sizing: border-box;
+		padding: 4px;
+		margin-bottom: 8px;
+	}
+
+  .title {
+		color: #333;
+		font-size: 12px;
+		margin-bottom: 4px;
+	}
+
+  .radio-container {
+		display: inline-block;
+		position: relative;
+		padding-left: 15px;
+		cursor: pointer;
+		font-size: 12px;
+		user-select: none;
+	}
+
+	.radio-container input {
+		position: absolute;
+		opacity: 0;
+		cursor: pointer;
+	}
+
+	.radio-checkmark {
+		position: absolute;
+		top: 3px;
+		left: 0;
+		height: 12px;
+		width: 12px;
+		background-color: #ccc;
+		border-radius: 50%;
+	}
+
+	.radio-container:hover input~.radio-checkmark {
+		background-color: #bbb;
+	}
+
+	.radio-container input:checked~.radio-checkmark {
+		background-color: #2196F3;
+	}
+
+	.radio-checkmark:after {
+		content: "";
+		position: absolute;
+		display: none;
+	}
+
+	.radio-container input:checked~.radio-checkmark:after {
+		display: block;
+	}
+
+	.radio-container .radio-checkmark:after {
+		top: 4px;
+		left: 4px;
+		width: 4px;
+		height: 4px;
+		border-radius: 50%;
+		background: white;
+	}
+
+
+
+  .stylish-input {
+		/* background-color: #f0f0f0; */
+		border: none;
+		border-radius: 4px;
+		box-shadow: inset 0 0 0 2px #ccc;
+		font-size: 16px;
+		padding: 8px 12px;
+		outline: none;
+		transition: box-shadow 0.3s, background-color 0.3s;
+	}
+
+	.stylish-input:focus {
+		background-color: #fff;
+		box-shadow: inset 0 0 0 2px #0077cc;
+	}
+
+  .form-item {
+    font-size: 12px;
+    margin-bottom: 4px;
+  }
+
+
+
+  .button {
+		display: inline-block;
+		background-color: #007BFF;
+		color: white;
+		padding: 8px 16px;
+		font-size: 16px;
+		border: none;
+		border-radius: 4px;
+		cursor: pointer;
+		text-decoration: none;
+		transition: background-color 0.3s, box-shadow 0.3s;
+		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	}
+
+	.button:hover {
+		background-color: #0056B3;
+		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+	}
+
+	.button:active {
+		background-color: #004085;
+		box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+	}
+
+	.mini-button {
+		padding: 4px 8px;
+		font-size: 8px;
+	}
+
+</style>
+<div class="body_container">
+  <div class="border">
+		<div class="title"> 类型 </div>
+		<label class="radio-container">文案
+			<input type="radio" name="editable" value="desc" checked>
+			<span class="radio-checkmark"></span>
+		</label>
+		<label class="radio-container">图片
+			<input type="radio" name="editable" value="pic">
+			<span class="radio-checkmark"></span>
+		</label>
+	</div>
+
+  <div class="border" id="descattr">
+		<div class="title"> 属性 </div>
+		<div class="form-item">
+      字数：
+      <input type="number" id="wnum" class="stylish-input"/>
+    </div>
+    <div class="form-item">
+      行高：
+      <input type="number" id="whigh" class="stylish-input"  />
+    </div>
+    <div class="form-item">
+      尺寸：
+      <input type="number" id="wsize" class="stylish-input"  />
+    </div>
+	</div>
+
+
+  <div class="border" id="picattr" style="display: none;">
+		<div class="title"> 属性 </div>
+		<div class="form-item">
+      宽：
+      <input type="number" id="pw" class="stylish-input"  />
+    </div>
+    <div class="form-item">
+      高：
+      <input type="number" id="ph" class="stylish-input"  />
+    </div>
+	</div>
+
+  <div style="text-align: center;">
+    <a href="#" class="button" id="export"> 立即生成</a>
+  </div>
+
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+	integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+	crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+
+let exType = 'desc'
+$('input[name="editable"]').on('change', (item) => {
+  exType = $('input:radio[name=editable]:checked').val();
+  console.log('-----', exType) 
+  if ( exType === 'desc') {
+    $('#descattr').show()
+    $('#picattr').hide()
+  } else if (exType === 'pic') {
+    $('#picattr').show()
+    $('#descattr').hide()
+  }
+})
+
+function getNumber(val, def = 0) {
+  let num = Number(val)
+  if (Number.isNaN(num)) return def
+  return val
+}
+
+$('#export').on('click',  async () => {
+  if (exType === 'desc') {
+    let content = await getDesc()
+    const wnum = getNumber($('#wnum').val(), 0)
+    const whigh = getNumber($('#whigh').val(), 0)
+    const wsize = getNumber($('#wsize').val(), 0)
+    if (wnum > 0) {
+      content = content.substr(0, wnum)
+      if ( content.length < wnum) {
+        content = content.padEnd(wnum, content)
+      }
+    }
+    parent.postMessage({
+      pluginMessage: {
+        type: 'desc:action',
+        datas: {
+          content,
+          whigh,
+          wsize,
+        },
+      }
+    }, '*')
+  }
+})
+
+function getDesc() {
+  const URL = 'https://v.api.aa1.cn/api/api-wenan-wangyiyunreping/index.php?aa1=json'
+  return new Promise(res => {
+    $.ajax({
+      url: URL, // 替换为你的 API 接口地址
+      type: "GET",
+      dataType: "json",
+      success: function(response) {
+        // 请求成功后执行的代码
+        console.log("请求成功，返回的数据：", response);
+        if (Array.isArray(response) && response.length && response[0].wangyiyunreping) {
+          res(response[0].wangyiyunreping)
+        } else {
+          res('希望你别像风，在我这里掀起了万般波澜，却又跟云去了远方。——网易云音乐热评《如风过境》')
+        }
+      },
+      error: function(xhr, textStatus, errorThrown) {
+        // 请求失败后执行的代码
+        // console.log("请求失败，错误信息：", textStatus, errorThrown);
+        res('希望你别像风，在我这里掀起了万般波澜，却又跟云去了远方。——网易云音乐热评《如风过境》')
+      }
+    });
+  })
+}
+
+</script>
