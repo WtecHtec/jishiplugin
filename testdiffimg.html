@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset='utf-8'>
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <title>Page Title</title>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
+</head>
+<body>
+  测试
+
+  <canvas id="myCanvas1" width="800" height="800"
+    style="border:1px solid #000000;">
+</canvas>
+
+<canvas id="myCanvas2" width="800" height="800"
+    style="border:1px solid #000000;">
+</canvas>
+
+  <button onclick="handleGoto()" > 跳转</button>
+  <script src="https://cdn.jsdelivr.net/npm/resemblejs@5.0.0/resemble.min.js"></script>
+  <script>
+    console.log('resemble---', resemble.compare)
+    // function handleGoto() {
+    //   console.log('测试')
+    //   setHash('sign')
+    // }
+    // function setHash(value) {
+    //   window.onpopstate = function (event) {
+    //     if(sessionStorage.getItem('sign')){
+    //       sessionStorage.removeItem('sign')
+    //       window.location.reload()
+    //     }
+    //     console.log('window.location.href===', window.location.href)
+    //     history.replaceState(null, '', window.location.href)
+    //   }
+    //   window.history.pushState('forward', null, '#'); 
+    //   window.history.forward(1);
+    // }
+ 
+
+  async function getDiff(imgData1, imgData2) {
+    const options = {
+        output: {
+            errorColor: {
+                red: 255,
+                green: 0,
+                blue: 255
+            },
+            errorType: "flat",
+            transparency: 0.5,
+            largeImageThreshold: 1200,
+            useCrossOrigin: false,
+            outputDiff: true
+        },
+        scaleToSameSize: true, 
+        ignore: "colors"
+    };
+    // const data = await resemble(imgData1, imgData2, options);
+    // resemble.outputSettings(options);
+    const data =  resemble(imgData1).compareTo(imgData2).setReturnEarlyThreshold(8).onComplete((data) => {
+      console.log('onComplete----', data.getBuffer())
+    });
+    return data
+  }
+
+  function getCompareDiff(image1, image2) {
+    const options = {
+      output: {
+            errorColor: {
+                red: 255,
+                green: 0,
+                blue: 255
+            },
+            errorType: "flat",
+            transparency: 0.5,
+            largeImageThreshold: 1200,
+            useCrossOrigin: false,
+            outputDiff: true
+        },
+        scaleToSameSize: true, 
+        ignore: "colors"
+    };
+
+    resemble.compare(image1, image2, options, function (err, data) {
+        if (err) {
+            console.log("An error!");
+        } else {
+            console.log(data.getImageDataUrl());
+        }
+    });
+}
+
+var c=document.getElementById("myCanvas1");
+var ctx=c.getContext("2d");
+// ctx.fillStyle="#FF0000";
+// ctx.fillRect(0,0,150,75);
+drawImg('http://rsmbl.github.io/Resemble.js/demoassets/People.jpg', ctx)
+
+
+var c2=document.getElementById("myCanvas2");
+var ctx2=c2.getContext("2d");
+// ctx2.fillStyle="#FFff00";
+// ctx2.fillRect(10,10,150,70);
+drawImg('http://rsmbl.github.io/Resemble.js/demoassets/People2.jpg', ctx2)
+
+
+async function encode(canvas) {
+		return await new Promise((resolve, reject) => {
+			canvas.toBlob(blob => {
+				const reader = new FileReader()
+				reader.onload = () => resolve(new Uint8Array(reader.result))
+				reader.onerror = () => reject(new Error('Could not read from blob'))
+				reader.readAsArrayBuffer(blob)
+			})
+		})
+	}
+
+  async function handleGoto() {
+      const data = await encode(c)
+      const data2 = await encode(c2)
+      const res = await getCompareDiff(c.toDataURL('image/png'), c2.toDataURL( 'image/png' ))
+      console.log('data---', res)
+    }
+
+    function drawImg(url, ctx) {
+      const img = new Image();
+        img.src = url
+        img.crossOrigin = 'Anonymous';
+        img.onload = () => {
+          ctx.drawImage(img, 0, 0);
+        };
+    }
+  </script>
+  
+</body>
+</html>
