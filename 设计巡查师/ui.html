@@ -3,145 +3,325 @@
     body {
         margin: 0;
         background-color: #fff;
-        display: flex;
-        align-items: center;
-        justify-content: center;
     }
 
-    .brand-box {
-        font-family: "Inter", sans-serif;
-        padding: 0px 8px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-direction: column;
-        margin-bottom: 16px;
-    }
+.upload-container {
+  position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    border-radius: 5px;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    height: 400px;
+}
 
-    .brand-box .header {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-        width: 230px;
-    }
+.upload-container:hover .custom-file-upload{
+  display: inline-block;
+}
+.custom-file-upload {
+  position: absolute;
+    display: none;
+    padding: 12px 30px;
+    font-size: 24px;
+    font-weight: bold;
+    color: #fff;
+    text-align: center;
+    text-decoration: none;
+    /* border: 1px solid #F5F5F5; */
+    border-radius: 5px;
+    background-color: #2e1c97;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
 
-    .brand-box .header h2 {
-        margin: 0;
-        font-weight: 500;
-        color: rgba(32, 32, 32, 1);
-        font-size: 12px;
-    }
+.custom-file-upload:hover {
+  background-color: rgb(110, 103, 202);
+}
 
-    .brand-box .header button {
-        width: 40px;
-        height: 20px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 12px;
-        background: #fff;
-        color: rgba(32, 32, 32, 1);
-        border-radius: 6px;
-        border: 1px solid rgba(32, 32, 32, 0.2);
-        cursor: pointer;
-    }
+.plus-icon {
+    display: inline-block;
+    vertical-align: middle;
+}
 
-    .brand-box .header button:hover {
-        border: 1px solid rgba(32, 32, 32, 0.4);
-    }
+input[type="file"] {
+    display: none;
+}
 
-    .brand-box .color-list {
-        display: flex;
-        flex-direction: row;
-        overflow-x: scroll;
-        align-items: center;
-        margin-top: 8px;
-        width: 228px;
-        height: 44px;
-        border: 1px solid rgba(32, 32, 32, 0.1);
-        border-radius: 6px;
-        padding-left: 8px;
-        box-sizing: border-box;
-    }
+.diff-img-container {
+  display: flex;
+}
 
-    .brand-box .color-list .color {
-        height: 24px;
-        min-width: 24px;
-        width: 24px;
-        border-radius: 100%;
-        margin-right: 7px;
-    }
+.flex-1 {
+  flex: 1;
+  margin-top: 8px;
+}
 
-    ::-webkit-scrollbar {
-        display: none;
-    }
+.ml-12 {
+  margin-left: 12px;
+}
+
+.img-show {
+  width: 100%;
+  height: 100%;
+}
+
+.title {
+		color: #333;
+		font-size: 12px;
+		margin-bottom: 4px;
+	}
+
+	.border {
+		border: 1px solid #f5f5f5;
+		box-sizing: border-box;
+		padding: 4px;
+		margin-bottom: 8px;
+	}
+
+
+.radio-container {
+		display: inline-block;
+		position: relative;
+		padding-left: 15px;
+		cursor: pointer;
+		font-size: 12px;
+		user-select: none;
+	}
+
+	.radio-container input {
+		position: absolute;
+		opacity: 0;
+		cursor: pointer;
+	}
+
+	.radio-checkmark {
+		position: absolute;
+		top: 3px;
+		left: 0;
+		height: 12px;
+		width: 12px;
+		background-color: #ccc;
+		border-radius: 50%;
+	}
+
+
+.radio-container:hover input~.radio-checkmark {
+		background-color: #bbb;
+	}
+
+	.radio-container input:checked~.radio-checkmark {
+		background-color: #2196F3;
+	}
+
+	.radio-checkmark:after {
+		content: "";
+		position: absolute;
+		display: none;
+	}
+
+	.radio-container input:checked~.radio-checkmark:after {
+		display: block;
+	}
+
+	.radio-container .radio-checkmark:after {
+		top: 4px;
+		left: 4px;
+		width: 4px;
+		height: 4px;
+		border-radius: 50%;
+		background: white;
+	}
+
+
+  .button {
+		display: inline-block;
+		background-color: #007BFF;
+		color: white;
+		padding: 8px 16px;
+		font-size: 16px;
+		border: none;
+		border-radius: 4px;
+		cursor: pointer;
+		text-decoration: none;
+		transition: background-color 0.3s, box-shadow 0.3s;
+		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	}
+
+	.button:hover {
+		background-color: #0056B3;
+		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+	}
+
+	.button:active {
+		background-color: #004085;
+		box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+	}
+
+	.mini-button {
+		padding: 4px 8px;
+		font-size: 12px;
+	}
+
 </style>
 <div class="body_container">
+  <!-- <div class="title"> 鼠标滑动有惊喜！</div> -->
+  <div class="diff-img-container">
+    <div class="flex-1">
+      <div class="title"> 设计稿： </div>
+      <div class="upload-container">
+        <img id="desgin-img" class="img-show"/>
+        <label class="custom-file-upload" id="target-plus">
+          <span  class="plus-icon">+</span>
+        </label>
+      </div>
+    </div>
+    <div class="flex-1 ml-12">
+      <div class="title"> 实现页面： </div>
+      <div class="upload-container">
+        <img id="target-img" class="img-show"/>
+        <label for="target-file-upload" class="custom-file-upload">
+            <span id="target-plus" class="plus-icon">+</span>
+        </label>
+        <input id="target-file-upload" type="file" accept="image/*"/>
+      </div>
+    </div>
+  </div>
 
+  <div>
+    <div class="border">
+      <div class="title"> 对比尺寸 </div>
+      <label class="radio-container">使用原始尺寸
+        <input type="radio" name="editable" value="false" checked>
+        <span class="radio-checkmark"></span>
+      </label>
+      <label class="radio-container">缩放至相同大小
+        <input type="radio" name="editable" value="same">
+        <span class="radio-checkmark"></span>
+      </label>
+    </div>
+
+    <div class="button mini-button" id="check">立即巡查</div>
+  </div>
+
+  <div class="border" style="display: none;" id="diff-result" >
+    <div class="title"> 结果:</div>
+    <div class="title" id="diff-per"> 差异:</div>
+    <img id="diff-img" style="width: 100%; height: 667px;" />
+  </div>
+
+  
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+	integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+	crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.jsdelivr.net/npm/resemblejs@5.0.0/resemble.min.js"></script>
+
 <script>
 
-    var colors = [{
-        "brand_name": "即时设计",
-        "colors": ["#CE5554", "#E45C5E", "#FF5354", "#4EAA70", "#58BC7C", "#35C773", "#58D67D", "#458BF2", "#4596FF", "#64A2FA", "#4F80FE", "#7290FF", "#EF853E", "#FE954F", "#FF9C45", "#FFB356", "#FF9233", "#8153F5", "#9066FF", "#9B70FE", "#A27CFC"]
+
+let desginBase64 = ''
+let targetBase64 = ''
+$("#target-file-upload").on("change", function() {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      targetBase64 = e.target.result
+      $("#target-img").attr("src", targetBase64);
+      $('#diff-result').hide()
     }
-    ];
+    reader.readAsDataURL(this.files[0]);
+});
 
-    for (let i = 0; i < colors.length; i++) {
-        //创建 插件内容 的DOM结构
-        let brand = document.createElement('div');
-        brand.classList.add('brand-box');
-
-        //创建div
-        let header = document.createElement('div');
-        header.classList.add('header')
-
-        //创建标签
-        let brandName = document.createElement('h2');
-        brandName.innerHTML = colors[i].brand_name;
-
-        //创建按钮
-        let addButton = document.createElement('button');
-        addButton.innerHTML = '添加';
+$('#target-plus').on('click', () => {
+  parent.postMessage({
+				pluginMessage: {
+					type: 'desgin:action',
+				}
+			}, '*')
+})
 
 
-        //添加点击事件
-        addButton.onclick = () => {
-            let colorsList = colors[i].colors
-            let name = colors[i].brand_name
-            //插件ui 向 插件主代码 发送信息
-            parent.postMessage({
-                pluginMessage: {
-                    type: 'createLayer',
-                    colorsList,
-                    name
-                }
-            }, '*')
-        }
+$('#check').on('click', async () => {
+  const selectedValue = $("input[name='editable']:checked").val();
+  const [misMatchPer, base64] = await getCompareDiff(desginBase64, targetBase64, selectedValue === 'same')
+  if (!base64) {
+    return
+  }
+  $('#diff-result').show()
+  $('#diff-per').html(`差异：${misMatchPer}`)
+  $('#diff-img').attr('src', base64)
+
+  // console.log('datas----', datas)
+})
 
 
-        header.appendChild(brandName);
-        header.appendChild(addButton);
-        brand.appendChild(header);
+window.onmessage = async (event) => {
+		const { pluginId, pluginMessage: { datas, type, }, } = event.data;
+		console.log('event.data===', event.data)
+		// if ( pluginId !== 'o9g2F02HEiP86uynkYIvq') return;
+		if (type === 'desgin:export') {
+      const res = await createImgUrl(datas);
+      desginBase64 = res
+		  $('#desgin-img').attr('src', res)
+      $('#diff-result').hide()
+		}
+	}
 
-        //遍历生成颜色DOM
-        let brandColors = document.createElement('div');
-        brandColors.classList.add('color-list');
-        var j;
-        for (j = 0; j < colors[i].colors.length; ++j) {
-            let color = document.createElement('div');
-            color.classList.add('color');
-            color.style.backgroundColor = colors[i].colors[j];
-            brandColors.appendChild(color);
-        }
-        brand.appendChild(brandColors);
-
-        //生成的Dom结构添加到Body
-        let bodyEl = document.querySelector('.body_container');
-        bodyEl.appendChild(brand);
-    }
-
+  async function createImgUrl(datas) {
+		const blob = new Blob([datas], { type: 'image/png' });
+		// const imageUrl = URL.createObjectURL(blob);
+    const data = await blobToBase64(blob)
+		return data
+	}
     
 
+function blobToBase64(blob) {
+  return new Promise((resolve, reject) => {
+    const fileReader = new FileReader();
+    fileReader.onload = (e) => {
+      resolve(e.target.result);
+    };
+    // readAsDataURL
+    fileReader.readAsDataURL(blob);
+    fileReader.onerror = () => {
+      reject(new Error('blobToBase64 error'));
+    };
+  });
+}
+
+
+function getCompareDiff(image1, image2, scaleToSameSize = false) {
+    const options = {
+      output: {
+            errorColor: {
+                red: 255,
+                green: 0,
+                blue: 255
+            },
+            errorType: "flat",
+            transparency: 0.5,
+            largeImageThreshold: 1200,
+            useCrossOrigin: false,
+            outputDiff: true
+        },
+        scaleToSameSize, 
+        ignore: "colors"
+    };
+    return new  Promise(res => {
+      resemble.compare(image1, image2, options, function (err, data) {
+        if (err) {
+            console.log("An error!");
+            res([0, 0])
+        } else {
+            console.log(data.rawMisMatchPercentage);
+            res([data.rawMisMatchPercentage, data.getImageDataUrl()])
+        }
+    });
+    })
+
+  
+}
 </script>
