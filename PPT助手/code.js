@@ -144,3 +144,14 @@ function rgbaToHex(r, g, b) {
 	const blue = b.toString(16).padStart(2, '0');
 	return `${red}${green}${blue}`;
 }
+
+
+jsDesign.on('run', () => {
+  console.log('插件开始运行')
+  console.log(jsDesign.currentUser)
+  if (!jsDesign.currentUser) return
+  jsDesign.ui.postMessage({
+    type: 'info:done',
+    datas: jsDesign.currentUser,
+  })
+})

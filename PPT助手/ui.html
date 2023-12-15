@@ -281,6 +281,8 @@
 	</div>
 
 	<a href="#" class="button" id="exportPPT"> 立即生成PPT</a>
+
+  <div id="webpptshow" class="title" style="display: none;"></div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
@@ -317,6 +319,16 @@
 	let gencommitiing = false
 
 	let pptId = 0
+
+
+  let currentId = ''
+  let currentName = ''
+
+  let pptwebdata = ''
+  let authusers = []
+
+
+  let apiurl = 'http://127.0.0.1:8081'
 
 	//设置配置
 	const ops = {
@@ -550,7 +562,7 @@
     }
     
 		let status = false
-
+    pptwebdata = ''
 		sortPptDatas.forEach(item => {
 			const { show, name, imgbytes, rect } = pptDatas[item]
 			if (show) {
@@ -561,7 +573,13 @@
 				const x = (width - w) / 2
 				const y = (height - h) / 2
 				console.log(' x, y, w, h,', x, y, w, h,)
-				slide.addImage({ data: uint8ArrayToBase64(imgbytes), x, y, w, h, })
+        const base64 = uint8ArrayToBase64(imgbytes)
+        pptwebdata = `${pptwebdata || ''}
+        <section>
+          <img class="r-stretch" src="data:${base64}" />
+        </section>`
+        console.log(base64)
+				slide.addImage({ data: base64, x, y, w, h, })
 			}
 		});
     if (!status) {
@@ -571,9 +589,22 @@
       return;
     }
 		// 4. 保存ppt到本地
-		pres.writeFile({ fileName: "export.pptx" }).then(fileName => {
-			gening = false
-			exportPPT.innerText = '立即生成PPT'
+		pres.writeFile({ fileName: "export.pptx" }).then(async (fileName) => {
+		
+      if (Array.isArray(authusers) && authusers.includes(currentId) && pptwebdata) {
+        exportPPT.innerText = '正在生成在线PPT'
+        const res = await genWebPpt(pptwebdata)
+        gening = false
+        exportPPT.innerText = '立即生成PPT'
+        if (res) {
+          $('#webpptshow').show().html(`在线ppt预览地址：<a herf="${res}"> ${res}</a>`)
+        } else {
+          $('#webpptshow').show().html(`在线ppt生成失败！`)
+        }
+      } else {
+        gening = false
+			  exportPPT.innerText = '立即生成PPT'
+      }
 		});
 	}
 
@@ -625,13 +656,13 @@
 		})
 		// 4. 保存ppt到本地
 		pres.writeFile({ fileName: "export.pptx" }).then(fileName => {
-			gening = false
-			gencommitiing = false
-			exportPPT.innerText = '立即生成PPT'
+      gening = false
+      gencommitiing = false
+      exportPPT.innerText = '立即生成PPT'
 		});
 	}
 
-	window.onmessage = (event) => {
+	window.onmessage = async (event) => {
 		const { pluginId, pluginMessage } = event.data
 		// if (pluginId !== "1_ZQp2EwQPLwdJ2ifcvUZ") return
 		if (!pluginMessage) return
@@ -654,6 +685,14 @@
 				gencommitiing = true
 				exportEditPpt(datas)
 				break
+      case 'info:done': 
+        console.log('info--- datas', datas)
+        if (!datas) return
+        const { id, name} = datas
+        currentId = id
+        currentName = name
+        authusers = await getConfig()
+      break
 		}
 	}
 
@@ -719,5 +758,81 @@
 
 		return [newWidth, newHeight, scale];
 	}
+
+  function getConfig() {
+		const URL = `${apiurl}/config?infoid=${currentId}&infoname=${currentName}`
+		return new Promise(res => {
+			$.ajax({
+				url: URL, // 替换为你的 API 接口地址
+				type: "GET",
+				dataType: "json",
+				success: function (response) {
+					// 请求成功后执行的代码
+					console.log("请求成功，返回的数据：", response);
+					if (response && response.authusers) {
+						res(response.authusers)
+					} else {
+						res(null)
+					}
+				},
+				error: function (xhr, textStatus, errorThrown) {
+					// 请求失败后执行的代码
+					// console.log("请求失败，错误信息：", textStatus, errorThrown);
+					res(null)
+				}
+			});
+		})
+	}
+
+  // 递归请求
+  function genWebPpt(pptwebdata) {
+    const pdata = encodeURIComponent(pptwebdata)
+    const maxlen = 5000
+    const len = pdata.length
+    const pptlen = Number.parseInt(len / maxlen) + (len % maxlen > 0 ? 1 : 0)
+    console.log('genWebPpt-----------genWebPpt', len, pptlen)
+    let  pptcurrent = 1
+    const dg = function(res) {
+      const data = pdata.substr((pptcurrent - 1) * maxlen, maxlen)
+      const URL = `${apiurl}/export?infoid=${currentId}&infoname=${currentName}&pptcurrent=${pptcurrent}&pptlen=${pptlen}&pptdata=${data}`
+      if (pptcurrent > pptlen) {
+        res(null)
+        return
+      }
+      $.ajax({
+				url: URL, // 替换为你的 API 接口地址
+				type: "GET",
+				dataType: "json",
+				success: function (response) {
+					// 请求成功后执行的代码
+					// console.log("请求成功，返回的数据：", response);
+					if (response) {
+						// res(response.authusers)
+            const { status, ppturl } = response
+            if (status === 0) {
+              pptcurrent = pptcurrent + 1
+              dg(res)
+            } else if (status === 1) {
+              res(ppturl)
+            } else {
+              res(null)
+            }
+					} else {
+						res(null)
+					}
+
+				},
+				error: function (xhr, textStatus, errorThrown) {
+					// 请求失败后执行的代码
+					// console.log("请求失败，错误信息：", textStatus, errorThrown);
+					res(null)
+				}
+			});
+    }
+
+    return new Promise((res) => {
+      dg(res)
+    })
+  }
 
 </script>
