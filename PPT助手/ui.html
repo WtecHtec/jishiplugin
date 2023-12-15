@@ -207,7 +207,7 @@
 
 
 
-  .stylish-input {
+	.stylish-input {
 		background-color: #f1f1f1;
 		border: none;
 		border-radius: 4px;
@@ -223,10 +223,9 @@
 		box-shadow: inset 0 0 0 2px #f1f1f1;
 	}
 
-  .lay-title {
-    margin-top: 12px;
-  }
-
+	.lay-title {
+		margin-top: 12px;
+	}
 </style>
 <div class="body_container">
 	<div class="border">
@@ -236,15 +235,15 @@
 				<option value="0">16x9（10x5.625英寸）</option>
 				<option value="1">16x10（10x6.25英寸）</option>
 				<option value="2">4x3（10 x 7.5英寸）</option>
-        <option value="3">自定义尺寸（单位：英寸）</option>
+				<option value="3">自定义尺寸（单位：英寸）</option>
 			</select>
 		</div>
-    <div id="setlayout" style="display: none;">
-      <div class="title lay-title"> 宽（单位：英寸） </div> 
-      <input type="number" id="sizew" value="16.5" step="0.1" class="stylish-input" style=" width: 100%;" />
-      <div  class="title lay-title" > 高（单位：英寸） </div>
-      <input type="number" id="sizeh" value="11.7" step="0.1" class="stylish-input" style=" width: 100%;" />
-    </div>
+		<div id="setlayout" style="display: none;">
+			<div class="title lay-title"> 宽（单位：英寸） </div>
+			<input type="number" id="sizew" value="16.5" step="0.1" class="stylish-input" style=" width: 100%;" />
+			<div class="title lay-title"> 高（单位：英寸） </div>
+			<input type="number" id="sizeh" value="11.7" step="0.1" class="stylish-input" style=" width: 100%;" />
+		</div>
 	</div>
 	<div class="border">
 		<div class="title"> ppt页面 <div id="addppt" class="button mini-button"> 插入</div>
@@ -256,16 +255,16 @@
 				<div class="list-item" data-id="3">Item 3</div>
 				<div class="list-item" data-id="4">Item 4</div> -->
 			</div>
-      <div class="content" style="padding: 8px;">
-        <div class="content" style="width: 100%; height: 100%; overflow: auto;">
-          <img class="del_icon" id="delicon" style="display: none;"
-            src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAAAAXNSR0IArs4c6QAABOtJREFUeF7tnVtO40AQRe1EoNkEaD5hF7CywMrIrAI+EWwCgRKPnEzQJHLcVdUPuuyTnwilH+VT112+bSe0Da9ZE2hnffQcfIMAZi4CBIAAZk5g5ofPCoAAZk5g5ofPCoAApk3g+fevu90Rbrf7d+1rsVjfvn6std28tJ/sCtAnvt1sVk3b2hJ/ksGuaR5v3z4fvCRWGuckBfB8ffnQNs1KCkHTbmpCmJwAXq4unlKd9eeEMSURTEYAqZf80KowFRFMQgC75G+3T6GkJf+869Zd2/7xfG2QTADfV9vJKZ8fMOVFXmzY/YrQLBbF3UKsQ4kSQOllNzZJU+0fU46iBPByfdlNFaq74+q69c371702brMAclot7UHQfk/g5u1TnU91hwNsBFCf7BBAfTkpGhECKIq7vskQQH05KRoRAiiKu77JEEB9OSkaEQIoiru+yRBAfTkpGhECKIq7vskQQH05KRoRAiiKu77JEEB9OSkaUVkB/NRDGEWR+pqsqAB6NNwOrkcg1mcCzHcDuStYSfIjH0uLFkAIA6tEiFD4c+vZHR65yf/7AAhAkobxNgggnqHrERDAWPr6GrhcPh6++5frG0FHIRSeEwGcEUC3WNyfPhad+1G1oWTk/l4CAhgQwBiUXF8PG5szp/AQwJAABs7+b2uaaZNqVACZ5uyPCQEMCGBs1yvXkjxUcv4PLZfjQQAIINtvE7jdCGIFSONsEYCCIyVAAevQNFddZAUwJGOgCyuAgiMrgAIWK4AB1rkNr4w/UMUKoMgTK4ACFiuAARYrgBwaF4FyVmMtKQEKjpQABSxKgAEWJUAOjRIgZ0UJSMOqoQQYQLITaIB20oW7gdwN5G7gqQa4BohfWfoRsIEKjlwDKGBhAw2wsIFyaJQAOStsYBpW2EALR2yghdpxH2wgNhAbiA3M8x/LsIGKFRobqICFDTTAwgbKoWED5aywgWlYYQMtHLGBFmrYwCA1SkAQkagBLkCEad8IF6CAhQswwMIFyKFRAuSscAFpWFECLBxxARZquIAgNUpAEJGoAS5AhAkXoMB03JQSYEb33ZHnAQYYUgLihdWPQAlQcGQjSAGLjSADLDaC5NAoAXJWbASlYcVGkIUjLsBCjY2gIDVKQBCRqAEuQISJjSAFJjaCzLBwAXJ0lAA5K1xAGla4AAtHXICFGi4gSI0SEEQkaoALEGHCBSgw4QLMsHABcnSUADkrXEAaVrgAC0dcgIUaLiBIjRIQRCRqgAsQYcIFKDDhAsywcAFydJQAOatJuoCxBzT538Fycbi9BhgVwPXlQ9s0KzkGWcufEF0fGd8LGMpP161v3r/uhz7KZT2bkTmfM4kOAYycnKdnxm7p32xWTdveyc5pfauhs/Hl6uKp9Jz6yId7uC0BR4fTdevd3xkTP4ivn7fAnJSAVHJ3Og4CcJq4VGEjgFQknY6DAJwmLlXYCCAVSafjIACniUsVNgJIRdLpOAjAaeJShY0AUpF0Og4CcJq4VGEjgFQknY7jWwCZb5Q4zakqbNcCyPVwhoqg88ZjTz/FHlr2u4F9gDnvlccCqL1/6KfpYuMvIoCDCPr3HE/qxEKorv+/29vdcvl4+/qxv9Wd6VVMAJniZ9hIAgggEqD37gjAewYj40cAkQC9d0cA3jMYGT8CiATovTsC8J7ByPgRQCRA793/AgM04sx0C3NDAAAAAElFTkSuQmCC" />
-          <div class="content_main" id="content_main">
-            <img alt="ppt show" class="content_show" id="pptshow" style="display: none;">
-          </div>
-        </div>
-      </div>
-		
+			<div class="content" style="padding: 8px;">
+				<div class="content" style="width: 100%; height: 100%; overflow: auto;">
+					<img class="del_icon" id="delicon" style="display: none;"
+						src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAAAAXNSR0IArs4c6QAABOtJREFUeF7tnVtO40AQRe1EoNkEaD5hF7CywMrIrAI+EWwCgRKPnEzQJHLcVdUPuuyTnwilH+VT112+bSe0Da9ZE2hnffQcfIMAZi4CBIAAZk5g5ofPCoAAZk5g5ofPCoAApk3g+fevu90Rbrf7d+1rsVjfvn6std28tJ/sCtAnvt1sVk3b2hJ/ksGuaR5v3z4fvCRWGuckBfB8ffnQNs1KCkHTbmpCmJwAXq4unlKd9eeEMSURTEYAqZf80KowFRFMQgC75G+3T6GkJf+869Zd2/7xfG2QTADfV9vJKZ8fMOVFXmzY/YrQLBbF3UKsQ4kSQOllNzZJU+0fU46iBPByfdlNFaq74+q69c371702brMAclot7UHQfk/g5u1TnU91hwNsBFCf7BBAfTkpGhECKIq7vskQQH05KRoRAiiKu77JEEB9OSkaEQIoiru+yRBAfTkpGhECKIq7vskQQH05KRoRAiiKu77JEEB9OSkaUVkB/NRDGEWR+pqsqAB6NNwOrkcg1mcCzHcDuStYSfIjH0uLFkAIA6tEiFD4c+vZHR65yf/7AAhAkobxNgggnqHrERDAWPr6GrhcPh6++5frG0FHIRSeEwGcEUC3WNyfPhad+1G1oWTk/l4CAhgQwBiUXF8PG5szp/AQwJAABs7+b2uaaZNqVACZ5uyPCQEMCGBs1yvXkjxUcv4PLZfjQQAIINtvE7jdCGIFSONsEYCCIyVAAevQNFddZAUwJGOgCyuAgiMrgAIWK4AB1rkNr4w/UMUKoMgTK4ACFiuAARYrgBwaF4FyVmMtKQEKjpQABSxKgAEWJUAOjRIgZ0UJSMOqoQQYQLITaIB20oW7gdwN5G7gqQa4BohfWfoRsIEKjlwDKGBhAw2wsIFyaJQAOStsYBpW2EALR2yghdpxH2wgNhAbiA3M8x/LsIGKFRobqICFDTTAwgbKoWED5aywgWlYYQMtHLGBFmrYwCA1SkAQkagBLkCEad8IF6CAhQswwMIFyKFRAuSscAFpWFECLBxxARZquIAgNUpAEJGoAS5AhAkXoMB03JQSYEb33ZHnAQYYUgLihdWPQAlQcGQjSAGLjSADLDaC5NAoAXJWbASlYcVGkIUjLsBCjY2gIDVKQBCRqAEuQISJjSAFJjaCzLBwAXJ0lAA5K1xAGla4AAtHXICFGi4gSI0SEEQkaoALEGHCBSgw4QLMsHABcnSUADkrXEAaVrgAC0dcgIUaLiBIjRIQRCRqgAsQYcIFKDDhAsywcAFydJQAOatJuoCxBzT538Fycbi9BhgVwPXlQ9s0KzkGWcufEF0fGd8LGMpP161v3r/uhz7KZT2bkTmfM4kOAYycnKdnxm7p32xWTdveyc5pfauhs/Hl6uKp9Jz6yId7uC0BR4fTdevd3xkTP4ivn7fAnJSAVHJ3Og4CcJq4VGEjgFQknY6DAJwmLlXYCCAVSafjIACniUsVNgJIRdLpOAjAaeJShY0AUpF0Og4CcJq4VGEjgFQknY7jWwCZb5Q4zakqbNcCyPVwhoqg88ZjTz/FHlr2u4F9gDnvlccCqL1/6KfpYuMvIoCDCPr3HE/qxEKorv+/29vdcvl4+/qxv9Wd6VVMAJniZ9hIAgggEqD37gjAewYj40cAkQC9d0cA3jMYGT8CiATovTsC8J7ByPgRQCRA793/AgM04sx0C3NDAAAAAElFTkSuQmCC" />
+					<div class="content_main" id="content_main">
+						<img alt="ppt show" class="content_show" id="pptshow" style="display: none;">
+					</div>
+				</div>
+			</div>
+
 		</div>
 	</div>
 	<div class="border">
@@ -280,9 +279,22 @@
 		</label>
 	</div>
 
+	<div class="border">
+		<div class="title"> 是否生成线上 </div>
+		<label class="radio-container">否
+			<input type="radio" name="onlineweb" value="no" checked>
+			<span class="radio-checkmark"></span>
+		</label>
+		<label class="radio-container">是
+			<input type="radio" name="onlineweb" value="yes">
+			<span class="radio-checkmark"></span>
+		</label>
+		<div id="onlinetip" class="title" style="color: red;display: none;">暂时没权限，可联系开发者。</div>
+	</div>
+
 	<a href="#" class="button" id="exportPPT"> 立即生成PPT</a>
 
-  <div id="webpptshow" class="title" style="display: none;"></div>
+	<div id="webpptshow" class="title" style="display: none;"></div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
@@ -295,6 +307,8 @@
 
 	const exportPPT = document.getElementById('exportPPT')
 	const radiosdom = document.getElementsByName("editable");
+
+	const onlinewebDom = document.getElementsByName("onlineweb");
 	const layoutselect = document.getElementById('layoutselect')
 	const addppt = document.getElementById('addppt')
 	const pptmenu = document.getElementById('ppt_meun');
@@ -302,9 +316,9 @@
 	const pptshow = document.getElementById('pptshow')
 	const contentMainDom = document.getElementById('content_main')
 
-  let cusWidth = 16.5
-  let cusHeight = 11.7
-  let cusLayoutName = 'A3'
+	let cusWidth = 16.5
+	let cusHeight = 11.7
+	let cusLayoutName = 'A3'
 
 	let pptIndex = 0
 	let layoutIndex = 0
@@ -321,14 +335,17 @@
 	let pptId = 0
 
 
-  let currentId = ''
-  let currentName = ''
+	let currentId = ''
+	let currentName = ''
 
-  let pptwebdata = ''
-  let authusers = []
+	let pptwebdata = ''
+	let authusers = []
 
 
-  let apiurl = 'http://127.0.0.1:8081'
+	let apiurl = 'http://127.0.0.1:8081'
+
+
+	let onlineStatus = 'no'
 
 	//设置配置
 	const ops = {
@@ -392,6 +409,14 @@
 			}
 		}
 	}
+	// // 是否线上
+	// function getRadioOnlineValue(onlinewebDom) {
+	// 	for (let i = 0; i < onlinewebDom.length; i++) {
+	// 		if (onlinewebDom[i].checked) {
+	// 			return onlinewebDom[i].value
+	// 		}
+	// 	}
+	// }
 
 
 
@@ -445,64 +470,77 @@
 	})
 
 
-  $('#sizew').on('blur', () => {
-    cusWidth = Number($('#sizew').val())
-    if (cusWidth > 0 && cusHeight > 0) {
-      resizeppshow(cusWidth, cusHeight)
-    }
-  })
-  $('#sizew').on('change', () => {
-    cusWidth = Number($('#sizew').val())
-    if (cusWidth > 0 && cusHeight > 0) {
-      resizeppshow(cusWidth, cusHeight)
-    }
-  })
+	$('#sizew').on('blur', () => {
+		cusWidth = Number($('#sizew').val())
+		if (cusWidth > 0 && cusHeight > 0) {
+			resizeppshow(cusWidth, cusHeight)
+		}
+	})
+	$('#sizew').on('change', () => {
+		cusWidth = Number($('#sizew').val())
+		if (cusWidth > 0 && cusHeight > 0) {
+			resizeppshow(cusWidth, cusHeight)
+		}
+	})
 
-  $('#sizeh').on('blur', () => {
-    cusHeight = Number($('#sizeh').val())
-    if (cusWidth > 0 && cusHeight > 0) {
-      resizeppshow(cusWidth, cusHeight)
-    }
-  })
-  $('#sizeh').on('change', () => {
-    cusHeight = Number($('#sizeh').val())
-    if (cusWidth > 0 && cusHeight > 0) {
-      resizeppshow(cusWidth, cusHeight)
-    }
-  })
+	$('#sizeh').on('blur', () => {
+		cusHeight = Number($('#sizeh').val())
+		if (cusWidth > 0 && cusHeight > 0) {
+			resizeppshow(cusWidth, cusHeight)
+		}
+	})
+	$('#sizeh').on('change', () => {
+		cusHeight = Number($('#sizeh').val())
+		if (cusWidth > 0 && cusHeight > 0) {
+			resizeppshow(cusWidth, cusHeight)
+		}
+	})
 
 	$('#layoutselect').change(e => {
 		const index = getSelectValue(layoutselect)
 		if (layoutIndex === index) return
 		layoutIndex = index
-    console.log('layoutIndex---', layoutIndex)
-    if (Number(layoutIndex) === 3) {
-      $('#setlayout').show()
-      if (cusWidth > 0 && cusHeight > 0) {
-        resizeppshow(cusWidth, cusHeight)
-      }
-      return;
-    } else {
-      $('#setlayout').hide()
-    }
+		console.log('layoutIndex---', layoutIndex)
+		if (Number(layoutIndex) === 3) {
+			$('#setlayout').show()
+			if (cusWidth > 0 && cusHeight > 0) {
+				resizeppshow(cusWidth, cusHeight)
+			}
+			return;
+		} else {
+			$('#setlayout').hide()
+		}
 		const { width, height } = layoutsconfig[index]
-    resizeppshow(width, height)
+		resizeppshow(width, height)
 	})
 
-  function resizeppshow(width, height) {
-    targetWidth = width * 10 * 3
+
+
+	$('input[name="onlineweb"]').on('change', (item) => {
+		onlineStatus = $('input:radio[name=onlineweb]:checked').val();
+		console.log('-----', onlineStatus)
+		if (onlineStatus === 'yes' && (!Array.isArray(authusers) || !authusers.includes(currentId))) {
+			$('#onlinetip').show();
+		} else if (onlineStatus === 'no') {
+			$('#onlinetip').hide();
+		}
+	})
+
+
+	function resizeppshow(width, height) {
+		targetWidth = width * 10 * 3
 		targetHeight = height * 10 * 3
 		contentMainDom.style.width = `${targetWidth}px`
 		contentMainDom.style.height = `${targetHeight}px`
 		if (pptDatas && pptDatas.length) {
-      console.log('------',)
+			console.log('------',)
 			const { rect } = pptDatas[sortPptDatas[pptIndex]]
-      console.log('pptshow---', pptshow, rect, pptDatas,  sortPptDatas,  pptIndex)
+			console.log('pptshow---', pptshow, rect, pptDatas, sortPptDatas, pptIndex)
 			const [w, h] = scaleImage(rect.width, rect.height, targetWidth, targetHeight)
 			pptshow.style.width = `${w}px`
 			pptshow.style.height = `${h}px`
 		}
-  }
+	}
 
 	addppt.addEventListener('click', () => {
 		if (!addTimer) {
@@ -518,6 +556,8 @@
 			addTimer = null
 		}, 1000)
 	})
+
+
 
 	exportPPT.addEventListener('click', () => {
 		if (gening) return
@@ -544,67 +584,67 @@
 	function creatNotPpt(sortPptDatas, pptDatas) {
 		const pres = new PptxGenJS();
 		let { width, height, value } = layoutsconfig[layoutIndex] || {}
-    if ( Number(layoutIndex)  === 3  ) {
-        if (cusWidth <= 0 || !cusWidth || cusHeight <= 0 || !cusHeight) {
-          alert('注意自定义宽高填写！')
-          gening = false
-			    exportPPT.innerText = '立即生成PPT'
-          return
-        } else {
-          cusLayoutName =  `Layout_x${new Date().getTime()}`
-          pres.defineLayout({ name: cusLayoutName, width: cusWidth, height: cusHeight});
-          width = cusWidth
-          height = cusHeight
-          pres.layout = cusLayoutName
-        }
-    } else {
-      pres.layout = value
-    }
-    
+		if (Number(layoutIndex) === 3) {
+			if (cusWidth <= 0 || !cusWidth || cusHeight <= 0 || !cusHeight) {
+				alert('注意自定义宽高填写！')
+				gening = false
+				exportPPT.innerText = '立即生成PPT'
+				return
+			} else {
+				cusLayoutName = `Layout_x${new Date().getTime()}`
+				pres.defineLayout({ name: cusLayoutName, width: cusWidth, height: cusHeight });
+				width = cusWidth
+				height = cusHeight
+				pres.layout = cusLayoutName
+			}
+		} else {
+			pres.layout = value
+		}
+
 		let status = false
-    pptwebdata = ''
+		pptwebdata = ''
 		sortPptDatas.forEach(item => {
 			const { show, name, imgbytes, rect } = pptDatas[item]
 			if (show) {
-        status = true
+				status = true
 				// 2. 增加一页ppt到ppt实例
 				let slide = pres.addSlide(name || '-');
 				const [w, h] = scaleImage(rect.width, rect.height, width, height)
 				const x = (width - w) / 2
 				const y = (height - h) / 2
 				console.log(' x, y, w, h,', x, y, w, h,)
-        const base64 = uint8ArrayToBase64(imgbytes)
-        pptwebdata = `${pptwebdata || ''}
+				const base64 = uint8ArrayToBase64(imgbytes)
+				pptwebdata = `${pptwebdata || ''}
         <section>
-          <img class="r-stretch" src="data:${base64}" />
+          <img class="r-stretch ppt-stretch" src="data:${base64}" />
         </section>`
-        console.log(base64)
+				// console.log(base64)
 				slide.addImage({ data: base64, x, y, w, h, })
 			}
 		});
-    if (!status) {
-      alert('页数为空！！')
-      gening = false
+		if (!status) {
+			alert('页数为空！！')
+			gening = false
 			exportPPT.innerText = '立即生成PPT'
-      return;
-    }
+			return;
+		}
 		// 4. 保存ppt到本地
 		pres.writeFile({ fileName: "export.pptx" }).then(async (fileName) => {
-		
-      if (Array.isArray(authusers) && authusers.includes(currentId) && pptwebdata) {
-        exportPPT.innerText = '正在生成在线PPT'
-        const res = await genWebPpt(pptwebdata)
-        gening = false
-        exportPPT.innerText = '立即生成PPT'
-        if (res) {
-          $('#webpptshow').show().html(`在线ppt预览地址：<a herf="${res}"> ${res}</a>`)
-        } else {
-          $('#webpptshow').show().html(`在线ppt生成失败！`)
-        }
-      } else {
-        gening = false
-			  exportPPT.innerText = '立即生成PPT'
-      }
+
+			if (Array.isArray(authusers) && onlineStatus === 'yes' && authusers.includes(currentId) && pptwebdata) {
+				exportPPT.innerText = '正在生成在线PPT'
+				const res = await genWebPpt(pptwebdata, width, height)
+				gening = false
+				exportPPT.innerText = '立即生成PPT'
+				if (res) {
+					$('#webpptshow').show().html(`在线ppt预览地址：<a herf="${res}"> ${res}</a>`)
+				} else {
+					$('#webpptshow').show().html(`在线ppt生成失败！`)
+				}
+			} else {
+				gening = false
+				exportPPT.innerText = '立即生成PPT'
+			}
 		});
 	}
 
@@ -656,9 +696,9 @@
 		})
 		// 4. 保存ppt到本地
 		pres.writeFile({ fileName: "export.pptx" }).then(fileName => {
-      gening = false
-      gencommitiing = false
-      exportPPT.innerText = '立即生成PPT'
+			gening = false
+			gencommitiing = false
+			exportPPT.innerText = '立即生成PPT'
 		});
 	}
 
@@ -685,14 +725,14 @@
 				gencommitiing = true
 				exportEditPpt(datas)
 				break
-      case 'info:done': 
-        console.log('info--- datas', datas)
-        if (!datas) return
-        const { id, name} = datas
-        currentId = id
-        currentName = name
-        authusers = await getConfig()
-      break
+			case 'info:done':
+				console.log('info--- datas', datas)
+				if (!datas) return
+				const { id, name } = datas
+				currentId = id
+				currentName = name
+				authusers = await getConfig()
+				break
 		}
 	}
 
@@ -718,7 +758,7 @@
 			realindex: pptDatas.length,
 			show: true,
 			imgUrl,
-		}, datas), );
+		}, datas),);
 		requestAnimationFrame(() => {
 			sortPptDatas = sortable.toArray()
 		})
@@ -759,7 +799,7 @@
 		return [newWidth, newHeight, scale];
 	}
 
-  function getConfig() {
+	function getConfig() {
 		const URL = `${apiurl}/config?infoid=${currentId}&infoname=${currentName}`
 		return new Promise(res => {
 			$.ajax({
@@ -784,22 +824,22 @@
 		})
 	}
 
-  // 递归请求
-  function genWebPpt(pptwebdata) {
-    const pdata = encodeURIComponent(pptwebdata)
-    const maxlen = 5000
-    const len = pdata.length
-    const pptlen = Number.parseInt(len / maxlen) + (len % maxlen > 0 ? 1 : 0)
-    console.log('genWebPpt-----------genWebPpt', len, pptlen)
-    let  pptcurrent = 1
-    const dg = function(res) {
-      const data = pdata.substr((pptcurrent - 1) * maxlen, maxlen)
-      const URL = `${apiurl}/export?infoid=${currentId}&infoname=${currentName}&pptcurrent=${pptcurrent}&pptlen=${pptlen}&pptdata=${data}`
-      if (pptcurrent > pptlen) {
-        res(null)
-        return
-      }
-      $.ajax({
+	// 递归请求
+	function genWebPpt(pptwebdata, width, height) {
+		const pdata = encodeURIComponent(pptwebdata)
+		const maxlen = 5000
+		const len = pdata.length
+		const pptlen = Number.parseInt(len / maxlen) + (len % maxlen > 0 ? 1 : 0)
+		console.log('genWebPpt-----------genWebPpt', len, pptlen)
+		let pptcurrent = 1
+		const dg = function (res) {
+			const data = pdata.substr((pptcurrent - 1) * maxlen, maxlen)
+			const URL = `${apiurl}/export?infoid=${currentId}&infoname=${currentName}&pptcurrent=${pptcurrent}&pptlen=${pptlen}&pptdata=${data}&pptw=${width}&ppth=${height}`
+			if (pptcurrent > pptlen) {
+				res(null)
+				return
+			}
+			$.ajax({
 				url: URL, // 替换为你的 API 接口地址
 				type: "GET",
 				dataType: "json",
@@ -808,15 +848,15 @@
 					// console.log("请求成功，返回的数据：", response);
 					if (response) {
 						// res(response.authusers)
-            const { status, ppturl } = response
-            if (status === 0) {
-              pptcurrent = pptcurrent + 1
-              dg(res)
-            } else if (status === 1) {
-              res(ppturl)
-            } else {
-              res(null)
-            }
+						const { status, ppturl } = response
+						if (status === 0) {
+							pptcurrent = pptcurrent + 1
+							dg(res)
+						} else if (status === 1) {
+							res(ppturl)
+						} else {
+							res(null)
+						}
 					} else {
 						res(null)
 					}
@@ -828,11 +868,11 @@
 					res(null)
 				}
 			});
-    }
+		}
 
-    return new Promise((res) => {
-      dg(res)
-    })
-  }
+		return new Promise((res) => {
+			dg(res)
+		})
+	}
 
 </script>

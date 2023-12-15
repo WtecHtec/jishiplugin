@@ -1,4 +1,4 @@
-const TEMP = `<!doctype html>
+<!doctype html>
 <html>
 
 <head>
@@ -19,7 +19,9 @@ const TEMP = `<!doctype html>
 
 	<script src="https://cdn.jsdelivr.net/npm/headjs@1.0.3/dist/1.0.0/head.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/reveal.js@3.7.0/js/reveal.min.js"></script>
-
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+		integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+		crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 	<script>
 
 		Reveal.initialize({
@@ -29,9 +31,17 @@ const TEMP = `<!doctype html>
 			width: '100%',
 			height: '100%',
 		});
+		window.onload = () => {
+			try {
+				const width = ###WIDTH#### * (960 / 30 / 10) * window.screen.pixelDepth
+				const height = ###HEIGHT#### * (540 / 30 / 5.625) * window.screen.pixelDepth
+				$('img[class*="ppt-stretch"]').css({ width, height })
+			} catch(err) {
+				console.log(err)
+			}
+		}
 	</script>
 </body>
 
-</html>`
+</html>
 
-module.exports = TEMP
