@@ -31,17 +31,54 @@
 			width: '100%',
 			height: '100%',
 		});
-		window.onload = () => {
+		window.onresize = () => {
 			try {
-				const width = ###WIDTH#### * (960 / 30 / 10) * window.screen.pixelDepth
-				const height = ###HEIGHT#### * (540 / 30 / 5.625) * window.screen.pixelDepth
-				$('img[class*="ppt-stretch"]').css({ width, height })
-			} catch(err) {
+				$('img[class*="ppt-stretch"]').each(function () {
+					formatImg($(this), Number($(this).data("w")), Number($(this).data("h")))
+				})
+			} catch (err) {
 				console.log(err)
 			}
+		}
+		window.onload = () => {
+			try {
+				$('img[class*="ppt-stretch"]').each(function () {
+					formatImg($(this), Number($(this).data("w")), Number($(this).data("h")))
+				})
+			} catch (err) {
+				console.log(err)
+			}
+		}
+
+		function formatImg(el, originalWidth, originalHeight) {
+			const width = $('.slides').innerWidth()
+			const height = $('.slides').height()
+			const mrtop = parseInt($('.slides').css("marginTop"))
+			const mrbottom = parseInt($('.slides').css("marginBottom"))
+			const ptop = parseInt($('.present').css('top'))
+			console.log('width--', width, height, mrtop, mrbottom)
+			const [nw, nh] = scaleImage(originalWidth, originalHeight, width, height - mrtop - mrbottom - 70 - ptop)
+			console.log('width--', nw, nh)
+			el.css({ width: nw, height: nh })
+		}
+
+		function scaleImage(originalWidth, originalHeight, targetWidth, targetHeight) {
+			// if (originalWidth < targetWidth && originalHeight < targetHeight) {
+			// 	return [originalWidth, originalHeight, 1];
+			// }
+			// 计算宽度和高度的缩放比例
+			const widthScale = targetWidth / originalWidth;
+			const heightScale = targetHeight / originalHeight;
+
+			// 选择较小的缩放比例，以保持宽高比不变
+			let scale = Math.min(widthScale, heightScale);
+			// 计算新的宽度和高度
+			let newWidth = originalWidth * scale;
+			let newHeight = originalHeight * scale;
+
+			return [newWidth, newHeight, scale];
 		}
 	</script>
 </body>
 
 </html>
-

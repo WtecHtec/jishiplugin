@@ -342,8 +342,9 @@
 	let authusers = []
 
 
-	let apiurl = 'http://127.0.0.1:8081'
+	let apiurl = 'https://luckcar.top/pptback'
 
+	// let apiurl = 'http://127.0.0.1:8081'
 
 	let onlineStatus = 'no'
 
@@ -609,14 +610,14 @@
 				status = true
 				// 2. 增加一页ppt到ppt实例
 				let slide = pres.addSlide(name || '-');
-				const [w, h] = scaleImage(rect.width, rect.height, width, height)
+				const [w, h, scale] = scaleImage(rect.width, rect.height, width, height)
 				const x = (width - w) / 2
 				const y = (height - h) / 2
 				console.log(' x, y, w, h,', x, y, w, h,)
 				const base64 = uint8ArrayToBase64(imgbytes)
 				pptwebdata = `${pptwebdata || ''}
         <section>
-          <img class="r-stretch ppt-stretch" src="data:${base64}" />
+          <img class="r-stretch ppt-stretch" src="data:${base64}" data-w="${w}" data-h="${h}" data-scale="${scale}" />
         </section>`
 				// console.log(base64)
 				slide.addImage({ data: base64, x, y, w, h, })
@@ -632,12 +633,12 @@
 		pres.writeFile({ fileName: "export.pptx" }).then(async (fileName) => {
 
 			if (Array.isArray(authusers) && onlineStatus === 'yes' && authusers.includes(currentId) && pptwebdata) {
-				exportPPT.innerText = '正在生成在线PPT'
+				exportPPT.innerText = '正在生成在线PPT...'
 				const res = await genWebPpt(pptwebdata, width, height)
 				gening = false
 				exportPPT.innerText = '立即生成PPT'
 				if (res) {
-					$('#webpptshow').show().html(`在线ppt预览地址：<a herf="${res}"> ${res}</a>`)
+					$('#webpptshow').show().html(`在线ppt预览地址：<a> ${res}</a>`)
 				} else {
 					$('#webpptshow').show().html(`在线ppt生成失败！`)
 				}

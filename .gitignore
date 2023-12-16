@@ -25,3 +25,8 @@ yarn.lock
 manifest.json
 ./manifest.json
 **/manifest.json
+
+pptfiles
+./pptfiles
+**/pptfiles
+*.zip

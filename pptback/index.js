@@ -10,14 +10,14 @@ const EXP_TITLE = '###TITLE###'
 const EXP_CONTENT = '###CONTENT###'
 const EXP_WIDTH = '###WIDTH####'
 const EXP_HEIGHT = '###HEIGHT####'
-const dname = 'http://luckcar.top/'
+const dname = 'https://luckcar.top/pptback'
 let USERS = []
 let redisData = {};
 let TEMP = ''
 
-app.use(cors());
-app.use('/pptfiles', express.static('public'));
 
+app.use('/ppts', express.static('./pptfiles'));
+app.use(cors());
 app.get('/config', function (req, res) {
 	try {
 		const data = fs.readFileSync('./userconfig.txt', 'utf8');
