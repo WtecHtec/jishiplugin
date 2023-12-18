@@ -1,69 +1,154 @@
+jsDesign.showUI(__html__, { width: 800, height: 740 });
 
-jsDesign.showUI(__html__, { width: 260, height: 123 });
+/** 防抖 2s */
+const optTime = 2000
+let timer = null
 
+const fix = '##_@@'
 
-function hex2rgb(hex) {
-	return [Number('0x' + hex[1] + hex[2]) | 0, Number('0x' + hex[3] + hex[4]) | 0, Number('0x' + hex[5] + hex[6]) | 0];
-}
+/** 上次修改元素id*/
+let updateId = ''
 
+/** 操作记录 */
+const cacheData = {}
 
-jsDesign.on('selectionchange', (e) => {
-	console.log(jsDesign.currentPage.selection)
-})
-setInterval(() => {
-	console.log(window)
-	console.log(jsDesign.currentPage.selection)
-}, 2000)
-let markId = null;
+/** 临时记录 */
+const currReData = {}
+
+let updating = false
+
+let currentId = ''
+
 //监听从 插件ui 发过来的信息
 jsDesign.ui.onmessage = msg => {
 	if (msg.type === 'createLayer') {
-		const nodes = [];
-		//创建 画板
-		const colorsFrame = jsDesign.createFrame();
-		//设置画板宽高
-		const frameHeight = 100
-		const frameWidth = (msg.colorsList.length * 100)
-		//调用jsDesignConstraints设置画板的宽高，子图层不会被等比缩放，
-		colorsFrame.resizeWithoutConstraints(frameWidth, frameHeight);
-		//设置画板名称
-		colorsFrame.name = msg.name
-		//处理画板位置
-		if (markId) {
-			//getNodeById 通过id 获取画布中的图层
-			let node = jsDesign.getNodeById(markId);
-			markId = colorsFrame.id;
-			if (node) {
-				colorsFrame.x = node.x;
-				colorsFrame.y = node.y + 200;
-			} else {
-				colorsFrame.x = jsDesign.viewport.center.x
-				colorsFrame.y = jsDesign.viewport.center.y
-			}
-		} else {
-			//将 colorsFrame画板定位在画布中央
-			colorsFrame.x = jsDesign.viewport.center.x
-			colorsFrame.y = jsDesign.viewport.center.y
-			markId = colorsFrame.id;
-		}
 
-		//循环创建颜色图层
-		for (let i = 0; i < msg.colorsList.length; i++) {
-			//创建 矩形图层
-			const rect = jsDesign.createRectangle();
-			//设置 矩形图层 坐标、图层名称、填充
-			rect.y = 0;
-			rect.x = (i * 100);
-			let rgbColor = hex2rgb(msg.colorsList[i]);
-			rect.name = msg.name + "-" + i
-			rect.fills = [{ type: 'SOLID', color: { r: rgbColor[0] / 255, g: rgbColor[1] / 255, b: rgbColor[2] / 255 } }];
-			jsDesign.currentPage.appendChild(rect);
-			colorsFrame.appendChild(rect);
-			nodes.push(rect);
-		}
-		//调用scrollAndZoomIntoView方法将创建的 节点 居中并以最佳缩放比展示
-		jsDesign.viewport.scrollAndZoomIntoView(nodes);
 	}
-
 };
+
+jsDesign.on('currentpagechange', () => {
+  console.log('currentpagechange---', currentpagechange)
+})
+
+
+jsDesign.on('selectionchange', () => {
+  const selection = jsDesign.currentPage.selection
+  console.log('selectionchange--', selection)
+  let currid = ''
+  selection.forEach(({ id }) => {
+    currid = `${currid}${fix}${id}`
+  })
+  if (selection.length > 1) {
+    currentId = ''
+    jsDesign.ui.postMessage( {
+      type: 'cache:done',
+      datas:[],
+      id: '',
+    })
+  } else if (selection.length === 1) {
+    const { id } = selection[0]
+    currentId = id
+    jsDesign.ui.postMessage( {
+      type: 'cache:done',
+      datas: cacheData[id] || [],
+      id,
+    })
+  }
+  if (updateId === '') {
+    updateId = currid
+    return
+  }
+
+  // 切换节点
+  if (updateId !== currid) {
+    if (updating) {
+      // 记录下来
+      clearTimeout(timer)
+      handleReData(getUpdateNods(updateId))
+      updating = false
+    }
+  }
+
+  // 修改了
+  if (updateId === currid) {
+    updating = true
+  }
+
+  if (timer) {
+    clearTimeout(timer)
+  }
+
+  timer = setTimeout(async () => {
+    console.log('setTimeout----')
+    if (updating) {
+      // 记录下来
+      await handleReData(selection)
+      if (currentId) {
+        console.log('currentId---', currentId)
+        jsDesign.ui.postMessage({
+          type: 'cache:update',
+          datas: cacheData[currentId][cacheData[currentId].length - 1],
+          id: currentId,
+        })
+      }
+      updating = false
+    }
+    clearTimeout(timer)
+    timer = null
+  }, optTime)
+  
+})
+
+/** 获取上一次操作 */
+function getUpdateNods(updateId) {
+  const ids = updateId.split(fix)
+  const result = []
+  ids.forEach( id => {
+    const node = jsDesign.getNodeById(id)
+    node && result.push(node)
+  })
+  return result;
+}
+
+/** 操作记录 */
+async function handleReData(selection) {
+  const time = formatDate();
+  let i = 0
+  let len = selection.length
+  for (i; i < len; i++) {
+    const node = selection[i]
+    const { id } = node
+    if (!Array.isArray(cacheData[id])) {
+      cacheData[id] = []
+    }
+    const base64 = jsDesign.base64Encode(await node.exportAsync());
+    cacheData[id].push({
+      time,
+      base64,
+    })
+  }
+}
+
+// 示例：将日期字符串转换为 "YYYY-MM-DD HH:mm:ss" 格式
+function formatDate() {
+	// 创建一个新的 Date 对象
+	const date = new Date();
+
+	// 获取年、月、日、小时和分钟
+	const year = date.getFullYear();
+	const month = date.getMonth() + 1; // 注意：月份从 0 开始，因此需要加 1
+	const day = date.getDate();
+	const hours = date.getHours();
+	const minutes = date.getMinutes();
+  const secondes = date.getSeconds()
+	// 补零（如果月、日、小时或分钟小于 10，则在前面添加一个 "0"）
+	const paddedMonth = month < 10 ? '0' + month : month;
+	const paddedDay = day < 10 ? '0' + day : day;
+	const paddedHours = hours < 10 ? '0' + hours : hours;
+	const paddedMinutes = minutes < 10 ? '0' + minutes : minutes;
+  const paddedSecondes = secondes < 10 ? '0' + secondes : secondes;
+
+	// 返回 "YYYY-MM-DD HH:mm" 格式的日期字符串
+	return `${year}-${paddedMonth}-${paddedDay} ${paddedHours}:${paddedMinutes}:${paddedSecondes}`;
+}
 
