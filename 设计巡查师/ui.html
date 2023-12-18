@@ -209,7 +209,7 @@ input[type="file"] {
   <div class="border" style="display: none;" id="diff-result" >
     <div class="title"> 结果:</div>
     <div class="title" id="diff-per"> 差异:</div>
-    <img id="diff-img" style="width: 100%; height: 667px;" />
+    <img id="diff-img" style="margin-top: 12px;" />
   </div>
 
   
@@ -225,12 +225,37 @@ input[type="file"] {
 
 let desginBase64 = ''
 let targetBase64 = ''
+
+
+const targetW = $('.upload-container').width()
+
+const targetH = $('.upload-container').height()
+
+let diffW =  0
+let diffH = 0
+
+console.log('targetW, targetH', targetW, targetH,diffW, diffH )
+
 $("#target-file-upload").on("change", function() {
     const reader = new FileReader();
     reader.onload = function(e) {
+      console.log('e.target---', e.target)
       targetBase64 = e.target.result
-      $("#target-img").attr("src", targetBase64);
-      $('#diff-result').hide()
+      var image = new Image();
+      image.src = targetBase64;
+
+      // 图片先加载完，才可以得到图片宽度和高度
+      image.onload = function(){
+        const width = image.width;
+        const height = image.height;
+        const [sw, sh] = scaleImage(width, height, targetW, targetH)
+        diffW = sw
+        diffH = sh
+        $("#target-img").attr("src", targetBase64).css({ width: `${sw}px`, height: `${sh}px`});
+        $('#diff-result').hide()
+      }
+   
+ 
     }
     reader.readAsDataURL(this.files[0]);
 });
@@ -252,20 +277,21 @@ $('#check').on('click', async () => {
   }
   $('#diff-result').show()
   $('#diff-per').html(`差异：${misMatchPer}`)
-  $('#diff-img').attr('src', base64)
+  $('#diff-img').attr('src', base64).css({ width: `${diffW}px`, height: `${diffH}px`})
 
   // console.log('datas----', datas)
 })
 
 
 window.onmessage = async (event) => {
-		const { pluginId, pluginMessage: { datas, type, }, } = event.data;
+		const { pluginId, pluginMessage: { datas, type, rect: { width, height }}, } = event.data;
 		console.log('event.data===', event.data)
 		// if ( pluginId !== 'o9g2F02HEiP86uynkYIvq') return;
 		if (type === 'desgin:export') {
       const res = await createImgUrl(datas);
       desginBase64 = res
-		  $('#desgin-img').attr('src', res)
+      const [sw, sh] = scaleImage(width, height, targetW, targetH)
+		  $('#desgin-img').attr({ src:  res}).css({ width: `${sw}px`, height: `${sh}px`})
       $('#diff-result').hide()
 		}
 	}
@@ -316,12 +342,29 @@ function getCompareDiff(image1, image2, scaleToSameSize = false) {
             console.log("An error!");
             res([0, 0])
         } else {
-            console.log(data.rawMisMatchPercentage);
+            console.log(data);
             res([data.rawMisMatchPercentage, data.getImageDataUrl()])
         }
     });
     })
-
-  
 }
+
+
+function scaleImage(originalWidth, originalHeight, targetWidth, targetHeight) {
+		if (originalWidth < targetWidth && originalHeight < targetHeight) {
+			return [originalWidth, originalHeight, 1];
+		}
+		// 计算宽度和高度的缩放比例
+		const widthScale = targetWidth / originalWidth;
+		const heightScale = targetHeight / originalHeight;
+
+		// 选择较小的缩放比例，以保持宽高比不变
+		const scale = Math.min(widthScale, heightScale);
+
+		// 计算新的宽度和高度
+		const newWidth = originalWidth * scale;
+		const newHeight = originalHeight * scale;
+
+		return [newWidth, newHeight, scale];
+	}
 </script>

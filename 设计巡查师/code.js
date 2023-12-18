@@ -18,6 +18,7 @@ jsDesign.ui.onmessage = msg => {
         jsDesign.ui.postMessage( {
          type: 'desgin:export',
          datas: res,
+         rect: { width, height}
         })
       })
     } else {
