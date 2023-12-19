@@ -2,29 +2,29 @@
 	body {
 		margin: 0;
 		background-color: #fff;
-    padding: 12px;
+		padding: 12px;
 	}
 
-  
+
 	.title {
 		color: #333;
 		font-size: 12px;
 		margin-bottom: 4px;
 	}
 
-  .mb-12 {
-    margin-bottom: 12px;
-  }
+	.mb-12 {
+		margin-bottom: 12px;
+	}
 
-  .pl-8 {
-    padding-left: 8px;
-  }
+	.pl-8 {
+		padding-left: 8px;
+	}
 
-  .mt-8 {
-    margin-top: 8px;
-  }
+	.mt-8 {
+		margin-top: 8px;
+	}
 
-  .ppt_meun {
+	.ppt_meun {
 		width: 200px;
 		flex-shrink: 0;
 		overflow: auto;
@@ -55,28 +55,28 @@
 		color: #fff;
 	}
 
-  
+
 	.content {
 		flex: 1;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		position: relative;
-    background-image: linear-gradient(45deg, #00000040, #00000040),
+		background-image: linear-gradient(45deg, #00000040, #00000040),
 			linear-gradient(45deg, #eee 25%, transparent 0, transparent 75%, #eee 0, #eee),
 			linear-gradient(45deg, #eee 25%, #fff 0, #fff 75%, #eee 0, #eee);
 		background-size: 12px 12px;
 		background-position: 0 0, 0 0, 6px 6px;
 	}
 
-  .ppt_container {
-    display: flex;
-  }
+	.ppt_container {
+		display: flex;
+	}
 
-  .max-height {
-    min-height: 300px;
-    max-height: 300px;
-  }
+	.max-height {
+		min-height: 300px;
+		max-height: 300px;
+	}
 
 
 	.button {
@@ -107,34 +107,20 @@
 		padding: 4px 8px;
 		font-size: 8px;
 	}
-
-
 </style>
 <div class="body_container">
-  <div class="title mb-12 pl-8">当前元素：</div>
-  <div class="max-height ppt_container">
-    <div class="ppt_meun" id="ppt_meun">
-      <div class="list-item active" data-id="1">Item 1</div>
-      <div class="list-item" data-id="2">Item 2</div>
-      <div class="list-item" data-id="3">Item 3</div>
-      <div class="list-item" data-id="4">Item 4</div>
-      <div class="list-item" data-id="3">Item 3</div>
-      <div class="list-item" data-id="4">Item 4</div>
-      <div class="list-item" data-id="3">Item 3</div>
-      <div class="list-item" data-id="4">Item 4</div>
-      <div class="list-item" data-id="3">Item 3</div>
-      <div class="list-item" data-id="4">Item 4</div>
-      <div class="list-item" data-id="3">Item 3</div>
-      <div class="list-item" data-id="4">Item 4</div>
-    </div>
-    <div class="content" style="padding: 8px;">
-      <img alt="ppt show" class="content_show" id="pptshow" style="display: none;">
-    </div>
-  </div>
-  <div class="button mt-8"> 对比 </div>
-  <div class="content max-height mt-8" style="padding: 8px;">
-    <img alt="ppt show" class="content_show" id="diffshow" style="display: none;">
-  </div>
+	<div class="title mb-12 pl-8" id="updatepage">当前面板：</div>
+	<div class="max-height ppt_container">
+		<div class="ppt_meun" id="ppt_meun">
+		</div>
+		<div class="content" id="recordmain" style="padding: 8px;">
+			<img alt="ppt show" class="content_show" id="pptshow" style="display: none;">
+		</div>
+	</div>
+	<div class="button mt-8"> 对比 </div>
+	<div class="content max-height mt-8" style="padding: 8px;">
+		<img alt="ppt show" class="content_show" id="diffshow" style="display: none;">
+	</div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
@@ -143,21 +129,82 @@
 <script>
 
 
-let curReId = ''
-$('#ppt_meun').on('click', (e) => {
-  console.log('e ----', $(e.target).data('id'))
-  const id = $(e.target).data('id')
-  if (curReId === id) return
-  curReId = id
-  $('.list-item').removeClass('active')
-  $(e.target).addClass('active')
-})
+	let curReId = ''
+	let cacheData = ''
+	let values = []
+	let targetw = $('#recordmain').width()
+	let targeth = $('#recordmain').height()
+	let cacheId = ''
+	$('#ppt_meun').on('click', (e) => {
+		console.log('e ----', $(e.target).data('id'))
+		const id = $(e.target).data('id')
+		if (curReId === id) return
+		curReId = id
+		$('.list-item').removeClass('active')
+		$(e.target).addClass('active')
+		// console.log(values[curReId])
+		const { base64, width, height } = values[curReId] || {}
+		const [sw, sh] = scaleImage(width, height, targetw, targeth)
+		$('#pptshow').attr('src', `data:image/png;base64,${base64}`)
+			.css({ width: `${sw}px`, height: `${sh}px`, }).show()
+	})
 
-window.onmessage = async (event) => {
-  const { pluginId, pluginMessage: { datas, id, type, }, } = event.data;
-  console.log('event.data===', event.data)
-  // if ( pluginId !== 'o9g2F02HEiP86uynkYIvq') return;
-}
+	window.onmessage = async (event) => {
+		const { pluginId, pluginMessage: { datas, id, type, name }, } = event.data;
+		// console.log('event.data===', event.data)
+		// if ( pluginId !== 'o9g2F02HEiP86uynkYIvq') return;
+		// <div class="list-item active" data-id="1">Item 1</div>
+		if (type === "cache:done") {
+			if (!id) {
+				$('#ppt_meun').html()
+				$('#pptshow').hide()
+				return
+			}
+			if (cacheId !== id) {
+				$('#pptshow').hide()
+				cacheId = id
+				cacheData = ''
+				curReId = ''
+			}
+			let html = ''
+			let cache = id
+			datas.forEach((element, index) => {
+				cache = `${cache}${element.time}`
+				html = `<div class="list-item" data-id="${index}">${element.time}</div>${html}`
+			});
+			if (cache !== cacheData) {
+				values = [...datas]
+				$('#ppt_meun').html(html)
+				$('#updatepage').html(`当前面板: ${name}`)
+				cacheData = cache
+			}
 
+		} else if (type === 'cache:update') {
+			cacheData = `${cacheData}${datas.time}`
+			values.push({ ...datas })
+			let html = $('#ppt_meun').html()
+			html = `<div class="list-item" data-id="${values.length - 1}">${datas.time}</div>${html}`
+			$('#ppt_meun').html(html)
+		}
+	}
+
+
+	function scaleImage(originalWidth, originalHeight, targetWidth, targetHeight) {
+		if (originalWidth < targetWidth && originalHeight < targetHeight) {
+			return [originalWidth, originalHeight, 1];
+		}
+		// 计算宽度和高度的缩放比例
+		const widthScale = targetWidth / originalWidth;
+		const heightScale = targetHeight / originalHeight;
+
+		// 选择较小的缩放比例，以保持宽高比不变
+		const scale = Math.min(widthScale, heightScale);
+
+		// 计算新的宽度和高度
+		const newWidth = originalWidth * scale;
+		const newHeight = originalHeight * scale;
+
+		return [newWidth, newHeight, scale];
+	}
 
 </script>
