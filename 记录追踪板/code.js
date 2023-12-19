@@ -22,18 +22,33 @@ let currentName = ''
 
 
 //监听从 插件ui 发过来的信息
-jsDesign.ui.onmessage = msg => {
-	if (msg.type === 'createLayer') {
-
+jsDesign.ui.onmessage = async (msg) => {
+  if (!msg) return 
+  const { type, id } = msg
+	if (type === 'diff:action') {
+    const fNode = jsDesign.getNodeById(id)
+    if (!fNode) {
+      jsDesign.notify("节点丢失在时空中，再次尝试寻找！")
+      return
+    }
+    const base64 = jsDesign.base64Encode(await fNode.exportAsync());
+    jsDesign.ui.postMessage({
+      type: 'diff:done',
+      datas: base64,
+      id,
+    })
 	}
 };
 
-jsDesign.on('currentpagechange', () => {
-	console.log('currentpagechange---', currentpagechange)
-})
+// jsDesign.on('currentpagechange', () => {
+// 	console.log('currentpagechange---', currentpagechange)
+// })
 
-
-jsDesign.on('selectionchange', () => {
+/**
+ * 检测是否修改 是当前 选择节点id
+ * 更新得节点是 选择节点的父级面板的内容
+ */
+jsDesign.on('selectionchange', async () => {
 	const selection = jsDesign.currentPage.selection
 	console.log('selectionchange--', selection)
 	let currtOptId = '' // 记录操作id
@@ -50,7 +65,7 @@ jsDesign.on('selectionchange', () => {
 		optIdSet.add(id)
 	})
 	currentId = ''
-	if (optIdSet.size > 1) {
+	if (optIdSet.size > 1 || optIdSet.size === 0) {
 		currentId = ''
 		jsDesign.ui.postMessage({
 			type: 'cache:done',
@@ -75,19 +90,15 @@ jsDesign.on('selectionchange', () => {
 	// 切换节点
 	if (updateId !== currtOptId) {
 		if (updatePageId !== updateOptPageId) {
-			if (updating) {
-				// 记录下来
-				clearTimeout(timer)
-				handleReData(getUpdateNods(updatePageId))
-				updating = false
-			}
+      console.log('切换 更新---', updating, updatePageId, updateOptPageId)
+			await updateCache(false)
 			updatePageId = updateOptPageId
 		}
 		updateId = currtOptId
 	} else {
 		// 修改了
 		if (updateId === currtOptId) {
-			console.log('------')
+			console.log('修改------')
 			updating = true
 		}
 	}
@@ -98,25 +109,29 @@ jsDesign.on('selectionchange', () => {
 	}
 
 	timer = setTimeout(async () => {
-		console.log('setTimeout----')
-		if (updating) {
-			// 记录下来
-			await handleReData(getUpdateNods(updatePageId))
-			if (currentId) {
-				jsDesign.ui.postMessage({
-					type: 'cache:update',
-					datas: cacheData[currentId][cacheData[currentId].length - 1],
-					id: currentId,
-					name: currentName,
-				})
-			}
-			updating = false
-		}
-		clearTimeout(timer)
-		timer = null
+		console.log('setTimeout---- 10s 更新')
+    await updateCache()
 	}, optTime)
 
 })
+
+async function updateCache(isnote = true) {
+  if (updating) {
+    // 记录下来
+    await handleReData(getUpdateNods(updatePageId))
+    if (currentId && isnote) {
+      jsDesign.ui.postMessage({
+        type: 'cache:update',
+        datas: cacheData[currentId][cacheData[currentId].length - 1],
+        id: currentId,
+        name: currentName,
+      })
+    }
+    updating = false
+  }
+  timer && (clearTimeout(timer))
+  timer = null
+}
 
 function getParentNode(node) {
 	let { parent } = node

@@ -117,8 +117,8 @@
 			<img alt="ppt show" class="content_show" id="pptshow" style="display: none;">
 		</div>
 	</div>
-	<div class="button mt-8"> 对比 </div>
-	<div class="content max-height mt-8" style="padding: 8px;">
+	<div class="button mt-8" id="diffbtn"> 对比 </div>
+	<div class="content max-height mt-8" id="diffmain"  style="padding: 8px;">
 		<img alt="ppt show" class="content_show" id="diffshow" style="display: none;">
 	</div>
 </div>
@@ -126,6 +126,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
 	integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
 	crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.jsdelivr.net/npm/resemblejs@5.0.0/resemble.min.js"></script>
+
+
 <script>
 
 
@@ -134,34 +137,58 @@
 	let values = []
 	let targetw = $('#recordmain').width()
 	let targeth = $('#recordmain').height()
+  let diffw = $('#diffmain').width()
+  let diffh = 300
 	let cacheId = ''
+  let elId = ''
+
 	$('#ppt_meun').on('click', (e) => {
 		console.log('e ----', $(e.target).data('id'))
 		const id = $(e.target).data('id')
+    elId = $(e.target).data('elid')
 		if (curReId === id) return
 		curReId = id
 		$('.list-item').removeClass('active')
 		$(e.target).addClass('active')
 		// console.log(values[curReId])
 		const { base64, width, height } = values[curReId] || {}
+    if (!base64) {
+      $('#pptshow').hide()
+      $('#diffshow').hide()
+      return
+    }
 		const [sw, sh] = scaleImage(width, height, targetw, targeth)
 		$('#pptshow').attr('src', `data:image/png;base64,${base64}`)
 			.css({ width: `${sw}px`, height: `${sh}px`, }).show()
+    $('#diffshow').hide()
 	})
+
+  $('#diffbtn').on('click', () => {
+    parent.postMessage({
+			pluginMessage: {
+				type: 'diff:action',
+				id: elId,
+			}
+		}, '*')
+  })
 
 	window.onmessage = async (event) => {
 		const { pluginId, pluginMessage: { datas, id, type, name }, } = event.data;
-		// console.log('event.data===', event.data)
+		console.log('event.data===', event.data)
 		// if ( pluginId !== 'o9g2F02HEiP86uynkYIvq') return;
 		// <div class="list-item active" data-id="1">Item 1</div>
 		if (type === "cache:done") {
 			if (!id) {
-				$('#ppt_meun').html()
+				$('#ppt_meun').html('')
 				$('#pptshow').hide()
+        $('#diffshow').hide()
+        cacheData = ''
+				curReId = ''
 				return
 			}
 			if (cacheId !== id) {
 				$('#pptshow').hide()
+        $('#diffshow').hide()
 				cacheId = id
 				cacheData = ''
 				curReId = ''
@@ -170,7 +197,7 @@
 			let cache = id
 			datas.forEach((element, index) => {
 				cache = `${cache}${element.time}`
-				html = `<div class="list-item" data-id="${index}">${element.time}</div>${html}`
+				html = `<div class="list-item" data-id="${index}" data-elid="${id}">${element.time}</div>${html}`
 			});
 			if (cache !== cacheData) {
 				values = [...datas]
@@ -179,15 +206,30 @@
 				cacheData = cache
 			}
 
-		} else if (type === 'cache:update') {
+		}
+    else if (type === 'cache:update') {
 			cacheData = `${cacheData}${datas.time}`
 			values.push({ ...datas })
 			let html = $('#ppt_meun').html()
-			html = `<div class="list-item" data-id="${values.length - 1}">${datas.time}</div>${html}`
+			html = `<div class="list-item" data-id="${values.length - 1}" data-elid="${id}">${datas.time}</div>${html}`
 			$('#ppt_meun').html(html)
 		}
+    else if (type === 'diff:done') {
+      if (id === elId && datas) {
+        const { base64, width, height } = values[curReId] || {}
+        const [misMatchPer, diffbase64] = await getCompareDiff(getBase(datas), getBase(base64), true)
+        if (!diffbase64) {
+          return
+        }
+        const [sw, sh] = scaleImage(width, height, diffw, diffh)
+        $('#diffshow').attr('src', diffbase64).css({ width: `${sw}px`, height: `${sh}px`}).show()
+      }
+    }
 	}
 
+  function getBase(bytes) {
+    return `data:image/png;base64,${bytes}`
+  }
 
 	function scaleImage(originalWidth, originalHeight, targetWidth, targetHeight) {
 		if (originalWidth < targetWidth && originalHeight < targetHeight) {
@@ -206,5 +248,36 @@
 
 		return [newWidth, newHeight, scale];
 	}
+
+
+  function getCompareDiff(image1, image2, scaleToSameSize = false) {
+    const options = {
+      output: {
+            errorColor: {
+                red: 255,
+                green: 0,
+                blue: 255
+            },
+            errorType: "flat",
+            transparency: 0.5,
+            largeImageThreshold: 1200,
+            useCrossOrigin: false,
+            outputDiff: true
+        },
+        scaleToSameSize, 
+        ignore: "colors"
+    };
+    return new  Promise(res => {
+      resemble.compare(image1, image2, options, function (err, data) {
+        if (err) {
+            console.log("An error!");
+            res([0, 0])
+        } else {
+            console.log(data);
+            res([data.rawMisMatchPercentage, data.getImageDataUrl()])
+        }
+    });
+    })
+}
 
 </script>
