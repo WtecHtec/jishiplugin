@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>印章生成器</title>
+	<link rel="stylesheet" href="seal_generator.css">
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			max-width: 600px;
+			margin: 0 auto;
+			background-color: #f0f0f0;
+			padding: 20px;
+		}
+
+		h1 {
+			text-align: center;
+			color: #333;
+			font-size: 2.5rem;
+			margin-bottom: 30px;
+		}
+
+		label {
+			color: #666;
+			display: block;
+			margin-bottom: 5px;
+		}
+
+		select,
+		input,
+		button {
+			display: block;
+			width: 100%;
+			padding: 10px;
+			margin-bottom: 20px;
+			border: 1px solid #ddd;
+			border-radius: 5px;
+			font-size: 16px;
+			outline: none;
+			box-shadow: none;
+			-webkit-appearance: none;
+			transition: all 0.3s ease;
+		}
+
+		select:focus,
+		input:focus {
+			border-color: #333;
+			box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+		}
+
+		button {
+			color: #fff;
+			background-color: #333;
+			cursor: pointer;
+			transition: background-color 0.3s ease;
+		}
+
+		button:hover {
+			background-color: #666;
+		}
+
+		canvas {
+			display: block;
+			margin: 20px auto;
+			border: 1px solid #ddd;
+			border-radius: 5px;
+			box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+			transition: box-shadow 0.3s ease;
+		}
+
+		canvas:hover {
+			box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+		}
+	</style>
+</head>
+
+<body>
+	<h1>印章生成器</h1>
+	<label for="sealType">印章类型:</label>
+	<select id="sealType">
+		<option value="personal">个人印章</option>
+		<option value="official">公司公章</option>
+	</select>
+	<br>
+	<div id="personalOptions" class="options">
+		<label for="name">姓名:</label>
+		<input type="text" id="name" value="张三">
+		<br>
+		<label for="font">字体:</label>
+		<select id="font">
+			<option value="Arial">Arial</option>
+			<option value="宋体">宋体</option>
+			<option value="楷体">楷体</option>
+		</select>
+		<br>
+		<label for="personalColor">印章颜色:</label>
+		<input type="color" id="personalColor" value="#FF0000">
+	</div>
+	<div id="officialOptions" class="options" style="display: none;">
+		<label for="radius">印章半径:</label>
+		<input type="number" id="radius" value="100">
+		<br>
+		<label for="officialColor">印章颜色:</label>
+		<input type="color" id="officialColor" value="#FF0000">
+		<br>
+		<label for="officialFont">字体:</label>
+		<select id="officialFont">
+			<option value="Arial">Arial</option>
+			<option value="宋体">宋体</option>
+			<option value="楷体">楷体</option>
+		</select>
+		<br>
+		<label for="companyName">公司名称:</label>
+		<input type="text" id="companyName" value="某某公司">
+		<br>
+		<label for="sealTypeName">印章类型名称:</label>
+		<input type="text" id="sealTypeName" value="公章">
+		<br>
+		<label for="hasInnerBorder">是否有内边框线:</label>
+		<input type="checkbox" id="hasInnerBorder">
+		<br>
+		<label for="securityCode">防伪码:</label>
+		<input type="text" id="securityCode" value="123456">
+	</div>
+	<button id="generate">生成印章</button>
+	<br>
+	<canvas id="sealCanvas" width="300" height="300"></canvas>
+	<script>
+		document.getElementById('sealType').addEventListener('change', toggleOptions);
+		document.getElementById('generate').addEventListener('click', generateSeal);
+
+		function toggleOptions() {
+			const sealType = document.getElementById('sealType').value;
+			const personalOptions = document.getElementById('personalOptions');
+			const officialOptions = document.getElementById('officialOptions');
+
+			if (sealType === 'personal') {
+				personalOptions.style.display = 'block';
+				officialOptions.style.display = 'none';
+			} else {
+				personalOptions.style.display = 'none';
+				officialOptions.style.display = 'block';
+			}
+		}
+
+		function generateSeal() {
+			const sealType = document.getElementById('sealType').value;
+
+			const canvas = document.getElementById('sealCanvas');
+			const ctx = canvas.getContext('2d');
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+			if (sealType === 'personal') {
+				const name = document.getElementById('name').value;
+				const font = document.getElementById('font').value;
+				const color = document.getElementById('personalColor').value;
+
+				ctx.fillStyle = color;
+				ctx.beginPath();
+				ctx.arc(canvas.width / 2, canvas.height / 2, canvas.width / 2 - 10, 0, 2 * Math.PI);
+				ctx.fill();
+
+				ctx.fillStyle = 'white';
+				ctx.font = '24px ' + font;
+				ctx.textAlign = 'center';
+				ctx.fillText(name, canvas.width / 2, canvas.height / 2 + 8);
+			} else {
+				const radius = document.getElementById('radius').value;
+				const color = document.getElementById('officialColor').value;
+				const font = document.getElementById('officialFont').value;
+				const companyName = document.getElementById('companyName').value;
+				const sealTypeName = document.getElementById('sealTypeName').value;
+				const hasInnerBorder = document.getElementById('hasInnerBorder').checked;
+				const securityCode = document.getElementById('securityCode').value;
+
+				ctx.fillStyle = color;
+				ctx.beginPath();
+				ctx.arc(canvas.width / 2, canvas.height / 2, radius, 0, 2 * Math.PI);
+				ctx.fill();
+
+				if (hasInnerBorder) {
+					ctx.strokeStyle = 'white';
+					ctx.lineWidth = 5;
+					ctx.beginPath();
+					ctx.arc(canvas.width / 2, canvas.height / 2, radius - 10, 0, 2 * Math.PI);
+					ctx.stroke();
+				}
+
+				ctx.fillStyle = 'white';
+				ctx.font = '24px ' + font;
+				ctx.textAlign = 'center';
+				ctx.fillText(companyName, canvas.width / 2, canvas.height / 2 - 10);
+				ctx.fillText(sealTypeName, canvas.width / 2, canvas.height / 2 + 30);
+				ctx.fillText(securityCode, canvas.width / 2, canvas.height / 2 + 70);
+			}
+		}
+
+	</script>
+</body>
+
+</html>
