@@ -124,11 +124,11 @@ const THEME_KEYS = [
 const  COLOR_CONTRAST = {
     'background' : {
       update: ['bg200', 'bg300'],
-      value: [2.8, 4.5]
+      value: [3, 4.5]
     },
     'primary': {
       update: ['primary200', 'primary300'],
-      value: [2.82, 4.5]
+      value: [3, 4.5]
     },
     'accent': {
       update: ['accent200'],
@@ -136,7 +136,7 @@ const  COLOR_CONTRAST = {
     },
     'text': {
       update: ['text200',],
-      value: [2.8]
+      value: [3]
     },
 }
 
@@ -200,7 +200,7 @@ class App extends React.Component {
       const baseColor = new BackgroundColor({
         name: 'base',
         colorKeys: [newColor],
-        ratios: [21]
+        ratios: [1]
       });
       // #5d5e5f;  #78797a
       const bg = new Color({
