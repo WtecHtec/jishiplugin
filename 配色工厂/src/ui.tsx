@@ -124,19 +124,19 @@ const THEME_KEYS = [
 const  COLOR_CONTRAST = {
     'background' : {
       update: ['bg200', 'bg300'],
-      value: [1.3, 1.94]
+      value: [2.8, 4.5]
     },
     'primary': {
       update: ['primary200', 'primary300'],
-      value: [3, 4.5]
+      value: [2.82, 4.5]
     },
     'accent': {
-      update: ['accent200',],
-      value: [3, 4.5]
+      update: ['accent200'],
+      value: [4.7]
     },
     'text': {
       update: ['text200',],
-      value: [3, 4.5]
+      value: [2.8]
     },
 }
 
@@ -192,7 +192,7 @@ class App extends React.Component {
   handleChange = color => {
     // console.log('handleChange--', color)
     const { currentTheme, editKey } = this.state
-    const newColor = `rgba(${color.rgb.r},${color.rgb.g},${color.rgb.b},${color.rgb.a})`
+    const newColor = color.hex.length === 7 ? color.hex : `rgba(${color.rgb.r},${color.rgb.g},${color.rgb.b},${color.rgb.a})`
     const update = { ...currentTheme }
     update[editKey] = newColor
     if (COLOR_CONTRAST[editKey]) {

@@ -308,7 +308,6 @@ body {
 
 .edit_item {
   position: relative;
-  margin-bottom: 24px;
 }
 
 .edit_tip {
@@ -332,6 +331,7 @@ body {
   width: 24px;
   height: 24px;
   border-radius: 50%;
+  border: 2px solid #f5f5f5;
 }
 
 .color_picker {
@@ -343,7 +343,8 @@ body {
 
 .edit_title {
   font-size: 14px;
-  margin-bottom: 12px;
+  margin: 4px 0;
+  font-weight: 400;
 }
 
 .picker_masker {
