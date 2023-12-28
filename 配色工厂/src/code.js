@@ -14,3 +14,4 @@ jsDesign.ui.onmessage = (msg) => {
     }
     jsDesign.closePlugin();
 };
+

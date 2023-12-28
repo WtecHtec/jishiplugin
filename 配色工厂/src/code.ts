@@ -1,4 +1,4 @@
-jsDesign.showUI(__html__, { width: 680, height: 440 });
+jsDesign.showUI(__html__, { width: 750, height: 740 });
 
 // jsDesign.ui.onmessage = (msg) => {
 //   if (msg.type === "create-rectangles") {
@@ -19,20 +19,20 @@ jsDesign.showUI(__html__, { width: 680, height: 440 });
 //   jsDesign.closePlugin();
 // };
 
-jsDesign.on('selectionchange', async () => {
-  const selection = jsDesign.currentPage.selection
-  if (selection && selection.length === 1) {
-    const { width, height } =  selection[0]
-    const datas = await selection[0].exportAsync()
-    const base64 = jsDesign.base64Encode(datas)
-    jsDesign.ui.postMessage( {
-      type: 'export',
-      datas: base64,
-      rect: {
-        width,
-        height
-      }
-    })
-  }
-})
+// jsDesign.on('selectionchange', async () => {
+//   const selection = jsDesign.currentPage.selection
+//   if (selection && selection.length === 1) {
+//     const { width, height } =  selection[0]
+//     const datas = await selection[0].exportAsync()
+//     const base64 = jsDesign.base64Encode(datas)
+//     jsDesign.ui.postMessage( {
+//       type: 'export',
+//       datas: base64,
+//       rect: {
+//         width,
+//         height
+//       }
+//     })
+//   }
+// })
 

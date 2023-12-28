@@ -3,7 +3,7 @@
 		"target": "es6",
 		"jsx": "react",
 		"noEmit": false, // Emit handled by webpack.
-		"moduleResolution": "node16",
+		"moduleResolution": "node",
 		"typeRoots": [
 			"./node_modules/@types",
 			"./node_modules/@jsdesigndeveloper"

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    .main_container {
+      width: 375px;
+      height: 667px;
+      position: relative;
+      border-radius: 16px;
+    }
+
+    .background {
+      background: #fffefb;
+    }
+
+    .bg-300-bd {
+      border: 4px solid #cccbc8;
+    }
+
+    .bg-300 {
+      background-color: #cccbc8;
+    }
+
+    .bg-200 {
+      background-color: #f5f4f1;
+    }
+
+    .top_block {
+      width: 128px;
+      height: 24px;
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      border-bottom-right-radius: 8px;
+      border-bottom-left-radius: 8px;
+    }
+    .title_desc {
+      margin-top: 32px;
+      text-align: center;
+    }
+    /* 字体颜色 */
+    .text_color {
+      color: #1d1c1c;
+    }
+    /* 副标题 */
+    .text-200 {
+      color: #313d44;
+    }
+    .title {
+      font-size: 24px;
+      font-weight: 700;
+      line-height: 20px;
+    }
+    .sub_desc {
+     
+      font-size: 14px;
+      padding: 16px;
+    }
+    .primary_main {
+      margin: 16px;
+    }
+
+    .primary {
+      background: #d4eaf7;
+    }
+
+    .primary-200 {
+      border-right: 2px solid #b6ccd8;
+    }
+
+    .primary-300 {
+      color: #3b3c3d;
+    }
+
+    .primary_content {
+      padding: 16px;
+      border-radius: 8px;
+      display: flex;
+    }
+    .primary_item {
+      flex: 1;
+      box-sizing: border-box;
+     
+      
+      margin-right: 12px;
+    }
+    .primary_item:last-child, .primary-200:last-child {
+      border-right: none;
+      margin-right: 0;
+    }
+
+    .primary_title {
+      font-size: 14px;
+      font-weight: 300;
+    }
+    .primary_desc {
+      font-size: 18px;
+      line-height: 28px;
+    }
+
+    .accent_main {
+      padding: 16px;
+     
+    }
+
+    .accent_content {
+      padding: 16px;
+      
+    }
+
+    .accent_title {
+      display: flex;
+      align-items: center;
+    }
+
+    .ac_text {
+      font-weight: 500;
+      font-size: 14px;
+    }
+    .accent_desc {
+      font-size: 10px;
+      line-height: 18px;
+    }
+
+    .accent {
+      color: #71e4ef;
+    }
+    .accent-200 {
+      background: #00668c;
+    }
+
+    .accent_tip {
+      margin-left: 4px;
+      padding: 0 4px;
+      height: 14px;
+      border-radius: 4px;
+      font-size: 8px;
+      line-height: 14px;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="main_container background bg-300-bd">
+    <div class="top_block bg-300"></div>
+    <div class="title_desc">
+      <div class="title text text_color">配色工厂</div>
+    </div>
+    <div class="sub_desc text-200">专为设计师提供智能配色方案，利用AI技术根据关键字生成独特搭配。拥有丰富色彩库和调色功能，适合专业设计师和初学者。让创意设计更高效、简便，为作品赋予丰富色彩。</div>
+    <div class="primary_main">
+      <div class="primary_content primary">
+        <div class="primary_item primary-200 primary-300">
+          <div class="primary_title">Primary</div>
+          <div class="primary_desc">#d4eaf7</div>
+        </div>
+        <div class="primary_item primary-200 primary-300">
+          <div class="primary_title">Primary 200</div>
+          <div class="primary_desc">#b6ccd8</div>
+        </div>
+        <div class="primary_item primary-200 primary-300">
+          <div class="primary_title">Primary 300</div>
+          <div class="primary_desc">#3b3c3d</div>
+        </div>
+      </div>
+    </div>
+    <div class="accent_main">
+      <div class="accent_content bg-200">
+        <div class="accent_title">
+          <div class="ac_text text_color">最新咨询</div>
+          <div class="accent_tip accent accent-200"> NEW </div>
+        </div>
+        <div class="accent_desc text-200">点亮心心❤</div>
+      </div>
+    </div>
+  </div>
+  <script src="https://cdn.bootcdn.net/ajax/libs/chroma-js/2.4.2/chroma.min.js"></script>
+  <script>
+    const color1 = '#5d5e5f';
+const color2 = '#4c4d4e';
+
+const contrast = chroma.contrast(color2, color1);
+
+console.log(contrast); // 输出两个颜色之间的对比度
+  </script>
+</body>
+</html>
