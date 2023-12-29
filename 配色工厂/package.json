@@ -26,6 +26,7 @@
     "@types/react": "^17.0.19",
     "@types/react-dom": "^17.0.9",
     "apca-w3": "^0.1.9",
+    "axios": "^1.6.3",
     "chroma-js": "^2.4.2",
     "ciebase": "^0.1.1",
     "ciecam02": "^0.4.6",
