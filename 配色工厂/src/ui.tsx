@@ -20,39 +20,25 @@ import chroma from 'chroma-js';
 
 declare function require(path: string): any
 
-let baseColor = new BackgroundColor({
-	name: 'gray',
-	colorKeys: ['#ffffff'],
-	ratios: [21]
-});
-
-// // #5d5e5f;  #78797a
-let bg = new Color({
-	name: 'bg',
-	colorKeys: ['#ff6e6e'],
-	ratios: [1.32]
-});
-
-// let red = new Color({
-//   name: 'red',
-//   colorKeys: ['#FF9A81', '#FF0000'],
-//   ratios: [3, 4.5]
+// let baseColor = new BackgroundColor({
+// 	name: 'gray',
+// 	colorKeys: ['#fffefb'],
+// 	ratios: [21]
 // });
 
-// let theme = new Theme({ colors: [gray, blue, red], backgroundColor: gray, lightness: 97 });
+// // // #5d5e5f;  #78797a
+// let bg = new Color({
+// 	name: 'bg',
+// 	colorKeys: [  '#ffffff', '#fffefb',],
+// 	ratios: [1.32],
 
-// returns theme colors as JSON
-// let colors = theme.contrastColors;
-// console.log('colors-----', colors)
+// });
 
 
+// let theme = new Theme({ colors: [bg], backgroundColor: baseColor, lightness: 100 });
 
-
-// 生成颜色主题
-let theme = new Theme({ colors: [bg], backgroundColor: baseColor, lightness: 100 });
-
-let colors = theme.contrastColorValues;
-console.log('colors-----', colors, theme)
+// let colors = theme.contrastColorValues;
+// console.log('colors-----', colors, theme)
 
 
 
@@ -102,7 +88,7 @@ const COLOR_CONTRAST = {
 	},
 	'primary': {
 		update: ['primary200', 'primary300'],
-		value: [1.320083534140116, 1.38]
+		value: [1.32, 1.38]
 	},
 	'accent': {
 		update: ['accent200'],
@@ -110,7 +96,7 @@ const COLOR_CONTRAST = {
 	},
 	'text': {
 		update: ['text200',],
-		value: [1.320083534140116]
+		value: [1.32]
 	},
 }
 
@@ -173,7 +159,7 @@ class App extends React.Component {
 		const newColor = color.hex.length === 7 ? color.hex : `rgba(${color.rgb.r},${color.rgb.g},${color.rgb.b},${color.rgb.a})`
 		const update = { ...currentTheme }
 		update[editKey] = newColor
-		this.formatColorContrast(editKey, newColor, COLOR_CONTRAST, update)
+		this.formatColorContrast(editKey, newColor, COLOR_CONTRAST, update, update.background)
 		// if (COLOR_CONTRAST[editKey]) {
 		// 	const { value, update: updateKeys } = COLOR_CONTRAST[editKey]
 		// 	const baseColor = new BackgroundColor({
@@ -316,7 +302,7 @@ class App extends React.Component {
 	inputRef = (e) => {
 		this.textbox = e
 	}
-	formatColorContrast = (editKey, newColor, colorContast, update) => {
+	formatColorContrast = (editKey, newColor, colorContast, update, bgColor) => {
 		let status = false;
 		if (colorContast[editKey]) {
 			status = true
@@ -350,7 +336,7 @@ class App extends React.Component {
 	genThemeData = (themeData) => {
 		const result = { ...themeData }
 		Object.keys(result).forEach(key => {
-			this.formatColorContrast(key, result[key], COLOR_CONTRAST, result)
+			this.formatColorContrast(key, result[key], COLOR_CONTRAST, result, result.background)
 		})
 		if (Object.keys(result).length === 10) return [true, result]
 		return [false, {}]
@@ -377,7 +363,7 @@ class App extends React.Component {
 							}
 							this.setState({
 								searchTheme: { ...result },
-								searchStatus: true,
+								searchStatus: false,
 							})
 							return
 						}
@@ -455,8 +441,7 @@ class App extends React.Component {
 				{
 					currentOpt === 'search' && <div className="search_main">
 						<div className="input_main">
-							{searchStatus}
-							<input type="text" ref={this.inputRef} className="search_input" placeholder="请输入颜色关键词,最好英文!"></input>
+							<input type="text" ref={this.inputRef} className="search_input" placeholder="如:(科技黑),最好英文!"></input>
 							<div className="search_btn" onClick={this.handleGen}>
 								{!searchStatus ? '立即生成' : '正在生成'}</div>
 						</div>

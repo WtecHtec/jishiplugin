@@ -374,6 +374,7 @@ body {
 	outline-style: none;
 	outline: none;
 	border: none;
+  width: 100%;
 }
 
 .search_input::placeholder {
