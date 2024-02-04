@@ -1,460 +1,484 @@
 <style>
-	body {
-		margin: 0;
-		background-color: #fff;
-		padding: 12px;
-		overflow: auto;
-	}
+  body {
+    margin: 0;
+    background-color: #fff;
+    padding: 12px;
+    overflow: auto;
+  }
 
-	.radio-container {
-		display: inline-block;
-		position: relative;
-		padding-left: 15px;
-		cursor: pointer;
-		font-size: 12px;
-		user-select: none;
-	}
+  .radio-container {
+    display: inline-block;
+    position: relative;
+    padding-left: 15px;
+    cursor: pointer;
+    font-size: 12px;
+    user-select: none;
+  }
 
-	.radio-container input {
-		position: absolute;
-		opacity: 0;
-		cursor: pointer;
-	}
+  .radio-container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+  }
 
-	.radio-checkmark {
-		position: absolute;
-		top: 3px;
-		left: 0;
-		height: 12px;
-		width: 12px;
-		background-color: #ccc;
-		border-radius: 50%;
-	}
+  .radio-checkmark {
+    position: absolute;
+    top: 3px;
+    left: 0;
+    height: 12px;
+    width: 12px;
+    background-color: #ccc;
+    border-radius: 50%;
+  }
 
-	.radio-container:hover input~.radio-checkmark {
-		background-color: #bbb;
-	}
+  .radio-container:hover input~.radio-checkmark {
+    background-color: #bbb;
+  }
 
-	.radio-container input:checked~.radio-checkmark {
-		background-color: #2196F3;
-	}
+  .radio-container input:checked~.radio-checkmark {
+    background-color: #2196F3;
+  }
 
-	.radio-checkmark:after {
-		content: "";
-		position: absolute;
-		display: none;
-	}
+  .radio-checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+  }
 
-	.radio-container input:checked~.radio-checkmark:after {
-		display: block;
-	}
+  .radio-container input:checked~.radio-checkmark:after {
+    display: block;
+  }
 
-	.radio-container .radio-checkmark:after {
-		top: 4px;
-		left: 4px;
-		width: 4px;
-		height: 4px;
-		border-radius: 50%;
-		background: white;
-	}
-
-
-
-	.dropdown {
-		position: relative;
-		/* display: inline-block; */
-	}
-
-	.dropdown select {
-		appearance: none;
-		background-color: #f1f1f1;
-		border: none;
-		cursor: pointer;
-		padding: 8px 16px;
-		outline: none;
-		font-size: 12px;
-		color: #333;
-		border-radius: 4px;
-		width: 100%;
-	}
-
-	.dropdown::before {
-		content: '▼';
-		position: absolute;
-		right: 8px;
-		top: 50%;
-		transform: translateY(-50%);
-		pointer-events: none;
-		font-size: 10px;
-		color: #333;
-	}
-
-
-	.button {
-		display: inline-block;
-		background-color: #007BFF;
-		color: white;
-		padding: 8px 16px;
-		font-size: 16px;
-		border: none;
-		border-radius: 4px;
-		cursor: pointer;
-		text-decoration: none;
-		transition: background-color 0.3s, box-shadow 0.3s;
-		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-	}
-
-	.button:hover {
-		background-color: #0056B3;
-		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-	}
-
-	.button:active {
-		background-color: #004085;
-		box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
-	}
-
-	.mini-button {
-		padding: 4px 8px;
-		font-size: 8px;
-	}
+  .radio-container .radio-checkmark:after {
+    top: 4px;
+    left: 4px;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: white;
+  }
 
 
 
-	.title {
-		color: #333;
-		font-size: 12px;
-		margin-bottom: 4px;
-	}
+  .dropdown {
+    position: relative;
+    /* display: inline-block; */
+  }
 
-	.border {
-		border: 1px solid #f5f5f5;
-		box-sizing: border-box;
-		padding: 4px;
-		margin-bottom: 8px;
-	}
+  .dropdown select {
+    appearance: none;
+    background-color: #f1f1f1;
+    border: none;
+    cursor: pointer;
+    padding: 8px 16px;
+    outline: none;
+    font-size: 12px;
+    color: #333;
+    border-radius: 4px;
+    width: 100%;
+  }
 
-	.max-height {
-		height: 300px;
-		max-height: 300px;
-	}
+  .dropdown::before {
+    content: '▼';
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    font-size: 10px;
+    color: #333;
+  }
 
-	.ppt_container {
-		display: flex;
-	}
 
-	.ppt_meun {
-		width: 200px;
-		flex-shrink: 0;
-		overflow: auto;
-		padding: 0 8px;
-		border-right: 1px solid #f5f5f5;
-	}
+  .button {
+    display: inline-block;
+    background-color: #007BFF;
+    color: white;
+    padding: 8px 16px;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.3s, box-shadow 0.3s;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
 
-	.list-item {
-		display: flex;
-		align-items: center;
-		background-color: #f1f1f1;
-		color: #333;
-		padding: 8px 16px;
-		margin-bottom: 4px;
-		font-size: 16px;
-		border-radius: 4px;
-		cursor: pointer;
-		text-decoration: none;
-		transition: background-color 0.3s;
-	}
+  .button:hover {
+    background-color: #0056B3;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  }
 
-	.list-item:hover {
-		background-color: #e1e1e1;
-	}
+  .button:active {
+    background-color: #004085;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+  }
 
-	.list-item.active {
-		background-color: #0056B3;
-		color: #fff;
-	}
-
-	.content {
-		flex: 1;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		background-color: #f2f2f2;
-		position: relative;
-	}
-
-	.del_icon {
-		position: absolute;
-		width: 20px;
-		height: 20px;
-		right: 40px;
-		top: 20px;
-		cursor: pointer;
-	}
-
-	.content_main {
-		background-color: #fff;
-		width: 300px;
-		height: 168px;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-	}
-
-	.content_show {
-		width: 300px;
-		height: 168px;
-	}
+  .mini-button {
+    padding: 4px 8px;
+    font-size: 8px;
+  }
 
 
 
-	.stylish-input {
-		background-color: #f1f1f1;
-		border: none;
-		border-radius: 4px;
-		/* box-shadow: inset 0 0 0 2px #ccc; */
-		font-size: 16px;
-		padding: 8px 12px;
-		outline: none;
-		transition: box-shadow 0.3s, background-color 0.3s;
-	}
+  .title {
+    color: #333;
+    font-size: 12px;
+    margin-bottom: 4px;
+  }
 
-	.stylish-input:focus {
-		background-color: #fff;
-		box-shadow: inset 0 0 0 2px #f1f1f1;
-	}
+  .border {
+    border: 1px solid #f5f5f5;
+    box-sizing: border-box;
+    padding: 4px;
+    margin-bottom: 8px;
+  }
 
-	.lay-title {
-		margin-top: 12px;
-	}
+  .max-height {
+    height: 300px;
+    max-height: 300px;
+  }
+
+  .ppt_container {
+    display: flex;
+  }
+
+  .ppt_meun {
+    width: 200px;
+    flex-shrink: 0;
+    overflow: auto;
+    padding: 0 8px;
+    border-right: 1px solid #f5f5f5;
+  }
+
+  .list-item {
+    display: flex;
+    align-items: center;
+    background-color: #f1f1f1;
+    color: #333;
+    padding: 8px 16px;
+    margin-bottom: 4px;
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.3s;
+  }
+
+  .list-item:hover {
+    background-color: #e1e1e1;
+  }
+
+  .list-item.active {
+    background-color: #0056B3;
+    color: #fff;
+  }
+
+  .content {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f2f2f2;
+    position: relative;
+  }
+
+  .del_icon {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    right: 40px;
+    top: 20px;
+    cursor: pointer;
+  }
+
+  .content_main {
+    background-color: #fff;
+    width: 300px;
+    height: 168px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .content_show {
+    width: 300px;
+    height: 168px;
+  }
+
+
+
+  .stylish-input {
+    background-color: #f1f1f1;
+    border: none;
+    border-radius: 4px;
+    /* box-shadow: inset 0 0 0 2px #ccc; */
+    font-size: 16px;
+    padding: 8px 12px;
+    outline: none;
+    transition: box-shadow 0.3s, background-color 0.3s;
+  }
+
+  .stylish-input:focus {
+    background-color: #fff;
+    box-shadow: inset 0 0 0 2px #f1f1f1;
+  }
+
+  .lay-title {
+    margin-top: 12px;
+  }
 </style>
 <div class="body_container">
-	<div class="border">
-		<div class="title lay-title"> 当想换一个新的路径时，请选择“文案”类型 </div>
-	</div>
-	<div class="border">
-		<div class="title"> 显示类型 </div>
-		<label class="radio-container">文案
-			<input type="radio" name="showtype" value="text" checked>
-			<span class="radio-checkmark"></span>
-		</label>
-		<label class="radio-container">节点
-			<input type="radio" name="showtype" value="node">
-			<span class="radio-checkmark"></span>
-		</label>
-	</div>
+  <div class="border">
+    <div class="title lay-title"> 当想换一个新的路径时，请选择“文案”类型 </div>
+  </div>
+  <div class="border">
+    <div class="title"> 显示类型 </div>
+    <label class="radio-container">文案
+      <input type="radio" name="showtype" value="text" checked>
+      <span class="radio-checkmark"></span>
+    </label>
+    <label class="radio-container">节点
+      <input type="radio" name="showtype" value="node">
+      <span class="radio-checkmark"></span>
+    </label>
+  </div>
 
-	<!-- <div id="offsetlayout" class="border">
+  <!-- <div id="offsetlayout" class="border">
 		<div class="title lay-title"> 横轴Offset </div>
 		<input type="number" id="xoffset" value="0" min="0" step="1" class="stylish-input" style=" width: 100%;" />
 		<div class="title lay-title"> 纵轴Offset </div>
 		<input type="number" id="yoffset" value="0" min="0" step="1" class="stylish-input" style=" width: 100%;" />
 	</div> -->
 
-	<div id="textlayout" class="border">
-		<div class="title lay-title"> 文案 </div>
-		<input type="text" id="textValue" value="" class="stylish-input" style=" width: 100%;" />
-		<div class="title lay-title"> 颜色 </div>
-		<input type="color" id="colorValue" class="stylish-input" style=" width: 100%;" />
-	</div>
+  <div id="textlayout" class="border">
+    <div class="title lay-title"> 文案 </div>
+    <input type="text" id="textValue" value="" class="stylish-input" style=" width: 100%;" />
+    <div class="title lay-title"> 颜色 </div>
+    <input type="color" id="colorValue" class="stylish-input" style=" width: 100%;" />
+    <div class="title lay-title"> 字体大小 </div>
+    <input type="number" id="fontSize" value="32" min="32" step="1" class="stylish-input" style=" width: 100%;" />
+  </div>
 
 
-	<div id="nodelayout" class="border" style="display: none;">
-		<div class="title lay-title"> 绘制元素 </div>
-		<span id="nodePath" class="title lay-title">（请选择一个设计）</span>
-		<div class="title lay-title"> 个数 </div>
-		<input type="number" id="nodecount" value="4" step="1" class="stylish-input" style=" width: 100%;" />
-	</div>
+  <div id="nodelayout" class="border" style="display: none;">
+    <div class="title lay-title"> 绘制元素 </div>
+    <span id="nodePath" class="title lay-title">（请选择一个设计）</span>
+    <div class="title lay-title"> 个数 </div>
+    <input type="number" id="nodecount" value="4" min="2" step="1" class="stylish-input" style=" width: 100%;" />
+    <div class="title lay-title"> 宽 </div>
+    <input type="number" id="nodew" value="32" min="32" step="1" class="stylish-input" style=" width: 100%;" />
+    <div class="title lay-title"> 高 </div>
+    <input type="number" id="nodeh" value="32" min="32" step="1" class="stylish-input" style=" width: 100%;" />
+  </div>
 
-	<a href="#" class="button" id="perview"> 预览</a>
-	<a href="#" class="button" id="setting">确定设置</a>
+  <a href="#" class="button" id="perview"> 预览</a>
+  <a href="#" class="button" id="setting">确定设置</a>
 
-	<svg id="showSvg" width="460" height="300" style="margin-bottom: 12px;">
-		<path id="myPath" d="" stroke="black" fill="transparent" />
-	</svg>
+  <svg id="showSvg" width="460" height="300" style="margin-bottom: 12px;">
+    <path id="myPath" d="" stroke="black" fill="transparent" />
+  </svg>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
-	integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
-	crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+  crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="https://d3js.org/d3.v5.min.js"></script>
 <script>
-	const myPath = document.getElementById('myPath')
-	const mySvg = document.getElementById('showSvg')
-	const path = d3.select("#myPath");
-	const fontSize = 32
-	let status = false
-	let nodeData = ''
-	let settingDatas = []
-	window.onmessage = async (event) => {
-		const { pluginMessage: { datas, type, rect, name }, } = event.data;
-		if (type === 'select:done') {
-			const showtype = $('input:radio[name=showtype]:checked').val();
-			if (showtype !== 'text') {
-				$('#nodePath').html(name || '--')
-				nodeData = datas
-				return
-			}
-			// console.log(datas)
-			status = true
-			refresh()
-			myPath.setAttribute('d', datas)
-			myPath.setAttribute('transform', `translate(${fontSize},${fontSize})`)
-			mySvg.setAttribute('width', rect[0] + fontSize * 2)
-			mySvg.setAttribute('height', rect[1] + fontSize * 2)
-		}
-	}
+  const myPath = document.getElementById('myPath')
+  const mySvg = document.getElementById('showSvg')
+  const path = d3.select("#myPath");
+  const fontSize = 32
+  let status = false
+  let nodeData = ''
+  let settingDatas = []
+  let penRect = []
 
-	function refresh() {
-		try {
-			d3.select('#pentext').remove()
-			d3.selectAll('image').remove()
-		} catch (error) {
+  window.onmessage = async (event) => {
+    const { pluginMessage: { datas, type, rect, name }, } = event.data;
+    if (type === 'select:done') {
+      const showtype = $('input:radio[name=showtype]:checked').val();
+      if (showtype !== 'text') {
+        $('#nodePath').html(name || '--')
+        nodeData = datas
+        return
+      }
+      // console.log(datas)
+      status = true
+      refresh()
+      myPath.setAttribute('d', datas)
+      penRect = rect
+      initSvg(penRect, fontSize, fontSize)
+    }
+  }
 
-		}
-	}
-	function renderPathByText() {
-		refresh()
-		const xDatas = []
-		const yDatas = []
-		const text = $('#textValue').val() || "钢笔大师";
-		const textColor = $('#colorValue').val() || '#000000'
-		let xoffset = $('#xoffset').val() || 0
-		let yoffset = $('#yoffset').val() || 0
-		const datas = text.split("")
-		const textContainer = d3.select("svg")
-			.append("text")
-			.style("font-size", `${fontSize}px`)
-			.attr("fill", textColor)
-			.attr("id", 'pentext')
+  function initSvg(rect, w, h) {
+    myPath.setAttribute('transform', `translate(${w},${h})`)
+    mySvg.setAttribute('width', rect[0] + w * 2)
+    mySvg.setAttribute('height', rect[1] + h * 2)
+  }
 
-		// 计算路径长度
-		const pathLength = path.node().getTotalLength();
-		if (xoffset == 0 || yoffset == 0) {
-			// 计算每个字符的间隔
-			const interval = pathLength / (text.length - 1);
-			xoffset = interval
-			yoffset = interval
-		}
+  function refresh() {
+    try {
+      d3.select('#pentext').remove()
+      d3.selectAll('image').remove()
+    } catch (error) {
 
-		textContainer.selectAll("tspan")
-			.data(datas)
-			.enter()
-			.append("tspan")
-			.text((d) => d)
-			.attr("x", (d, i) => {
-				const x = path.node().getPointAtLength(i * xoffset).x + fontSize
-				xDatas.push(x)
-				return x
-			})
-			.attr("y", (d, i) => {
-				const y = path.node().getPointAtLength(i * yoffset).y + fontSize
-				yDatas.push(y)
-				return y
-			})
-
-		return [datas, xDatas, yDatas, text, textColor]
-
-	}
+    }
+  }
 
 
-	function renderPathByNode(imgBytes) {
-		refresh()
-		const xDatas = []
-		const yDatas = []
-		const count = Number($('#nodecount').val())
-		const textContainer = d3.select("svg")
-		// .append("rect")
-		// .attr('width', '100%')
-		// .attr('height', '100%')
-		// .attr('fill', 'transparent')
-		// .attr("id", 'penrect')
+  function renderPathByText() {
+    refresh()
+    const fontSize = Number($('#fontSize').val()) || 32
+    const xDatas = []
+    const yDatas = []
+    const text = $('#textValue').val() || "钢笔大师";
+    const textColor = $('#colorValue').val() || '#000000'
+    let xoffset = $('#xoffset').val() || 0
+    let yoffset = $('#yoffset').val() || 0
+    const datas = text.split("")
+
+    initSvg(penRect, fontSize, fontSize)
+
+    const textContainer = d3.select("svg")
+      .append("text")
+      .style("font-size", `${fontSize}px`)
+      .attr("fill", textColor)
+      .attr("id", 'pentext')
+
+    // 计算路径长度
+    const pathLength = path.node().getTotalLength();
+    if (xoffset == 0 || yoffset == 0) {
+      // 计算每个字符的间隔
+      const interval = pathLength / (text.length - 1);
+      xoffset = interval
+      yoffset = interval
+    }
+
+    textContainer.selectAll("tspan")
+      .data(datas)
+      .enter()
+      .append("tspan")
+      .text((d) => d)
+      .attr("x", (d, i) => {
+        const x = path.node().getPointAtLength(i * xoffset).x + fontSize
+        xDatas.push(x)
+        return x
+      })
+      .attr("y", (d, i) => {
+        const y = path.node().getPointAtLength(i * yoffset).y + fontSize
+        yDatas.push(y)
+        return y
+      })
+
+    return [datas, xDatas, yDatas, text, textColor, fontSize]
+
+  }
 
 
-		// 计算路径长度
-		const pathLength = path.node().getTotalLength();
-		const interval = pathLength / (count);
+  function renderPathByNode(imgBytes) {
+    refresh()
+    const xDatas = []
+    const yDatas = []
+    const count = Number($('#nodecount').val())
+    const textContainer = d3.select("svg")
+    // .append("rect")
+    // .attr('width', '100%')
+    // .attr('height', '100%')
+    // .attr('fill', 'transparent')
+    // .attr("id", 'penrect')
 
-		textContainer.selectAll("image")
-			.data(new Array(count).fill(1))
-			.enter()
-			.append("image")
-			.attr('xlink:href', getBase(imgBytes))
-			.attr('width', fontSize)
-			.attr('width', fontSize)
+    const nodew = Number($('#nodew').val())
+    const nodeh = Number($('#nodeh').val())
 
-			.attr("x", (d, i) => {
-				const x = path.node().getPointAtLength(i * interval).x + fontSize
-				xDatas.push(x)
-				return x
-			})
-			.attr("y", (d, i) => {
-				const y = path.node().getPointAtLength(i * interval).y + fontSize
-				yDatas.push(y)
-				return y
-			})
-		return [imgBytes, xDatas, yDatas]
-	}
+    initSvg(penRect, nodew, nodeh)
+    // 计算路径长度
+    const pathLength = path.node().getTotalLength();
+    const interval = pathLength / (count - 1);
 
-	$('input[name="showtype"]').on('change', (item) => {
-		const showtype = $('input:radio[name=showtype]:checked').val();
-		if (showtype === 'text') {
-			$('#textlayout').show()
-			$('#nodelayout').hide()
-			$('#nodePath').html('')
-			nodeData = ''
-		} else {
-			$('#textlayout').hide()
-			$('#nodelayout').show()
-		}
-		parent.postMessage({
-			pluginMessage: {
-				type: 'select:type',
-				nodeshowtype: showtype,
-			}
-		}, '*')
-	})
-	$('#perview').on('click', () => {
-		if (!status) {
-			alert('请选择一个钢笔路径！！')
-			return
-		}
-		const showtype = $('input:radio[name=showtype]:checked').val();
-		if (showtype === 'text') {
-			if (!$('#textValue').val()) {
-				alert('请输入文案！！')
-				return
-			}
-			settingDatas = renderPathByText()
-		} else {
-			if (!nodeData) {
-				alert('请选择需要绘制的节点！！')
-				return
-			}
-			// console.log('nodeData--', nodeData)
-			settingDatas = renderPathByNode(nodeData)
-		}
-	})
+    textContainer.selectAll("image")
+      .data(new Array(count).fill(1))
+      .enter()
+      .append("image")
+      .attr('xlink:href', getBase(imgBytes))
+      .attr('width', nodew)
+      .attr('width', nodeh)
 
-	$('#setting').on('click', () => {
-		if (!status || !settingDatas.length) {
-			alert('请选择一个钢笔路径！！')
-			return
-		}
-		const showtype = $('input:radio[name=showtype]:checked').val();
-		parent.postMessage({
-			pluginMessage: {
-				type: 'setting:done',
-				settingDatas,
-				nodeshowtype: showtype,
-			}
-		}, '*')
+      .attr("x", (d, i) => {
+        const x = path.node().getPointAtLength(i * interval).x + nodew
+        xDatas.push(x)
+        return x
+      })
+      .attr("y", (d, i) => {
+        const y = path.node().getPointAtLength(i * interval).y + nodeh
+        yDatas.push(y)
+        return y
+      })
+    return [imgBytes, xDatas, yDatas, '', '', '', nodew, nodeh]
+  }
+
+  $('input[name="showtype"]').on('change', (item) => {
+    const showtype = $('input:radio[name=showtype]:checked').val();
+    refresh()
+    initSvg(penRect, fontSize, fontSize)
+    if (showtype === 'text') {
+      $('#textlayout').show()
+      $('#nodelayout').hide()
+      $('#nodePath').html('')
+      nodeData = ''
+    } else {
+      $('#textlayout').hide()
+      $('#nodelayout').show()
+    }
+    parent.postMessage({
+      pluginMessage: {
+        type: 'select:type',
+        nodeshowtype: showtype,
+      }
+    }, '*')
+  })
+  $('#perview').on('click', () => {
+    if (!status) {
+      alert('请选择一个钢笔路径！！')
+      return
+    }
+    const showtype = $('input:radio[name=showtype]:checked').val();
+    if (showtype === 'text') {
+      if (!$('#textValue').val()) {
+        alert('请输入文案！！')
+        return
+      }
+      settingDatas = renderPathByText()
+    } else {
+      if (!nodeData) {
+        alert('请选择需要绘制的节点！！')
+        return
+      }
+      // console.log('nodeData--', nodeData)
+      settingDatas = renderPathByNode(nodeData)
+    }
+  })
+
+  $('#setting').on('click', () => {
+    if (!status || !settingDatas.length) {
+      alert('请选择一个钢笔路径！！')
+      return
+    }
+    const showtype = $('input:radio[name=showtype]:checked').val();
+    parent.postMessage({
+      pluginMessage: {
+        type: 'setting:done',
+        settingDatas,
+        nodeshowtype: showtype,
+      }
+    }, '*')
 
 
-	})
+  })
 
-	function getBase(bytes) {
-		return `data:image/png;base64,${bytes}`
-	}
+  function getBase(bytes) {
+    return `data:image/png;base64,${bytes}`
+  }
 
 
 </script>
