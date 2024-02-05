@@ -22,6 +22,8 @@ jsDesign.ui.onmessage = msg => {
 			diffw,
 			diffh,
 			radius,
+      pl = 0,
+      pr = 0,
 		} = modeData
 		console.log(modeData, rect)
 		const selection = jsDesign.currentPage.selection[0]
@@ -32,7 +34,7 @@ jsDesign.ui.onmessage = msg => {
 		// console.log('scale----', scale, scaleImage(1116, 2370, rect.width, rect.height))
 		console.log('widthScale, heightScale---', widthScale, heightScale)
 
-		const width = rect.width
+		const width = rect.width - pl - pr
 		const height = modeh * heightScale
 
 		const frame = jsDesign.createFrame()
@@ -70,7 +72,7 @@ jsDesign.ui.onmessage = msg => {
 		}]
 		renderFrame.resize(width, height)
 		renderFrame.appendChild(selection)
-		renderFrame.x = loffset
+		renderFrame.x = loffset + pl
 		renderFrame.y = toffset
 		renderFrame.cornerRadius = radius
 
