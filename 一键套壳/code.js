@@ -33,7 +33,8 @@ jsDesign.ui.onmessage = msg => {
 		console.log('widthScale, heightScale---', widthScale, heightScale)
 
 		const width = rect.width
-		const height = 2540 * heightScale
+		const height = modeh * heightScale
+
 		const frame = jsDesign.createFrame()
 		frame.name = mode
 		frame.fills = [{
@@ -45,14 +46,14 @@ jsDesign.ui.onmessage = msg => {
 		}]
 		frame.x = selection.x
 		frame.y = selection.y
+		frame.resize(rect.width + loffset + roffset, rect.height)
 
-		frame.resize(rect.width, rect.height)
 		const rectNode = jsDesign.createFrame()
 		// rectNode.x = -(loffset * scale)
 		// rectNode.y = -(toffset * scale)
 		const newImg = jsDesign.createImage(jsDesign.base64Decode(base64))
-		rectNode.fills = [Object.assign(newImg, { type: 'IMAGE', imageHash: newImg.hash, scaleMode: 'FILL' },)];
-		rectNode.resize(rect.width, rect.height)
+		rectNode.fills = [Object.assign(newImg, { type: 'IMAGE', imageHash: newImg.hash, scaleMode: 'CROP' },)];
+		rectNode.resize(rect.width + loffset + roffset, rect.height)
 
 		selection.x = 0
 		selection.y = 0
@@ -69,9 +70,9 @@ jsDesign.ui.onmessage = msg => {
 		}]
 		renderFrame.resize(width, height)
 		renderFrame.appendChild(selection)
-		// renderFrame.x = loffset * widthScale
-		renderFrame.y = toffset * heightScale
-		renderFrame.cornerRadius = radius * heightScale
+		renderFrame.x = loffset
+		renderFrame.y = toffset
+		renderFrame.cornerRadius = radius
 
 		frame.appendChild(renderFrame)
 		frame.appendChild(rectNode)
