@@ -1,0 +1,408 @@
+<style>
+  body {
+    margin: 0;
+    background-color: #fff;
+    padding: 12px;
+  }
+
+  .radio-container {
+    display: inline-block;
+    position: relative;
+    padding-left: 15px;
+    cursor: pointer;
+    font-size: 12px;
+    user-select: none;
+  }
+
+  .radio-container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  .radio-checkmark {
+    position: absolute;
+    top: 3px;
+    left: 0;
+    height: 12px;
+    width: 12px;
+    background-color: #ccc;
+    border-radius: 50%;
+  }
+
+  .radio-container:hover input~.radio-checkmark {
+    background-color: #bbb;
+  }
+
+  .radio-container input:checked~.radio-checkmark {
+    background-color: #2196F3;
+  }
+
+  .radio-checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+  }
+
+  .radio-container input:checked~.radio-checkmark:after {
+    display: block;
+  }
+
+  .radio-container .radio-checkmark:after {
+    top: 4px;
+    left: 4px;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: white;
+  }
+
+
+
+  .dropdown {
+    position: relative;
+    /* display: inline-block; */
+  }
+
+  .dropdown select {
+    appearance: none;
+    background-color: #f1f1f1;
+    border: none;
+    cursor: pointer;
+    padding: 8px 16px;
+    outline: none;
+    font-size: 12px;
+    color: #333;
+    border-radius: 4px;
+    width: 100%;
+  }
+
+  .dropdown::before {
+    content: '▼';
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    font-size: 10px;
+    color: #333;
+  }
+
+
+  .button {
+    display: inline-block;
+    background-color: #007BFF;
+    color: white;
+    padding: 8px 16px;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.3s, box-shadow 0.3s;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .button:hover {
+    background-color: #0056B3;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  }
+
+  .button:active {
+    background-color: #004085;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+  }
+
+  .mini-button {
+    padding: 4px 8px;
+    font-size: 8px;
+  }
+
+
+
+  .title {
+    color: #333;
+    font-size: 12px;
+    margin-bottom: 4px;
+  }
+
+  .border {
+    border: 1px solid #f5f5f5;
+    box-sizing: border-box;
+    padding: 4px;
+    margin-bottom: 8px;
+  }
+
+  .max-height {
+    height: 300px;
+    max-height: 300px;
+  }
+
+  .ppt_container {
+    display: flex;
+  }
+
+  .ppt_meun {
+    width: 200px;
+    flex-shrink: 0;
+    overflow: auto;
+    padding: 0 8px;
+    border-right: 1px solid #f5f5f5;
+  }
+
+  .list-item {
+    display: flex;
+    align-items: center;
+    background-color: #f1f1f1;
+    color: #333;
+    padding: 8px 16px;
+    margin-bottom: 4px;
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.3s;
+  }
+
+  .list-item:hover {
+    background-color: #e1e1e1;
+  }
+
+  .list-item.active {
+    background-color: #0056B3;
+    color: #fff;
+  }
+
+  .content {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f2f2f2;
+    position: relative;
+  }
+
+  .del_icon {
+    display: none;
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    right: 10px;
+    top: 10px;
+    z-index: 9999;
+    cursor: pointer;
+  }
+
+  .content_main {
+    background-color: #fff;
+    width: 300px;
+    height: 168px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .content_show {
+    width: 300px;
+    height: 168px;
+  }
+
+
+
+  .stylish-input {
+    background-color: #f1f1f1;
+    border: none;
+    border-radius: 4px;
+    /* box-shadow: inset 0 0 0 2px #ccc; */
+    font-size: 16px;
+    padding: 8px 12px;
+    outline: none;
+    transition: box-shadow 0.3s, background-color 0.3s;
+  }
+
+  .stylish-input:focus {
+    background-color: #fff;
+    box-shadow: inset 0 0 0 2px #f1f1f1;
+  }
+
+  .lay-title {
+    margin-top: 12px;
+  }
+
+  .perview-container {
+    width: 450px;
+    height: 500px;
+    box-sizing: border-box;
+    background-image: linear-gradient(45deg, #00000040, #00000040),
+      linear-gradient(45deg, #eee 25%, transparent 0, transparent 75%, #eee 0, #eee),
+      linear-gradient(45deg, #eee 25%, #fff 0, #fff 75%, #eee 0, #eee);
+    background-size: 12px 12px;
+    background-position: 0 0, 0 0, 6px 6px;
+    padding: 0 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: auto;
+  }
+
+  .email-img {
+    cursor: pointer;
+  }
+
+  .email-imgs {
+    cursor: pointer;
+    position: relative;
+  }
+
+  .email-imgs:hover .del_icon {
+    display: block;
+  }
+
+  .email-img:hover .del_icon {
+    display: block;
+  }
+</style>
+<div class="body_container">
+  <div class="border">
+    <div class="title lay-title"> 预览 </div>
+    <div class="perview-container" id="perviewContainer">
+
+    </div>
+  </div>
+  <div class="border">
+    <div class="title lay-title"> 发送到 </div>
+    <input type="text" id="toEmail" value="" class="stylish-input" style=" width: 100%;" />
+  </div>
+  <a href="#" class="button" id="sendEmail">一键汇报</a>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+  integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+  crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+  const emailDatas = []
+  const eW = 420
+  const eH = 500
+  let loading = false
+  window.onmessage = async (event) => {
+    const { pluginMessage: { datas, type, rect, id }, } = event.data;
+    if (type === 'select:done') {
+      emailDatas.push({
+        base64: datas,
+        show: true,
+        id,
+      })
+      const [nW, nH] = scaleImage(rect[0], rect[1], eW, eH)
+      $('#perviewContainer').append(`
+        <div class="email-imgs" data-index="${emailDatas.length - 1}">
+          <img class="del_icon"
+            data-index="${emailDatas.length - 1}"
+						src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAAAAXNSR0IArs4c6QAABOtJREFUeF7tnVtO40AQRe1EoNkEaD5hF7CywMrIrAI+EWwCgRKPnEzQJHLcVdUPuuyTnwilH+VT112+bSe0Da9ZE2hnffQcfIMAZi4CBIAAZk5g5ofPCoAAZk5g5ofPCoAApk3g+fevu90Rbrf7d+1rsVjfvn6std28tJ/sCtAnvt1sVk3b2hJ/ksGuaR5v3z4fvCRWGuckBfB8ffnQNs1KCkHTbmpCmJwAXq4unlKd9eeEMSURTEYAqZf80KowFRFMQgC75G+3T6GkJf+869Zd2/7xfG2QTADfV9vJKZ8fMOVFXmzY/YrQLBbF3UKsQ4kSQOllNzZJU+0fU46iBPByfdlNFaq74+q69c371702brMAclot7UHQfk/g5u1TnU91hwNsBFCf7BBAfTkpGhECKIq7vskQQH05KRoRAiiKu77JEEB9OSkaEQIoiru+yRBAfTkpGhECKIq7vskQQH05KRoRAiiKu77JEEB9OSkaUVkB/NRDGEWR+pqsqAB6NNwOrkcg1mcCzHcDuStYSfIjH0uLFkAIA6tEiFD4c+vZHR65yf/7AAhAkobxNgggnqHrERDAWPr6GrhcPh6++5frG0FHIRSeEwGcEUC3WNyfPhad+1G1oWTk/l4CAhgQwBiUXF8PG5szp/AQwJAABs7+b2uaaZNqVACZ5uyPCQEMCGBs1yvXkjxUcv4PLZfjQQAIINtvE7jdCGIFSONsEYCCIyVAAevQNFddZAUwJGOgCyuAgiMrgAIWK4AB1rkNr4w/UMUKoMgTK4ACFiuAARYrgBwaF4FyVmMtKQEKjpQABSxKgAEWJUAOjRIgZ0UJSMOqoQQYQLITaIB20oW7gdwN5G7gqQa4BohfWfoRsIEKjlwDKGBhAw2wsIFyaJQAOStsYBpW2EALR2yghdpxH2wgNhAbiA3M8x/LsIGKFRobqICFDTTAwgbKoWED5aywgWlYYQMtHLGBFmrYwCA1SkAQkagBLkCEad8IF6CAhQswwMIFyKFRAuSscAFpWFECLBxxARZquIAgNUpAEJGoAS5AhAkXoMB03JQSYEb33ZHnAQYYUgLihdWPQAlQcGQjSAGLjSADLDaC5NAoAXJWbASlYcVGkIUjLsBCjY2gIDVKQBCRqAEuQISJjSAFJjaCzLBwAXJ0lAA5K1xAGla4AAtHXICFGi4gSI0SEEQkaoALEGHCBSgw4QLMsHABcnSUADkrXEAaVrgAC0dcgIUaLiBIjRIQRCRqgAsQYcIFKDDhAsywcAFydJQAOatJuoCxBzT538Fycbi9BhgVwPXlQ9s0KzkGWcufEF0fGd8LGMpP161v3r/uhz7KZT2bkTmfM4kOAYycnKdnxm7p32xWTdveyc5pfauhs/Hl6uKp9Jz6yId7uC0BR4fTdevd3xkTP4ivn7fAnJSAVHJ3Og4CcJq4VGEjgFQknY6DAJwmLlXYCCAVSafjIACniUsVNgJIRdLpOAjAaeJShY0AUpF0Og4CcJq4VGEjgFQknY7jWwCZb5Q4zakqbNcCyPVwhoqg88ZjTz/FHlr2u4F9gDnvlccCqL1/6KfpYuMvIoCDCPr3HE/qxEKorv+/29vdcvl4+/qxv9Wd6VVMAJniZ9hIAgggEqD37gjAewYj40cAkQC9d0cA3jMYGT8CiATovTsC8J7ByPgRQCRA793/AgM04sx0C3NDAAAAAElFTkSuQmCC" />
+          <img class="email-img" src="${getBase(datas)}" style="width: ${nW}px; height: ${nH}px;" />
+        </div>
+      `)
+      $('.del_icon').off('click')
+      $('.del_icon').on('click', (e) => {
+        const index = getMutliLevelProperty(e, 'target.dataset.index', '-1')
+        if (index != -1) {
+          emailDatas.splice(Number(index), 1)
+          $(`div[class="email-imgs"][data-index="${index}"]`).hide()
+          console.log(emailDatas)
+        }
+      })
+    }
+  }
+
+
+  $('#sendEmail').on('click', () => {
+    console.log(emailDatas)
+    const toEmail = $('#toEmail').val()
+    if (!toEmail) {
+      alert('请输入发送邮件！！！')
+      return
+    }
+    if (emailDatas.length === 0) {
+      alert('请选择需要发送的内容！！！')
+      return
+    }
+    if (loading) return
+    loading = true
+    const URL = 'https://luckcar.top/designemail/sendmail'
+    $.ajax({
+      url: URL, // 替换为你的 API 接口地址
+      type: "POST",
+      // headers: {
+      //   'Content-Type': 'application/json;charset=UTF-8'
+      // },
+      data: {
+        toemail: toEmail,
+        emaildatas: emailDatas,
+      },
+      success: function (response) {
+        loading = false
+        // 请求成功后执行的代码
+        console.log("请求成功，返回的数据：", response);
+        if (response == 'ok') {
+          alert('汇报成功')
+        } else {
+          alert('汇报失败')
+        }
+
+      },
+      error: function (xhr, textStatus, errorThrown) {
+        loading = false
+        console.log(textStatus, errorThrown)
+        alert('汇报失败')
+      }
+    });
+  })
+
+
+
+
+  function scaleImage(originalWidth, originalHeight, targetWidth, targetHeight) {
+    if (originalWidth < targetWidth && originalHeight < targetHeight) {
+      return [originalWidth, originalHeight, 1];
+    }
+    // 计算宽度和高度的缩放比例
+    const widthScale = targetWidth / originalWidth;
+    const heightScale = targetHeight / originalHeight;
+
+    // 选择较小的缩放比例，以保持宽高比不变
+    const scale = Math.min(widthScale, heightScale);
+
+    // 计算新的宽度和高度
+    const newWidth = originalWidth * scale;
+    const newHeight = originalHeight * scale;
+
+    return [newWidth, newHeight, scale, widthScale, heightScale];
+  }
+
+  function getBase(bytes) {
+    return `data:image/png;base64,${bytes}`
+  }
+
+
+  function getMutliLevelProperty(ctx, path, defaultVal) {
+    let res = defaultVal;
+    if (!(typeof path === 'string') || !isObject(ctx)) return res;
+    let key = path.replace(/\[(\w+)\]/g, '.$1');
+    key = key.replace(/^\./, '');
+    const arr = key.split('.');
+    for (let i = 0, count = arr.length; i < count; i++) {
+      const p = arr[i];
+      if ((isObject(ctx) || Array.isArray(ctx)) && p in ctx) {
+        ctx = ctx[p];
+      } else {
+        return res;
+      }
+    }
+    res = ctx;
+    return res;
+  }
+
+  function isObject(obj) {
+    var type = typeof obj;
+    return type === 'function' || type === 'object' && !!obj;
+  }
+</script>

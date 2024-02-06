@@ -1,0 +1,25 @@
+{
+  "name": "jishiplugin",
+  "version": "1.0.0",
+  "description": "",
+  "main": "sendemail.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://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@github.com/WtecHtec/jishiplugin.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/WtecHtec/jishiplugin/issues"
+  },
+  "homepage": "https://github.com/WtecHtec/jishiplugin#readme",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "express": "^4.18.2",
+    "nodemailer": "^6.9.9"
+  }
+}
