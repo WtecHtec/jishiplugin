@@ -1,147 +1,468 @@
-
 <style>
-    body {
-        margin: 0;
-        background-color: #fff;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
+   	body {
+		margin: 0;
+		background-color: #fff;
+		padding: 12px;
+	}
 
-    .brand-box {
-        font-family: "Inter", sans-serif;
-        padding: 0px 8px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-direction: column;
-        margin-bottom: 16px;
-    }
+	.radio-container {
+		display: inline-block;
+		position: relative;
+		padding-left: 15px;
+		cursor: pointer;
+		font-size: 12px;
+		user-select: none;
+	}
 
-    .brand-box .header {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-        width: 230px;
-    }
+	.radio-container input {
+		position: absolute;
+		opacity: 0;
+		cursor: pointer;
+	}
 
-    .brand-box .header h2 {
-        margin: 0;
-        font-weight: 500;
-        color: rgba(32, 32, 32, 1);
-        font-size: 12px;
-    }
+	.radio-checkmark {
+		position: absolute;
+		top: 3px;
+		left: 0;
+		height: 12px;
+		width: 12px;
+		background-color: #ccc;
+		border-radius: 50%;
+	}
 
-    .brand-box .header button {
-        width: 40px;
-        height: 20px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 12px;
-        background: #fff;
-        color: rgba(32, 32, 32, 1);
-        border-radius: 6px;
-        border: 1px solid rgba(32, 32, 32, 0.2);
-        cursor: pointer;
-    }
+	.radio-container:hover input~.radio-checkmark {
+		background-color: #bbb;
+	}
 
-    .brand-box .header button:hover {
-        border: 1px solid rgba(32, 32, 32, 0.4);
-    }
+	.radio-container input:checked~.radio-checkmark {
+		background-color: #2196F3;
+	}
 
-    .brand-box .color-list {
-        display: flex;
-        flex-direction: row;
-        overflow-x: scroll;
-        align-items: center;
-        margin-top: 8px;
-        width: 228px;
-        height: 44px;
-        border: 1px solid rgba(32, 32, 32, 0.1);
-        border-radius: 6px;
-        padding-left: 8px;
-        box-sizing: border-box;
-    }
+	.radio-checkmark:after {
+		content: "";
+		position: absolute;
+		display: none;
+	}
 
-    .brand-box .color-list .color {
-        height: 24px;
-        min-width: 24px;
-        width: 24px;
-        border-radius: 100%;
-        margin-right: 7px;
-    }
+	.radio-container input:checked~.radio-checkmark:after {
+		display: block;
+	}
 
-    ::-webkit-scrollbar {
-        display: none;
-    }
+	.radio-container .radio-checkmark:after {
+		top: 4px;
+		left: 4px;
+		width: 4px;
+		height: 4px;
+		border-radius: 50%;
+		background: white;
+	}
+
+
+
+	.dropdown {
+		position: relative;
+		/* display: inline-block; */
+	}
+
+	.dropdown select {
+		appearance: none;
+		background-color: #f1f1f1;
+		border: none;
+		cursor: pointer;
+		padding: 8px 16px;
+		outline: none;
+		font-size: 12px;
+		color: #333;
+		border-radius: 4px;
+		width: 100%;
+	}
+
+	.dropdown::before {
+		content: '▼';
+		position: absolute;
+		right: 8px;
+		top: 50%;
+		transform: translateY(-50%);
+		pointer-events: none;
+		font-size: 10px;
+		color: #333;
+	}
+
+
+	.button {
+		display: inline-block;
+		background-color: #007BFF;
+		color: white;
+		padding: 8px 16px;
+		font-size: 16px;
+		border: none;
+		border-radius: 4px;
+		cursor: pointer;
+		text-decoration: none;
+		transition: background-color 0.3s, box-shadow 0.3s;
+		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	}
+
+	.button:hover {
+		background-color: #0056B3;
+		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+	}
+
+	.button:active {
+		background-color: #004085;
+		box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+	}
+
+	.mini-button {
+		padding: 4px 8px;
+		font-size: 8px;
+	}
+
+
+
+	.title {
+		color: #333;
+		font-size: 12px;
+		margin-bottom: 4px;
+	}
+
+	.border {
+		border: 1px solid #f5f5f5;
+		box-sizing: border-box;
+		padding: 4px;
+		margin-bottom: 8px;
+	}
+
+	.max-height {
+		height: 300px;
+		max-height: 300px;
+	}
+
+	.ppt_container {
+		display: flex;
+	}
+
+	.ppt_meun {
+		width: 200px;
+		flex-shrink: 0;
+		overflow: auto;
+		padding: 0 8px;
+		border-right: 1px solid #f5f5f5;
+	}
+
+	.list-item {
+		display: flex;
+		align-items: center;
+		background-color: #f1f1f1;
+		color: #333;
+		padding: 8px 16px;
+		margin-bottom: 4px;
+		font-size: 16px;
+		border-radius: 4px;
+		cursor: pointer;
+		text-decoration: none;
+		transition: background-color 0.3s;
+	}
+
+	.list-item:hover {
+		background-color: #e1e1e1;
+	}
+
+	.list-item.active {
+		background-color: #0056B3;
+		color: #fff;
+	}
+
+	.content {
+		flex: 1;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background-color: #f2f2f2;
+		position: relative;
+	}
+
+	.del_icon {
+		position: absolute;
+		width: 20px;
+		height: 20px;
+		right: 40px;
+		top: 20px;
+		cursor: pointer;
+	}
+
+	.content_main {
+		background-color: #fff;
+		width: 300px;
+		height: 168px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.content_show {
+		width: 300px;
+		height: 168px;
+	}
+
+
+
+	.stylish-input {
+		background-color: #f1f1f1;
+		border: none;
+		border-radius: 4px;
+		/* box-shadow: inset 0 0 0 2px #ccc; */
+		font-size: 16px;
+		padding: 8px 12px;
+		outline: none;
+		transition: box-shadow 0.3s, background-color 0.3s;
+	}
+
+	.stylish-input:focus {
+		background-color: #fff;
+		box-shadow: inset 0 0 0 2px #f1f1f1;
+	}
+
+	.lay-title {
+		margin-top: 12px;
+	}
+  
+  .c-box {
+    background: #f5f5f5;
+  }
+  .c-box:hover {
+    background-color: #0056B3;
+  }
+
+  .active-box {
+    background-color: #0056B3;
+  }
+
+  .disabled-btn {
+    background-color: #0057b35d !important;
+    color: #0057b35d !important;
+
+  }
+
+
+  .perview-container {
+    display: none;
+  }
+
 </style>
-<div class="body_container">
+
+<div id="settingBox" class="body_container">
+  <div class="title lay-title"> 跳转关联 </div>
+  <div class="border" style="display: flex; align-items: center;justify-content:space-around;">
+    <div>
+      <div class="title"> from <a href="#" class="button mini-button" id="selectForm"> 选择 </a>  </div>
+      <div class="title" id="titleForm""> 选择节点FORM</div>
+      <div id="direcForm" class="border" style=" cursor: pointer;  width: 80px; height: 80px; box-sizing: border-box; position: relative; display: flex;justify-content: center;align-items: center;">
+        <div class="c-box" style="border-radius: 2px; width: 40px; height: 5px; position: absolute; top: 10px;" data-type="from" data-direc="top"></div>
+        <div class="c-box" style="border-radius: 2px;width: 40px; height: 5px; position: absolute; bottom: 10px;" data-type="from" data-direc="bottom"></div>
+        <div  class="c-box" style="border-radius: 2px;width: 5px; height: 40px; position: absolute; left: 10px;" data-type="from" data-direc="left"></div>
+        <div  class="c-box active-box" style="border-radius: 2px;width: 5px; height: 40px; position: absolute; right: 10px;" data-type="from" data-direc="right"></div>
+        <div class="c-box" style="border-radius: 2px; width: 40px; height: 40px;"></div>
+      </div>
+    </div>
+    <div style="flex-shrink: 0;"><a href="#"  class="button mini-button disabled-btn" id="contect"> 连接</a> </div>
+    <div>
+      <div class="title"> to <a href="#" class="button mini-button " id="selectTo"> 选择 </a></div>
+      <div class="title" id="titleTo"> 选择节点TO </div>
+      <div id="direcTo" class="border" style=" cursor: pointer;  width: 80px; height: 80px; box-sizing: border-box; position: relative; display: flex;justify-content: center;align-items: center;">
+        <div class="c-box" style="border-radius: 2px; width: 40px; height: 5px; position: absolute; top: 10px;" data-type="to" data-direc="top"></div>
+        <div class="c-box" style="border-radius: 2px;width: 40px; height: 5px; position: absolute; bottom: 10px;" data-type="to" data-direc="bottom"></div>
+        <div  class="c-box active-box" style="border-radius: 2px;width: 5px; height: 40px; position: absolute; left: 10px;" data-type="to" data-direc="left"></div>
+        <div  class="c-box " style="border-radius: 2px;width: 5px; height: 40px; position: absolute; right: 10px;" data-type="to" data-direc="right"></div>
+        <div class="c-box" style="border-radius: 2px; width: 40px; height: 40px;"></div>
+      </div>
+    </div>
+  </div>
+  <div class="border">
+		<div class="title lay-title"> 颜色 </div>
+		<input type="color" id="color" value="#E8178A">
+	</div>
+  <div class="border">
+		<div class="title lay-title"> 大小 </div>
+		<input type="number" id="strokeWeight" value="5" min="1" step="1" class="stylish-input" style=" width: 100%;" />
+	</div>
+  <div>
+    <div class="title lay-title"> 预览设置 </div>
+    <div class="border">
+      <div class="title lay-title"> 入口 <a href="#" class="button mini-button" id="selectEntry"> 选择 </a></div>
+      <div class="title lay-title" id="entryTitle">请选择节点(页面第一层子节点元素)</div>
+    </div>
+    <div class="border">
+      <div class="title lay-title"> 宽 </div>
+      <input type="number" id="perviewwidth" value="375" min="375" max="1920" step="1" class="stylish-input" style=" width: 100%;" />
+    </div>
+    <div class="border">
+      <div class="title lay-title"> 高 </div>
+      <input type="number" id="perviewheight" value="667" min="667" max="1080"  step="1" class="stylish-input" style=" width: 100%;" />
+    </div>
+    <a href="#" class="button" id="perview"> 立即预览 </a>
+  </div>
+</div>
+<div id="perviewbox" class="perview-container">
+  <div style="text-align: center;">
+    <a href="#" class="button" id="gohome"> 返回设置 </a>
+    <a href="#" class="button" id="pageUp"> 上一页 </a>
+    <a href="#" class="button" id="pageDown"> 下一页 </a>
+  </div>
+  
 
 </div>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+	integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+	crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
 <script>
+  let formNode = {
+    direc: 'right'
+  }
 
-    var colors = [{
-        "brand_name": "即时设计",
-        "colors": ["#CE5554", "#E45C5E", "#FF5354", "#4EAA70", "#58BC7C", "#35C773", "#58D67D", "#458BF2", "#4596FF", "#64A2FA", "#4F80FE", "#7290FF", "#EF853E", "#FE954F", "#FF9C45", "#FFB356", "#FF9233", "#8153F5", "#9066FF", "#9B70FE", "#A27CFC"]
+  let toNode =  {
+    direc: 'left'
+  }
+
+  let contectStatus = false
+
+  let entryNode = {}
+
+  $('#selectForm').on('click', () => {
+    parent.postMessage({
+				pluginMessage: {
+					type: 'select:form',
+				}
+			}, '*')
+  })
+
+  $('#selectTo').on('click', () => {
+    parent.postMessage({
+				pluginMessage: {
+					type: 'select:to',
+				}
+			}, '*')
+  })
+
+  $('#direcTo').on('click', (event) => {
+    const direc = getMutliLevelProperty(event, 'target.dataset.direc', '')
+    if (direc) {
+      toNode.direc = direc
+      $(`div[data-type="to"]`).removeClass('active-box')
+      $(`div[data-type="to"][data-direc="${direc}"]`).addClass('active-box')
     }
-    ];
+  })
 
-    for (let i = 0; i < colors.length; i++) {
-        //创建 插件内容 的DOM结构
-        let brand = document.createElement('div');
-        brand.classList.add('brand-box');
+  $('#direcForm').on('click', (event) => {
+    console.log('event---', event)
+    const direc = getMutliLevelProperty(event, 'target.dataset.direc', '')
+    if (direc) {
+      formNode.direc = direc
+      $(`div[data-type="from"]`).removeClass('active-box')
+      $(`div[data-type="from"][data-direc="${direc}"]`).addClass('active-box')
+    }
+  })
 
-        //创建div
-        let header = document.createElement('div');
-        header.classList.add('header')
+  $('#contect').on('click', () => {
+    if (!contectStatus) return
+    parent.postMessage({
+				pluginMessage: {
+					type: 'contect',
+          datas: {
+            formNode,
+            toNode,
+            color: $('#color').val(),
+            strokeWeight: $('#strokeWeight').val(),
+          }
+				}
+			}, '*')
+  })
 
-        //创建标签
-        let brandName = document.createElement('h2');
-        brandName.innerHTML = colors[i].brand_name;
+  $('#perview').on('click', () => {
+    if (!entryNode.id) {
+      alert('请选择节点(页面第一层子节点元素)')
+      return
+    }
+    parent.postMessage({
+				pluginMessage: {
+					type: 'perview',
+          datas: {
+            entry: entryNode.id,
+            width: $('#perviewwidth').val(),
+            height: $('#perviewheight').val(),
+          }
+				}
+			}, '*')
+  })
 
-        //创建按钮
-        let addButton = document.createElement('button');
-        addButton.innerHTML = '添加';
+  $('#gohome').on('click', () =>{
+    $('#settingBox').show()
+    $('#perviewbox').hide()
+    parent.postMessage({
+				pluginMessage: {
+					type: 'reset',
+				}
+			}, '*')
+  })
 
+  $('#selectEntry').on('click', () => {
+    parent.postMessage({
+				pluginMessage: {
+					type: 'select:entry',
+				}
+			}, '*')
+  })
 
-        //添加点击事件
-        addButton.onclick = () => {
-            let colorsList = colors[i].colors
-            let name = colors[i].brand_name
-            //插件ui 向 插件主代码 发送信息
-            parent.postMessage({
-                pluginMessage: {
-                    type: 'createLayer',
-                    colorsList,
-                    name
-                }
-            }, '*')
-        }
-
-
-        header.appendChild(brandName);
-        header.appendChild(addButton);
-        brand.appendChild(header);
-
-        //遍历生成颜色DOM
-        let brandColors = document.createElement('div');
-        brandColors.classList.add('color-list');
-        var j;
-        for (j = 0; j < colors[i].colors.length; ++j) {
-            let color = document.createElement('div');
-            color.classList.add('color');
-            color.style.backgroundColor = colors[i].colors[j];
-            brandColors.appendChild(color);
-        }
-        brand.appendChild(brandColors);
-
-        //生成的Dom结构添加到Body
-        let bodyEl = document.querySelector('.body_container');
-        bodyEl.appendChild(brand);
+  window.onmessage = async (event) => {
+		const { pluginId, pluginMessage } = event.data
+		// if (pluginId !== "1_ZQp2EwQPLwdJ2ifcvUZ") return
+		if (!pluginMessage) return
+		const { type, datas } = pluginMessage 
+    if (type === 'select:form:done') {
+      formNode = Object.assign(formNode, datas)
+      $('#titleForm').html(formNode.name)
+    } else if(type === 'select:to:done') {
+      toNode = Object.assign(toNode, datas)
+      $('#titleTo').html(toNode.name)
+    } else if (type === 'select:entry:done') {
+      entryNode = datas
+      $('#entryTitle').html(entryNode.name)
+    } else if (type === 'perview:done') {
+      console.log('perview:done')
+      $('#settingBox').hide()
+      $('#perviewbox').show()
+    }
+    if (toNode.id && formNode.id) {
+      contectStatus = true
+      $('#contect').removeClass('disabled-btn')
     }
 
-    
+  }
 
+
+  function getMutliLevelProperty(ctx, path, defaultVal) {
+		let res = defaultVal;
+		if (!(typeof path === 'string') || !isObject(ctx)) return res;
+		let key = path.replace(/\[(\w+)\]/g, '.$1');
+		key = key.replace(/^\./, '');
+		const arr = key.split('.');
+		for (let i = 0, count = arr.length; i < count; i++) {
+			const p = arr[i];
+			if ((isObject(ctx) || Array.isArray(ctx)) && p in ctx) {
+				ctx = ctx[p];
+			} else {
+				return res;
+			}
+		}
+		res = ctx;
+		return res;
+	}
+
+	function isObject(obj) {
+		var type = typeof obj;
+		return type === 'function' || type === 'object' && !!obj;
+	}
 </script>
