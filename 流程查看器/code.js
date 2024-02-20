@@ -177,24 +177,29 @@ function getTurnPoints(from, to, el, direc) {
 	let space = 20
 	let point = JSON.parse(JSON.stringify(from))
 	const { width, height } = el
+  let pdirec = 'right'
 	if (direc === 'top' || direc === 'bottom') {
 		if (from.x > to.x) {
 			// 在右边
 			point.x = point.x - width / 2 - space
+      pdirec = 'right'
 		} else {
 			// 左边
 			point.x = point.x + width / 2 + space
+      pdirec = 'left'
 		}
 	} else {
 		if (from.y > to.y) {
 			// 在下边
 			point.y = point.y - height / 2 - space
+      pdirec = 'bottom'
 		} else {
 			// 上边
 			point.y = point.y + height / 2 + space
+      pdirec = 'top'
 		}
 	}
-	return point
+	return [point, pdirec]
 }
 
 // 第四个点
@@ -228,9 +233,9 @@ function createContect(fromEl, toEl, formDirec, toDirec) {
 	const pointTo0 = getElDirecPoint(toEl)[toDirec]
 	const pointTo1 = getOffsetPoint(pointTo0, toDirec)
 
-	const point2 = getTurnPoints(point1, pointTo1, fromEl, formDirec)
+	let [point2, point2Direc] = getTurnPoints(point1, pointTo1, fromEl, formDirec)
 
-	const pointTo2 = getTurnPoints(pointTo1, point1, toEl, toDirec)
+	let [pointTo2, pointTo2Direc] = getTurnPoints(pointTo1, point1, toEl, toDirec)
 
 	const [point3, point4] = getContectPoints(point2, pointTo2)
 
@@ -264,7 +269,7 @@ function createContect(fromEl, toEl, formDirec, toDirec) {
 	//   M ${point0.x} ${point0.y} 
 	//   L ${point1.x} ${point1.y}
 	//   L ${point2.x} ${point2.y}
-	//   L ${point2.x} ${pointTo2.y}
+  //   L ${point3.x} ${point3.y}
 	//   L ${pointTo2.x} ${pointTo2.y}
 	//   L ${pointTo1.x} ${pointTo1.y}
 	//   L ${pointTo0.x} ${pointTo0.y}
@@ -282,6 +287,8 @@ function createContect(fromEl, toEl, formDirec, toDirec) {
 	try {
 		let vectorNetwork = JSON.parse(JSON.stringify(vectorNode.vectorNetwork))
 		// vectorNode.vectorNetwork.vertices.splice(0, 1)
+    
+    vectorNetwork.vertices[0].strokeCap = 'SQUARE'
 		vectorNetwork.vertices[vectorNetwork.vertices.length - 1].strokeCap = 'ARROW_LINES'
 		vectorNode.vectorNetwork = vectorNetwork
 	} catch (error) {
@@ -391,29 +398,33 @@ function setCacheData(fromEl, toEl, vectId) {
 function getFromDatas(el) {
 	let parentCache = el.getPluginData(childfromcachekey)
 	const reslut = []
-	console.log('elCache---', parentCache)
+
 	if (parentCache) {
 		parentCache = JSON.parse(parentCache)
+    console.log('elCache---', parentCache)
 		// 刷新链接数据
 		parentCache = refreshChildFrom(parentCache)
 		el.setPluginData(childfromcachekey, JSON.stringify(parentCache))
 		if (Array.isArray(parentCache)) {
-			// parentCache.forEach(({ from }) => {
-			// 	const node = jsDesign.getNodeById(from)
-			// 	let ownto = node.getPluginData(tocachekey)
-			// 	if (node && ownto) {
-			// 		reslut.push({
-			// 			id,
-			// 			toId: ownto,
-			// 			x: node.x,
-			// 			y: node.y,
-			// 			w: node.width,
-			// 			h: node.height
-			// 		})
-			// 	}
-			// })
+			parentCache.forEach(({ from }) => {
+        console.log('reslut---', reslut, from)
+				const node = jsDesign.getNodeById(from)
+				let ownto = node.getPluginData(tocachekey)
+        console.log('ownto---', ownto)
+				if (node && ownto) {
+					reslut.push({
+						id: from,
+						toId: ownto,
+						x: node.x,
+						y: node.y,
+						w: node.width,
+						h: node.height
+					})
+				}
+			})
 		}
 	}
+  console.log('reslut---', reslut)
 	return reslut
 }
 

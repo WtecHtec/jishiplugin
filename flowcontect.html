@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <!-- content -->
+    <div id="myDiagramDiv"
+     style="width:800px; height:500px; background-color: #DAE4E4;"></div>
+
+    <!-- dependencies -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/@joint/core/4.0.0/joint.js"></script> -->
+
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/gojs/1.7.2/go-debug.js"></script> -->
+
+       <script src="https://cdnjs.cloudflare.com/ajax/libs/gojs/2.1.47/go.js"></script>
+
+       <button onclick="findLinkByKey('Alpha-Beta')">Find Link by Key: Alpha-Beta</button>
+    <!-- code -->
+    <script type="text/javascript">
+    var $ = go.GraphObject.make;
+
+var diagram =
+  $(go.Diagram, "myDiagramDiv",
+    {
+      // initialContentAlignment: go.Spot.Center, // center Diagram contents
+      // "undoManager.isEnabled": true, // enable Ctrl-Z to undo and Ctrl-Y to redo
+      // layout: $(go.TreeLayout, // specify a Diagram.layout that arranges trees
+      //           { angle: 90, layerSpacing: 35 })
+    });
+  
+    // diagram.nodeTemplate =
+    //   $(go.Node, 
+    //   // new go.Binding('rect'),
+    //   // { width: 10, height: 10},
+    //   { width: new go.Binding('text', 'width', v => {
+    //     console.log(v)
+    //     return 10
+    //   }), height: new go.Binding('text', 'height', v => {
+    //     return 10
+    //   }) },
+    //   new go.Binding('position'),
+    //     // $(go.Shape, "RoundedRectangle", { fill: "lightgray" }),
+    //     $(go.TextBlock, { margin: 0 },
+    //       new go.Binding("text", "key", v => {
+    //         console.log(v)
+    //         return v
+    //       }))
+    //   );
+
+// diagram.linkTemplate =
+//   $(go.Link,
+//     { routing: go.Link.AvoidsNodes, fromSpot: go.Spot.Left, toSpot: go.Spot.Right }, // 方向
+//     new go.Binding("fromEndSegmentLength"),
+//     new go.Binding("toEndSegmentLength"),
+//     $(go.Shape),
+//     $(go.Shape, { toArrow: "Standard" })  
+//   );
+
+
+  // diagram.nodeTemplateMap.add('node1',
+  //   $(go.Node,
+  //     // 规定该节点的宽高, 内容超出会被隐藏
+  //     { width: 30, height: 40 },
+      
+  //     // 绑定节点的位置属性, 用来控制节点处于画布的哪个位置
+  //     new go.Binding('position'),
+
+  //     // 背景图片与图标
+  //     $(go.Panel, go.Panel.Auto,
+  //       { position: new go.Point(0, 0) },
+  //       $(go.TextBlock,
+  //         {
+  //           stroke: '#000',
+  //           font: 'normal bold 12px Serif',
+  //           position: new go.Point(80, 20)
+  //         },
+  //         new go.Binding('text'))
+  //     )
+  //   )
+  // )
+
+  
+  diagram.nodeTemplateMap.add('node1',
+    $(go.Node,
+      // 规定该节点的宽高, 内容超出会被隐藏
+      { width: 30, height: 40 },
+      
+      // 绑定节点的位置属性, 用来控制节点处于画布的哪个位置
+      new go.Binding('position'),
+
+      $(go.TextBlock, { margin: 0 },
+          new go.Binding("text", "key")
+          ),
+    )
+  )
+
+  diagram.nodeTemplateMap.add('node2',
+    $(go.Node,
+      // 规定该节点的宽高, 内容超出会被隐藏
+      { width: 10, height: 40 },
+      
+      // 绑定节点的位置属性, 用来控制节点处于画布的哪个位置
+      new go.Binding('position'),
+
+      $(go.TextBlock, { margin: 0 },
+          new go.Binding("text", "key")
+          ),
+    )
+  )
+
+var nodeDataArray = [
+  { key: "Alpha", rect: { width: 10, height: 40 } , text: '申请', position: new go.Point(-100, -100), category: 'node2'},
+  { key: "Beta", width: "30", height: "40", position: new go.Point(100, 100),category: 'node1' },
+  { key: "Gamma", category: 'node1', position: new go.Point(50, 100) },
+  { key: "Delta",  category: 'node1', position: new go.Point(80, 80) }
+];
+
+
+    // 定义普通连线模板
+    var normalLinkTemplate =
+        $(go.Link,
+          { routing: go.Link.Orthogonal, corner: 5 },
+          $(go.Shape, { strokeWidth: 3, stroke: "#555" }));
+
+      // 定义虚线模板
+      var dashedLinkTemplate =
+        $(go.Link,
+          { routing: go.Link.Orthogonal, corner: 5 },
+          $(go.Shape, { strokeWidth: 3, stroke: "#555", strokeDashArray: [6, 3] }));
+
+      // 将连线模板添加到linkTemplateMap中
+      diagram.linkTemplateMap.add("normal", normalLinkTemplate);
+      diagram.linkTemplateMap.add("dashed", dashedLinkTemplate);
+
+var linkDataArray = [
+  { key:"Alpha-Beta", from: "Alpha", to: "Beta", category: 'dashed' },
+  // {  from: "Gamma", to: "Delta", fromEndSegmentLength: 4, toEndSegmentLength: 30 },
+];
+diagram.model = new go.GraphLinksModel(nodeDataArray, linkDataArray);
+    console.log('diagram.model---',diagram, diagram.model)
+          setTimeout(() => {
+            const link = findLinkByKey('Alpha-Beta')
+            console.log(link)
+          }, 1000)
+
+          // 获取连线的坐标点
+          function findLinkByKey(key) {
+        const link = diagram.findLinksByExample({ key: key });
+        if (link) {
+          console.log('Link found:', link.first().points.toArray());
+        } else {
+          console.log('Link not found for key:', key);
+        }
+      }
+  
+    </script>
+</body>
+</html>

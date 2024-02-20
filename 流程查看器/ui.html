@@ -256,6 +256,31 @@
 		background-color: transparent;
 		z-index: 9999;
 	}
+
+  html::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+
+html::-webkit-scrollbar-track {
+    background: rgb(179, 177, 177);
+    border-radius: 4px;
+}
+
+html::-webkit-scrollbar-thumb {
+    background: rgb(136, 136, 136);
+    border-radius: 4px;
+  }
+
+html::-webkit-scrollbar-thumb:hover {
+    background: rgb(100, 100, 100);
+    border-radius: 4px;
+  }
+
+html::-webkit-scrollbar-thumb:active {
+    background: rgb(68, 68, 68);
+    border-radius: 4px;
+  }
 </style>
 
 <div id="settingBox" class="body_container">
@@ -328,10 +353,10 @@
 	<div id="perviewContentBox" style="position: relative;">
 		<!-- <img id="perviewImg" style="width: 100%;height: 100%;" /> -->
 	</div>
-	<div style="text-align: center; margin-top: 2px;">
-		<a href="#" class="button" id="gohome"> 返回设置 </a>
-		<a href="#" class="button" id="pageUp" style="display: none;"> 上一页 </a>
-		<a href="#" class="button" id="pageDown" style="display: none;"> 下一页 </a>
+	<div style="text-align: center; margin-top: 2px; margin-bottom: 4px;">
+		<a href="#" class="button mini-button" id="gohome"> 返回设置 </a>
+		<a href="#" class="button mini-button" id="pageUp" style="display: none;"> 上一页 </a>
+		<a href="#" class="button mini-button" id="pageDown" style="display: none;"> 下一页 </a>
 	</div>
 </div>
 
@@ -454,6 +479,7 @@
 		// if (pluginId !== "1_ZQp2EwQPLwdJ2ifcvUZ") return
 		if (!pluginMessage) return
 		const { type, datas } = pluginMessage
+    console.log('pluginMessage---', pluginMessage)
 		if (type === 'select:form:done') {
 			formNode = Object.assign(formNode, datas)
 			$('#titleForm').html(formNode.name)
@@ -464,7 +490,7 @@
 			entryNode = datas
 			$('#entryTitle').html(entryNode.name)
 		} else if (type === 'perview:done') {
-			// console.log('perview:done', datas)
+			console.log('perview:done', datas)
 			const { rect, perivewdata } = datas
 			$('#settingBox').hide()
 			$('#perviewbox').show()
@@ -523,31 +549,30 @@
 		const newWidth = originalWidth * scale;
 		const newHeight = originalHeight * scale;
 
-		return [newWidth, newHeight, scale];
+		return [newWidth, newHeight, scale, widthScale, heightScale, originalWidth * widthScale,  originalHeight * heightScale];
 	}
 
 	function perviewFlow(datas, soucer = '') {
 		const { rect, perivewdata, events } = datas
-		const [nw, nh, scale] = scaleImage(rect.width, rect.height, perviewWidth, perviewHeight)
+		const [nw, nh, scale, wscale, hscale, sameW, sameH] = scaleImage(rect.width, rect.height, perviewWidth, perviewHeight)
 		const img = $('<img/>')
 		img.attr('src', getBase(perivewdata))
-			.css({ width: `${nw}px`, height: `${nh}px` })
+			.css({ width: `${sameW}px`, height: `${sameH}px` })
 
 		const eventBoxs = []
 		if (Array.isArray(events)) {
 			events.forEach(item => {
 				const { id, toId, x, y, w, h } = item
 				eventBoxs.push($(`<div class="events-box" data-type="event" data-toid="${toId}"  data-id="${id}"></div>`).css({
-					left: `${x * scale}px`,
-					top: `${y * scale}px`,
-					width: `${w * scale}px`,
-					height: `${h * scale}px`,
+					left: `${x * wscale}px`,
+					top: `${y * hscale}px`,
+					width: `${w * wscale}px`,
+					height: `${h * hscale}px`,
 				}))
 			})
 		}
 		if (!soucer) {
 			perivewsDatas.push(datas)
-			console.log('perivewsDatas---', perivewsDatas)
 		}
 		if (perviewNext) {
 			perviewIndex = perviewIndex + 1
@@ -560,7 +585,7 @@
 
 	$('#perviewContentBox').on('click', event => {
 		const type = getMutliLevelProperty(event, 'target.dataset.type', '')
-		const toId = getMutliLevelProperty(event, 'target.dataset.toId', '')
+		const toId = getMutliLevelProperty(event, 'target.dataset.toid', '')
 		if (type === 'event' && toId) {
 			const findex = perivewsDatas.findIndex(item => item.id === toId)
 			console.log(findex)
