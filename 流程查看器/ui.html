@@ -386,6 +386,8 @@ html::-webkit-scrollbar-thumb:active {
 
 	let perviewNext = false
 
+
+
 	$('#selectForm').on('click', () => {
 		parent.postMessage({
 			pluginMessage: {
@@ -467,6 +469,8 @@ html::-webkit-scrollbar-thumb:active {
 	})
 
 	$('#selectEntry').on('click', () => {
+    perivewsDatas = []
+    perviewIndex = 0
 		parent.postMessage({
 			pluginMessage: {
 				type: 'select:entry',
