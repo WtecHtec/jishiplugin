@@ -553,7 +553,8 @@
 			formData.append('configDatas', JSON.stringify(configDatas))
 			formData.append('userId', userId)
 
-			const url = 'https://luckcar.top/vpserver/'
+			// const url = 'https://luckcar.top/vpserver/'
+			const url = 'http://127.0.0.1:3299'
 			// $('#miniCodeImg').attr('src', `${url}/vp/${userId}_image_0.png`).show()
 			$.ajax({
 				url: url + '/api/upload/file',

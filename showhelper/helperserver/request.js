@@ -10,9 +10,14 @@ async function getRequest(url, params) {
 	}
 }
 
-async function postRequest(url, data) {
+async function postRequest(url, data, config = {
+	responseType: 'arraybuffer',
+	headers: {
+		'Content-Type': 'application/json',
+	},
+}) {
 	try {
-		const response = await axios.post(url, data);
+		const response = await axios.post(url, data, config);
 		return response.data;
 	} catch (error) {
 		console.error('Error in POST request:', error);

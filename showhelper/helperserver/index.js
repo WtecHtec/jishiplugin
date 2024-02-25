@@ -64,8 +64,11 @@ app.get('/getvp/:sourceId', (req, res) => {
 });
 
 function getWxKey() {
-	const secret = 'a4d86cfd774e84d831b4ffa0fd498cff'
-	const appid = 'wxa27a95e5f546c668'
+	// const secret = 'a4d86cfd774e84d831b4ffa0fd498cff'
+	// const appid = 'wxa27a95e5f546c668'
+
+	const secret = 'cbfab2e36bce1252eb32035a3024da7d'
+	const appid = 'wx5b8c0dadaa80810d'
 	const getUrl = `https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=${appid}&secret=${secret}`
 	return new Promise((resolve) => {
 		getRequest(getUrl)
@@ -84,22 +87,35 @@ function getWxKey() {
 }
 
 function getCode(userId, attoken) {
-	const postUrl = `https://api.weixin.qq.com/cgi-bin/wxaapp/createwxaqrcode?access_token=${attoken}`
-	const postData = {
-		"path": `/pages/index/index?sourceId=${userId}`,
-		"width": 430
-	}
+	// const postUrl = `https://api.weixin.qq.com/cgi-bin/wxaapp/createwxaqrcode?access_token=${attoken}`
+	// const postData = {
+	// 	path: `pkgVp/pages/index/index?source=${userId}`,
+	// 	 "env_version": "trial",
+	// }
+
+
+	// const postUrl = `https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=${attoken}`
+	// const postData = {
+	// 	"scene": 'a=1',
+	// 	"page": `pkgVp/pages/index/index`,
+	// 	"width": 430,
+	// 	"env_version": "trial",
+	// 	check_path: false,
+	// }
+
+
+	// console.log(postData.scene.length)
 	return new Promise((resolve) => {
 		postRequest(postUrl, postData)
 			.then((data) => {
-				console.log('POST request data:', data.errcode)
-				if (data.buffer) {
-					resolve(data.buffer)
-				} else {
-					console.log('no data.buffer')
+				console.log('POST request data:', data)
+				try {
+					const { errcode, errmsg } = JSON.parse(data.toString())
+					console.log(errcode, errmsg)
 					resolve('')
+				} catch (error) {
+					resolve(data)
 				}
-
 			})
 			.catch((err) => {
 				console.error('Error in POST request:', err)
@@ -110,9 +126,9 @@ function getCode(userId, attoken) {
 
 function saveImg(imgbuffer, pathfile) {
 	// 将 Buffer 保存为文件
-	const imageBuffer = Buffer.from(imgbuffer);
+	// const imageBuffer = Buffer.from(imgbuffer);
 	return new Promise((resolve) => {
-		fs.writeFile(pathfile, imageBuffer, (err) => {
+		fs.writeFile(pathfile, imgbuffer, (err) => {
 			if (err) {
 				console.error('Error saving image:', err);
 				resolve('')
@@ -149,7 +165,7 @@ app.post('/api/upload/file', upload.array('image'), (req, res) => {
 			if (aukey) {
 				const imgbuffer = await getCode(userId, aukey)
 				if (imgbuffer) {
-					const status = await saveImg(imgbuffer, path.join(__dirname, './uploads', `${userId}.png`))
+					const status = await saveImg(imgbuffer, path.join(__dirname, './uploads', `${userId}_qr.png`))
 					if (status) {
 						res.status(200).send(`${userId}.png`)
 					} else {
