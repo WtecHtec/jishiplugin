@@ -1,0 +1,17 @@
+.show-page {
+	/* height: 100vh; */
+	width: 100%;
+	box-sizing: border-box;
+	position: relative;
+}
+
+.show-img {
+	width: 100%;
+	height: 100%;
+	vertical-align: top;
+}
+
+.events-img {
+	position: absolute;
+	z-index: 99999;
+}

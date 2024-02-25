@@ -12,6 +12,7 @@ const pathtokey = 'pathto'
 const idfix = 'flowver'
 //监听从 插件ui 发过来的信息
 jsDesign.ui.onmessage = async (msg) => {
+	console.log(msg)
 	// jsDesign.showUI(__html__, { width: 760, height: 123 });
 	if (msg.type === 'select:form') {
 		const selection = jsDesign.currentPage.selection
@@ -106,9 +107,57 @@ jsDesign.ui.onmessage = async (msg) => {
 		})
 	} else if (msg.type === 'reset') {
 		jsDesign.ui.resize(400, 700)
+	} else if (msg.type === 'perview:mini') {
+		const { datas } = msg
+		const { entry, } = datas
+		console.log('perview:mini0---', entry)
+		await handlePerviewMini(entry)
 	}
 
 };
+
+async function handlePerviewMini(id) {
+	let files = [];
+	let datas = [];
+	let cache = {}
+	await fromPerviewDatas(id, files, datas, cache)
+	console.log('perview:mini1---')
+	jsDesign.ui.postMessage({
+		type: 'perview:mini:done',
+		datas: {
+			files: files,
+			configDatas: datas,
+			userId: jsDesign.currentUser.id,
+		},
+	})
+}
+
+async function fromPerviewDatas(id, files, datas, cache) {
+	const entryNode = jsDesign.getNodeById(id)
+	if (!entryNode || cache[id]) return
+	cache[id] = true
+	const uint8Array = await entryNode.exportAsync()
+	// const blob = new Blob([uint8Array], { type: 'image/png' });
+	// const blobToFile = new File([blob], this.currentImage.fileName, {
+
+	// 	type: 'image/*'
+
+	// })
+	const item = {
+		id: id,
+		events: getFromDatas(entryNode),
+		rect: { width: entryNode.width, height: entryNode.height }
+	}
+	files.push(uint8Array)
+	datas.push(item)
+	if (Array.isArray(item.events) && item.events.length) {
+		for (let i = 0; i < item.events.length; i++) {
+			const { toId } = item.events[i];
+			await fromPerviewDatas(toId, files, datas, cache)
+		}
+	}
+}
+
 
 function getGlobalXY(el) {
 	let x = 0
@@ -177,26 +226,26 @@ function getTurnPoints(from, to, el, direc) {
 	let space = 20
 	let point = JSON.parse(JSON.stringify(from))
 	const { width, height } = el
-  let pdirec = 'right'
+	let pdirec = 'right'
 	if (direc === 'top' || direc === 'bottom') {
 		if (from.x > to.x) {
 			// 在右边
 			point.x = point.x - width / 2 - space
-      pdirec = 'right'
+			pdirec = 'right'
 		} else {
 			// 左边
 			point.x = point.x + width / 2 + space
-      pdirec = 'left'
+			pdirec = 'left'
 		}
 	} else {
 		if (from.y > to.y) {
 			// 在下边
 			point.y = point.y - height / 2 - space
-      pdirec = 'bottom'
+			pdirec = 'bottom'
 		} else {
 			// 上边
 			point.y = point.y + height / 2 + space
-      pdirec = 'top'
+			pdirec = 'top'
 		}
 	}
 	return [point, pdirec]
@@ -269,7 +318,7 @@ function createContect(fromEl, toEl, formDirec, toDirec) {
 	//   M ${point0.x} ${point0.y} 
 	//   L ${point1.x} ${point1.y}
 	//   L ${point2.x} ${point2.y}
-  //   L ${point3.x} ${point3.y}
+	//   L ${point3.x} ${point3.y}
 	//   L ${pointTo2.x} ${pointTo2.y}
 	//   L ${pointTo1.x} ${pointTo1.y}
 	//   L ${pointTo0.x} ${pointTo0.y}
@@ -287,8 +336,8 @@ function createContect(fromEl, toEl, formDirec, toDirec) {
 	try {
 		let vectorNetwork = JSON.parse(JSON.stringify(vectorNode.vectorNetwork))
 		// vectorNode.vectorNetwork.vertices.splice(0, 1)
-    
-    vectorNetwork.vertices[0].strokeCap = 'SQUARE'
+
+		vectorNetwork.vertices[0].strokeCap = 'SQUARE'
 		vectorNetwork.vertices[vectorNetwork.vertices.length - 1].strokeCap = 'ARROW_LINES'
 		vectorNode.vectorNetwork = vectorNetwork
 	} catch (error) {
@@ -401,16 +450,16 @@ function getFromDatas(el) {
 
 	if (parentCache) {
 		parentCache = JSON.parse(parentCache)
-    console.log('elCache---', parentCache)
+		console.log('elCache---', parentCache)
 		// 刷新链接数据
 		parentCache = refreshChildFrom(parentCache)
 		el.setPluginData(childfromcachekey, JSON.stringify(parentCache))
 		if (Array.isArray(parentCache)) {
 			parentCache.forEach(({ from }) => {
-        console.log('reslut---', reslut, from)
+				console.log('reslut---', reslut, from)
 				const node = jsDesign.getNodeById(from)
 				let ownto = node.getPluginData(tocachekey)
-        console.log('ownto---', ownto)
+				console.log('ownto---', ownto)
 				if (node && ownto) {
 					reslut.push({
 						id: from,
@@ -424,7 +473,7 @@ function getFromDatas(el) {
 			})
 		}
 	}
-  console.log('reslut---', reslut)
+	console.log('reslut---', reslut)
 	return reslut
 }
 

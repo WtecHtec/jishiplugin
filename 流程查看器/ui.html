@@ -257,30 +257,30 @@
 		z-index: 9999;
 	}
 
-  html::-webkit-scrollbar {
-    width: 4px;
-    height: 4px;
-  }
+	html::-webkit-scrollbar {
+		width: 4px;
+		height: 4px;
+	}
 
-html::-webkit-scrollbar-track {
-    background: rgb(179, 177, 177);
-    border-radius: 4px;
-}
+	html::-webkit-scrollbar-track {
+		background: rgb(179, 177, 177);
+		border-radius: 4px;
+	}
 
-html::-webkit-scrollbar-thumb {
-    background: rgb(136, 136, 136);
-    border-radius: 4px;
-  }
+	html::-webkit-scrollbar-thumb {
+		background: rgb(136, 136, 136);
+		border-radius: 4px;
+	}
 
-html::-webkit-scrollbar-thumb:hover {
-    background: rgb(100, 100, 100);
-    border-radius: 4px;
-  }
+	html::-webkit-scrollbar-thumb:hover {
+		background: rgb(100, 100, 100);
+		border-radius: 4px;
+	}
 
-html::-webkit-scrollbar-thumb:active {
-    background: rgb(68, 68, 68);
-    border-radius: 4px;
-  }
+	html::-webkit-scrollbar-thumb:active {
+		background: rgb(68, 68, 68);
+		border-radius: 4px;
+	}
 </style>
 
 <div id="settingBox" class="body_container">
@@ -330,24 +330,27 @@ html::-webkit-scrollbar-thumb:active {
 		<div class="title lay-title"> 大小 </div>
 		<input type="number" id="strokeWeight" value="5" min="1" step="1" class="stylish-input" style=" width: 100%;" />
 	</div>
-	<div>
-		<div class="title lay-title"> 预览设置 </div>
-		<div class="border">
-			<div class="title lay-title"> 入口 <a href="#" class="button mini-button" id="selectEntry"> 选择 </a></div>
-			<div class="title lay-title" id="entryTitle">请选择节点(页面第一层子节点元素)</div>
-		</div>
-		<div class="border">
-			<div class="title lay-title"> 宽 </div>
-			<input type="number" id="perviewwidth" value="375" min="375" max="1920" step="1" class="stylish-input"
-				style=" width: 100%;" />
-		</div>
-		<div class="border">
-			<div class="title lay-title"> 高 </div>
-			<input type="number" id="perviewheight" value="667" min="667" max="1080" step="1" class="stylish-input"
-				style=" width: 100%;" />
-		</div>
-		<a href="#" class="button" id="perview"> 立即预览 </a>
+	<div class="title lay-title"> 预览设置 </div>
+	<input type="file" id="testfile" />
+	<div class="border">
+		<div class="title lay-title"> 入口 <a href="#" class="button mini-button" id="selectEntry"> 选择 </a></div>
+		<div class="title lay-title" id="entryTitle">请选择节点(页面第一层子节点元素)</div>
 	</div>
+	<div class="border">
+		<div class="title lay-title"> 宽 </div>
+		<input type="number" id="perviewwidth" value="375" min="375" max="1920" step="1" class="stylish-input"
+			style=" width: 100%;" />
+	</div>
+	<div class="border">
+		<div class="title lay-title"> 高 </div>
+		<input type="number" id="perviewheight" value="667" min="667" max="1080" step="1" class="stylish-input"
+			style=" width: 100%;" />
+	</div>
+	<div id="miniTip" style="color: #333; font-size: 12px;">请耐心等待一下,正在努力为你构建！！</div>
+	<img id="miniCodeImg" style="width: 240px;height: 240px;display: block;margin-bottom: 8px;" />
+	<a href="#" class="button" id="perview"> 立即演示 </a>
+	<a href="#" class="button" id="perviewMini"> 小程序演示 </a>
+</div>
 </div>
 <div id="perviewbox" class="perview-container">
 	<div id="perviewContentBox" style="position: relative;">
@@ -386,7 +389,8 @@ html::-webkit-scrollbar-thumb:active {
 
 	let perviewNext = false
 
-
+	$('#miniTip').hide()
+	$('#miniCodeImg').hide()
 
 	$('#selectForm').on('click', () => {
 		parent.postMessage({
@@ -469,8 +473,8 @@ html::-webkit-scrollbar-thumb:active {
 	})
 
 	$('#selectEntry').on('click', () => {
-    perivewsDatas = []
-    perviewIndex = 0
+		perivewsDatas = []
+		perviewIndex = 0
 		parent.postMessage({
 			pluginMessage: {
 				type: 'select:entry',
@@ -483,7 +487,7 @@ html::-webkit-scrollbar-thumb:active {
 		// if (pluginId !== "1_ZQp2EwQPLwdJ2ifcvUZ") return
 		if (!pluginMessage) return
 		const { type, datas } = pluginMessage
-    console.log('pluginMessage---', pluginMessage)
+		console.log('pluginMessage---', pluginMessage)
 		if (type === 'select:form:done') {
 			formNode = Object.assign(formNode, datas)
 			$('#titleForm').html(formNode.name)
@@ -502,12 +506,80 @@ html::-webkit-scrollbar-thumb:active {
 			$('#pageDown').hide()
 			$('#pageUp').hide()
 			perviewFlow(datas)
+		} else if (type === 'perview:mini:done') {
+			console.log('sssss', datas)
+			const { files, configDatas, userId } = datas
+			postMini(files, configDatas, userId)
+
 		}
 		if (toNode.id && formNode.id) {
 			contectStatus = true
 			$('#contect').removeClass('disabled-btn')
 		}
 
+	}
+
+	function postMini(files, configDatas, userId) {
+
+
+		const formData = new FormData()
+
+		if (Array.isArray(files) && files.length && userId && configDatas.length === files.length) {
+			console.log('---console.log(formData)')
+			// var oFiles = document.getElementById("testfile").files;
+			// console.log('2222', oFiles)
+			// formData.append('image', oFiles[0])
+			// const fdatas = [files[0]]
+			files.forEach((uint8Array, i) => {
+				// console.log(uint8Array)
+				// const blob = new Blob([uint8Array], { type: 'image/jpeg' });
+				// const file = new File([blob], `kkkk.png`, { type: 'image/jpeg', lastModified: Date.now() });
+				// console.log('2222', file)
+
+				// const base64Data = getBase(uint8Array)
+				// const contentType = base64Data.split(',')[0].match(/:(.*?);/)[1];
+				// const base64Body = base64Data.split(',')[1];
+				// const binaryData = atob(base64Body);
+				// const dataArray = new Uint8Array(binaryData.length);
+
+				// for (let i = 0; i < binaryData.length; i++) {
+				// 	dataArray[i] = binaryData.charCodeAt(i);
+				// }
+				const contentType = 'image/png'
+				const blob = new Blob([uint8Array], { type: contentType });
+				const file = new File([blob], `${userId}_image_${i}.png`, { type: contentType, lastModified: Date.now() });
+				formData.append('image', file)
+			})
+			formData.append('configDatas', JSON.stringify(configDatas))
+			formData.append('userId', userId)
+
+			const url = 'https://luckcar.top/vpserver/'
+			$('#miniCodeImg').attr('src', `${url}/vp/${userId}_image_0.png`).show()
+			$.ajax({
+				url: url + '/api/upload/file',
+				type: 'POST',
+				data: formData,
+				processData: false, // 告诉jQuery不要处理数据（不要将数据转换为查询字符串）
+				contentType: false, // 告诉jQuery不要设置Content-Type请求头（让浏览器自动设置）
+				// headers: {
+				// 	'Content-Type': "multipart/form-data"
+				// },
+				success: (data) => {
+					console.log(data)
+					$('#miniTip').hide()
+					$('#miniCodeImg').attr(`${url}/vp/${userId}.png`).show()
+				},
+				error: () => {
+					alert('构建失败')
+					$('#miniTip').hide()
+					$('#miniCodeImg').hide()
+				}
+			})
+		} else {
+			$('#miniTip').hide()
+			$('#miniCodeImg').hide()
+			alert('数据异常')
+		}
 	}
 
 
@@ -553,7 +625,7 @@ html::-webkit-scrollbar-thumb:active {
 		const newWidth = originalWidth * scale;
 		const newHeight = originalHeight * scale;
 
-		return [newWidth, newHeight, scale, widthScale, heightScale, originalWidth * widthScale,  originalHeight * heightScale];
+		return [newWidth, newHeight, scale, widthScale, heightScale, originalWidth * widthScale, originalHeight * heightScale];
 	}
 
 	function perviewFlow(datas, soucer = '') {
@@ -631,5 +703,24 @@ html::-webkit-scrollbar-thumb:active {
 		}
 		console.log(perivewsDatas)
 		$('#pageUp').show()
+	})
+
+	$('#perviewMini').on('click', () => {
+		if (!entryNode.id) {
+			alert('请选择节点(页面第一层子节点元素)')
+			return
+		}
+		alert('请耐心等待一下,正在努力为你构建！！')
+		console.log('小程序演示')
+		$('#miniTip').html('请耐心等待一下,正在努力为你构建！！').show()
+		$('#miniCodeImg').hide()
+		parent.postMessage({
+			pluginMessage: {
+				type: 'perview:mini',
+				datas: {
+					entry: entryNode.id,
+				}
+			}
+		}, '*')
 	})
 </script>

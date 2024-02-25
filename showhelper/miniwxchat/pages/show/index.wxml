@@ -1,0 +1,4 @@
+<view wx:if="{{vpUrl}}" class="show-page">
+		<image id="vpshowimg" bindload="bindload" binderror="binderror" src="{{vpUrl}}{{showData.url}}" mode="widthFix" class="show-img"></image>
+		<view class="events-img" wx:for="{{showEvents}}" wx:key="index" style="{{item.style}}" data-item="{{item}}" bindtap="bindToId"></view>
+</view>

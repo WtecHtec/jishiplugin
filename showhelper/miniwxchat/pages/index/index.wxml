@@ -1,0 +1,23 @@
+<view class="container">
+		<view class="header">
+				<text class="title">扫码设计演示 - 展示你的创意大作</text>
+		</view>
+		<view class="content">
+				<view class="introduction">
+						<text class="intro-text">
+								欢迎来到创意演示小助手！这里为您提供了便捷的设计稿展示方式，让您的作品在这个舞台上大放异彩。无论是平面设计、UI界面还是其他视觉创意，我们都能满足您的需求。
+						</text>
+				</view>
+				<view class="guide">
+						<text class="guide-title">快速开始</text>
+						<view class="guide-steps">
+								<view class="step">1. 在插件点击"小程序演示"按钮。</view>
+								<view class="step">2. 生成专属二维码：点击后系统将为您生成一个专属的二维码。</view>
+								<view class="step">3. 扫码预览：使用微信扫描二维码，即可在小程序中预览您的设计作品。</view>
+						</view>
+				</view>
+		</view>
+		<view bindtap="copyText" class="footer">
+				<text class="copyright">反馈联系wx:b-b-bigbelly[点击复制]</text>
+		</view>
+</view>
