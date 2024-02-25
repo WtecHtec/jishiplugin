@@ -12,7 +12,7 @@ Page({
 		showData: {},
 		vpUrl: app.vpUrl,
 		showEvents: [],
-
+		resizeNum: 0,
 	},
 
 	/**
@@ -56,6 +56,13 @@ Page({
 			const { showData } = this.data
 			console.log('event.detail', showData, event.detail)
 			const { events, rect } = showData
+			if (rect.height > 0 && height == 0 && this.data.resizeNum <= 5) {
+				setTimeout(() => {
+					this.bindload(event)
+					this.data.resizeNum = this.data.resizeNum + 1
+				}, 500)
+				return
+			}
 			if (Array.isArray(events)) {
 				const wScale = width / rect.width
 				const hScale = height / rect.height
@@ -79,7 +86,7 @@ Page({
 		console.log(event)
 		const { item } = event.target.dataset
 		wx.navigateTo({
-			url: `/pages/show/index?fromId=${item.toId}&isFirst=0`
+			url: `/pkgVp/pages/show/index?fromId=${item.toId}&isFirst=0`
 		})
 	},
 

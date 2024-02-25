@@ -554,7 +554,7 @@
 			formData.append('userId', userId)
 
 			const url = 'https://luckcar.top/vpserver/'
-			$('#miniCodeImg').attr('src', `${url}/vp/${userId}_image_0.png`).show()
+			// $('#miniCodeImg').attr('src', `${url}/vp/${userId}_image_0.png`).show()
 			$.ajax({
 				url: url + '/api/upload/file',
 				type: 'POST',

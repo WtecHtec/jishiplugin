@@ -19,7 +19,7 @@ Page({
 					if (res.data) {
 						app.globalData.designDatas = res.data
 						wx.redirectTo({
-							url: `/pages/show/index?fromId=0&isFirst=1`
+							url: `/pkgVp/pages/show/index?fromId=0&isFirst=1`
 						})
 
 					} else {
