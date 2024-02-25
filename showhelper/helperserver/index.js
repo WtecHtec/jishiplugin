@@ -94,17 +94,17 @@ function getCode(userId, attoken) {
 	// }
 
 
-	// const postUrl = `https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=${attoken}`
-	// const postData = {
-	// 	"scene": 'a=1',
-	// 	"page": `pkgVp/pages/index/index`,
-	// 	"width": 430,
-	// 	"env_version": "trial",
-	// 	check_path: false,
-	// }
+	const postUrl = `https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=${attoken}`
+	const postData = {
+		"scene": `${userId}`,
+		"page": `pkgVp/pages/index/index`,
+		"width": 430,
+		"env_version": "trial",
+		check_path: false,
+	}
 
 
-	// console.log(postData.scene.length)
+	console.log(postData.scene.length)
 	return new Promise((resolve) => {
 		postRequest(postUrl, postData)
 			.then((data) => {
