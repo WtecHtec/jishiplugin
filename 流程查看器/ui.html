@@ -331,7 +331,7 @@
 		<input type="number" id="strokeWeight" value="5" min="1" step="1" class="stylish-input" style=" width: 100%;" />
 	</div>
 	<div class="title lay-title"> 预览设置 </div>
-	<input type="file" id="testfile" />
+	<!-- <input type="file" id="testfile" /> -->
 	<div class="border">
 		<div class="title lay-title"> 入口 <a href="#" class="button mini-button" id="selectEntry"> 选择 </a></div>
 		<div class="title lay-title" id="entryTitle">请选择节点(页面第一层子节点元素)</div>
@@ -553,8 +553,8 @@
 			formData.append('configDatas', JSON.stringify(configDatas))
 			formData.append('userId', userId)
 
-			// const url = 'https://luckcar.top/vpserver/'
-			const url = 'http://127.0.0.1:3299'
+			const url = 'https://luckcar.top/vpserver/'
+			// const url = 'http://127.0.0.1:3299'
 			// $('#miniCodeImg').attr('src', `${url}/vp/${userId}_image_0.png`).show()
 			$.ajax({
 				url: url + '/api/upload/file',
@@ -568,7 +568,7 @@
 				success: (data) => {
 					console.log(data)
 					$('#miniTip').hide()
-					$('#miniCodeImg').attr(`${url}/vp/${userId}.png`).show()
+					$('#miniCodeImg').attr('src', `${url}/vp/${userId}_qr.png`).show()
 				},
 				error: () => {
 					alert('构建失败')

@@ -32,3 +32,4 @@ pptfiles
 *.zip
 uploads
 ./uploads
+*.tar

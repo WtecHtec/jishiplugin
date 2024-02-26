@@ -110,7 +110,6 @@ jsDesign.ui.onmessage = async (msg) => {
 	} else if (msg.type === 'perview:mini') {
 		const { datas } = msg
 		const { entry, } = datas
-		console.log('perview:mini0---', entry)
 		await handlePerviewMini(entry)
 	}
 
