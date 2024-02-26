@@ -24,6 +24,7 @@ jsDesign.ui.onmessage = msg => {
 			radius,
       pl = 0,
       pr = 0,
+      pb = 0,
 		} = modeData
 		console.log(modeData, rect)
 		const selection = jsDesign.currentPage.selection[0]
@@ -70,7 +71,7 @@ jsDesign.ui.onmessage = msg => {
 				r: 1,
 			}
 		}]
-		renderFrame.resize(width, height)
+		renderFrame.resize(width, height - (pb || 0))
 		renderFrame.appendChild(selection)
 		renderFrame.x = loffset + pl
 		renderFrame.y = toffset
