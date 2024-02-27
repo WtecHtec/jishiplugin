@@ -42,7 +42,18 @@ jsDesign.ui.onmessage = async (msg) => {
 				},
 			})
 		}
-	} else if (msg.type === 'contect') {
+	} else if (msg.type === 'contect:done') {
+    const { datas } = msg
+		const { formNode, toNode, pathData } = datas;
+    const fromEl = jsDesign.getNodeById(formNode.id)
+    const toEl = jsDesign.getNodeById(toNode.id)
+    const vectNode = createContect(fromEl, toEl, pathData)
+		setTimeout(() => {
+			console.log(vectNode, vectNode.id)
+			setCacheData(fromEl, toEl, vectNode.id)
+		}, 500)
+  } 
+  else if (msg.type === 'contect') {
 		const { datas } = msg
 		const { formNode, toNode } = datas;
 		color = msg.color || color
@@ -61,17 +72,60 @@ jsDesign.ui.onmessage = async (msg) => {
 			jsDesign.notify('嘿，一个节点只能作为一个FROM节点。')
 			return
 		}
-		console.log('checkContect(fromEl.id)---', checkContect(formNode.id))
+		console.log('checkContect(fromEl.id)---', jsDesign.currentPage,  checkContect(formNode.id))
 		const toEl = jsDesign.getNodeById(toNode.id)
 		if (!toEl) {
 			jsDesign.notify('嘿，TO节点不知道跑哪里了。')
 			return
 		}
-		const vectNode = createContect(fromEl, toEl, formNode.direc, toNode.direc)
-		setTimeout(() => {
-			console.log(vectNode, vectNode.id)
-			setCacheData(fromEl, toEl, vectNode.id)
-		}, 500)
+    
+    const childrens = jsDesign.currentPage.children.map(item => ({ 
+        id: item.id, 
+        width: item.width, 
+        height: item.height, 
+        x: item.x, 
+        y: item.y,
+        nodeType: item.type,
+      }))
+
+      const [fromX, fromY] = getGlobalXY(fromEl)
+      const fromItem = {
+        id: fromEl.id, 
+        width: fromEl.width, 
+        height: fromEl.height, 
+        x: fromX, 
+        y: fromY,
+        type: 'from',
+        direc: formNode.direc,
+        nodeType: fromEl.type,
+      }
+      childrens.push(fromItem)
+
+      const [toX, toY] = getGlobalXY(toEl)
+      const toItem = {
+        id: toEl.id, 
+        width: toEl.width, 
+        height: toEl.height, 
+        x:  toX, 
+        y: toY,
+        type: 'to',
+        direc: toNode.direc,
+        nodeType: toEl.type,
+      }
+      childrens.push(toItem)
+
+    jsDesign.ui.postMessage({
+      type: 'contect:done',
+      datas: {
+        childrens,
+        links: [fromItem, toItem]
+      },
+    })
+		// const vectNode = createContect(fromEl, toEl, formNode.direc, toNode.direc)
+		// setTimeout(() => {
+		// 	console.log(vectNode, vectNode.id)
+		// 	setCacheData(fromEl, toEl, vectNode.id)
+		// }, 500)
 
 	} else if (msg.type === 'select:entry') {
 		const selection = jsDesign.currentPage.selection
@@ -265,40 +319,41 @@ function getContectPoints(from, to,) {
 	return [point0, point1]
 }
 
-function createContect(fromEl, toEl, formDirec, toDirec) {
+function createContect(fromEl, toEl, pathData) {
 	const vectorNode = jsDesign.createVector()
-	if (!formDirec) {
-		formDirec = 'top'
-	}
 
-	if (!toDirec) {
-		toDirec = 'top'
-	}
+	// if (!formDirec) {
+	// 	formDirec = 'top'
+	// }
 
-	const point0 = getElDirecPoint(fromEl)[formDirec]
-	const point1 = getOffsetPoint(point0, formDirec)
+	// if (!toDirec) {
+	// 	toDirec = 'top'
+	// }
 
-	const pointTo0 = getElDirecPoint(toEl)[toDirec]
-	const pointTo1 = getOffsetPoint(pointTo0, toDirec)
+	// const point0 = getElDirecPoint(fromEl)[formDirec]
+	// const point1 = getOffsetPoint(point0, formDirec)
 
-	let [point2, point2Direc] = getTurnPoints(point1, pointTo1, fromEl, formDirec)
+	// const pointTo0 = getElDirecPoint(toEl)[toDirec]
+	// const pointTo1 = getOffsetPoint(pointTo0, toDirec)
 
-	let [pointTo2, pointTo2Direc] = getTurnPoints(pointTo1, point1, toEl, toDirec)
+	// let [point2, point2Direc] = getTurnPoints(point1, pointTo1, fromEl, formDirec)
 
-	const [point3, point4] = getContectPoints(point2, pointTo2)
+	// let [pointTo2, pointTo2Direc] = getTurnPoints(pointTo1, point1, toEl, toDirec)
+
+	// const [point3, point4] = getContectPoints(point2, pointTo2)
 
 	// const point4 = getContectPoints(point1, pointTo1)
 
-	const pathData = `
-    M ${point0.x} ${point0.y} 
-    L ${point1.x} ${point1.y}
-    L ${point2.x} ${point3.y}
-    L ${point3.x} ${point3.y}
-    L ${point4.x} ${point4.y}
-    L ${pointTo2.x} ${pointTo2.y}
-    L ${pointTo1.x} ${pointTo1.y}
-    L ${pointTo0.x} ${pointTo0.y}
-  `
+	// const pathData = `
+  //   M ${point0.x} ${point0.y} 
+  //   L ${point1.x} ${point1.y}
+  //   L ${point2.x} ${point3.y}
+  //   L ${point3.x} ${point3.y}
+  //   L ${point4.x} ${point4.y}
+  //   L ${pointTo2.x} ${pointTo2.y}
+  //   L ${pointTo1.x} ${pointTo1.y}
+  //   L ${pointTo0.x} ${pointTo0.y}
+  // `
 
 	//   const pathData = `
 	//   M ${point0.x} ${point0.y} 

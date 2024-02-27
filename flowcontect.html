@@ -78,68 +78,94 @@ var diagram =
   // )
 
   
-  diagram.nodeTemplateMap.add('node1',
-    $(go.Node,
-      // 规定该节点的宽高, 内容超出会被隐藏
-      { width: 30, height: 40 },
+  // diagram.nodeTemplateMap.add('node1',
+  //   $(go.Node,
+  //     // 规定该节点的宽高, 内容超出会被隐藏
+  //     { width: 30, height: 40 },
       
-      // 绑定节点的位置属性, 用来控制节点处于画布的哪个位置
-      new go.Binding('position'),
+  //     // 绑定节点的位置属性, 用来控制节点处于画布的哪个位置
+  //     new go.Binding('position'),
 
-      $(go.TextBlock, { margin: 0 },
-          new go.Binding("text", "key")
-          ),
-    )
-  )
+  //     $(go.TextBlock, { margin: 0 },
+  //         new go.Binding("text", "key")
+  //         ),
+  //   )
+  // )
 
-  diagram.nodeTemplateMap.add('node2',
-    $(go.Node,
-      // 规定该节点的宽高, 内容超出会被隐藏
-      { width: 10, height: 40 },
+  // diagram.nodeTemplateMap.add('node2',
+  //   $(go.Node,
+  //     // 规定该节点的宽高, 内容超出会被隐藏
+  //     { width: 10, height: 40 },
       
-      // 绑定节点的位置属性, 用来控制节点处于画布的哪个位置
-      new go.Binding('position'),
+  //     // 绑定节点的位置属性, 用来控制节点处于画布的哪个位置
+  //     new go.Binding('position'),
 
-      $(go.TextBlock, { margin: 0 },
-          new go.Binding("text", "key")
-          ),
-    )
-  )
+  //     $(go.TextBlock, { margin: 0 },
+  //         new go.Binding("text", "key")
+  //         ),
+  //   )
+  // )
 
-var nodeDataArray = [
-  { key: "Alpha", rect: { width: 10, height: 40 } , text: '申请', position: new go.Point(-100, -100), category: 'node2'},
-  { key: "Beta", width: "30", height: "40", position: new go.Point(100, 100),category: 'node1' },
-  { key: "Gamma", category: 'node1', position: new go.Point(50, 100) },
-  { key: "Delta",  category: 'node1', position: new go.Point(80, 80) }
-];
+  const nodeDataArray = []
+  const nodes = [{"id":"8:1","width":375,"height":667,"x":-1682,"y":1999},{"id":"8:194","width":375,"height":667,"x":-642,"y":1986},{"id":"8:287","width":375,"height":1070,"x":-469,"y":2852},{"id":"9:2","width":1051,"height":970,"x":618,"y":2332},{"id":"12:16","width":676,"height":353.5,"x":-1318,"y":2319.5}]
+  nodes.forEach(({ id, width, height, x, y}) => {
+        console.log(id)
+        diagram.nodeTemplateMap.add(`node_${id}`,
+          $(go.Node,
+          { background: `rgb(${Math.random() * 255},${Math.random() * 255},${Math.random() * 255} )` },
+            // 规定该节点的宽高, 内容超出会被隐藏
+            { width, height},
+            
+            // 绑定节点的位置属性, 用来控制节点处于画布的哪个位置
+            // 绑定节点的位置属性, 用来控制节点处于画布的哪个位置
+            new go.Binding('position'),
+            $(go.TextBlock, { margin: 0 },
+              new go.Binding("text", "key")
+            ),
+          ),)
+          nodeDataArray.push({
+            key: id,
+            position: new go.Point(x, y),
+            category: `node_${id}`,
+          })
+        
+      })
+
+
+// var nodeDataArray = [
+//   { key: "1:2",  position: new go.Point(-100, -100), category: 'node2'},
+//   { key: "1:3",  position: new go.Point(100, 100),category: 'node1' },
+//   { key: "Gamma", category: 'node1', position: new go.Point(50, 100) },
+//   { key: "Delta",  category: 'node1', position: new go.Point(80, 80) }
+// ];
 
 
     // 定义普通连线模板
-    var normalLinkTemplate =
-        $(go.Link,
-          { routing: go.Link.Orthogonal, corner: 5 },
-          $(go.Shape, { strokeWidth: 3, stroke: "#555" }));
+    // var normalLinkTemplate =
+    //     $(go.Link,
+    //       { routing: go.Link.Orthogonal, corner: 5 },
+    //       $(go.Shape, { strokeWidth: 3, stroke: "#555" }));
 
-      // 定义虚线模板
-      var dashedLinkTemplate =
-        $(go.Link,
-          { routing: go.Link.Orthogonal, corner: 5 },
-          $(go.Shape, { strokeWidth: 3, stroke: "#555", strokeDashArray: [6, 3] }));
+    //   // 定义虚线模板
+    //   var dashedLinkTemplate =
+    //     $(go.Link,
+    //       { routing: go.Link.Orthogonal, corner: 5 },
+    //       $(go.Shape, { strokeWidth: 3, stroke: "#555", strokeDashArray: [6, 3] }));
 
-      // 将连线模板添加到linkTemplateMap中
-      diagram.linkTemplateMap.add("normal", normalLinkTemplate);
-      diagram.linkTemplateMap.add("dashed", dashedLinkTemplate);
+    //   // 将连线模板添加到linkTemplateMap中
+    //   diagram.linkTemplateMap.add("normal", normalLinkTemplate);
+    //   diagram.linkTemplateMap.add("dashed", dashedLinkTemplate);
 
 var linkDataArray = [
-  { key:"Alpha-Beta", from: "Alpha", to: "Beta", category: 'dashed' },
+  // { key:"Alpha-Beta", from: "Alpha", to: "Beta", category: 'dashed' },
   // {  from: "Gamma", to: "Delta", fromEndSegmentLength: 4, toEndSegmentLength: 30 },
 ];
 diagram.model = new go.GraphLinksModel(nodeDataArray, linkDataArray);
     console.log('diagram.model---',diagram, diagram.model)
-          setTimeout(() => {
-            const link = findLinkByKey('Alpha-Beta')
-            console.log(link)
-          }, 1000)
+          // setTimeout(() => {
+          //   const link = findLinkByKey('Alpha-Beta')
+          //   console.log(link)
+          // }, 1000)
 
           // 获取连线的坐标点
           function findLinkByKey(key) {

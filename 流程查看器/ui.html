@@ -3,6 +3,7 @@
 		margin: 0;
 		background-color: #fff;
 		padding: 12px;
+    overflow-x: hidden;
 	}
 
 	.radio-container {
@@ -283,13 +284,16 @@
 	}
 </style>
 
+<div id="myDiagramDiv"
+style="width:800px; height:500px; background-color: #DAE4E4; position: absolute; z-index: -9999999; opacity: 0; pointer-events: none;"></div>
+
 <div id="settingBox" class="body_container">
 	<div class="title lay-title"> 跳转关联 </div>
 	<div class="border" style="display: flex; align-items: center;justify-content:space-around;">
 		<div>
 			<div class="title"> from <a href="#" class="button mini-button" id="selectForm"> 选择 </a> </div>
 			<div class="title" id="titleForm""> 选择节点FORM</div>
-      <div id=" direcForm" class="border"
+      <div id="direcForm" class="border"
 				style=" cursor: pointer;  width: 80px; height: 80px; box-sizing: border-box; position: relative; display: flex;justify-content: center;align-items: center;">
 				<div class="c-box" style="border-radius: 2px; width: 40px; height: 5px; position: absolute; top: 10px;"
 					data-type="from" data-direc="top"></div>
@@ -367,6 +371,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
 	integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
 	crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gojs/2.1.47/go.js"></script>
+
 
 <script>
 	let formNode = {
@@ -511,7 +518,32 @@
 			const { files, configDatas, userId } = datas
 			postMini(files, configDatas, userId)
 
-		}
+		} else if (type === 'contect:done') {
+      console.log('contect:done', datas)
+      const points = await initDiagram(datas.childrens, datas.links)
+      let pathData = ''
+      points.forEach(({ x , y}, i) => {
+        if (i === 0) {
+          pathData = `M ${x} ${y}`
+        } else {
+          pathData = `${pathData} L ${x} ${y}`
+        }
+      })
+
+      parent.postMessage({
+        pluginMessage: {
+          type: 'contect:done',
+          datas: {
+            formNode,
+            toNode,
+            color: $('#color').val(),
+            strokeWeight: $('#strokeWeight').val(),
+            pathData,
+          }
+        }
+      }, '*')
+
+    }
 		if (toNode.id && formNode.id) {
 			contectStatus = true
 			$('#contect').removeClass('disabled-btn')
@@ -724,4 +756,77 @@
 			}
 		}, '*')
 	})
+
+  let diagram = null
+  function clearDiagram() {
+    diagram.model.nodeDataArray = [];
+    diagram.model.linkDataArray = [];
+  }
+  // path线段
+  function initDiagram(nodes, links) {
+    let $m = go.GraphObject.make;
+    if (!diagram) {
+      diagram = $m(go.Diagram, "myDiagramDiv",
+        {
+          // initialContentAlignment: go.Spot.Center, // center Diagram contents
+          // "undoManager.isEnabled": true, // enable Ctrl-Z to undo and Ctrl-Y to redo
+          // layout: $(go.TreeLayout, // specify a Diagram.layout that arranges trees
+          //   { angle: 90, layerSpacing: 35 })
+        });
+    }
+    clearDiagram()
+    // 清空画布上的数据
+
+      const nodeDataArray = []
+      let linkDataArray = []
+      nodes.forEach(({ id, width, height, x, y, type}) => {
+        diagram.nodeTemplateMap.add(`node_${id}`,
+          $m(go.Node,
+          { background: `rgb(${Math.random() * 255},${Math.random() * 255},${Math.random() * 255} )` },
+            // 规定该节点的宽高, 内容超出会被隐藏
+            { width:width, height: height},
+            // 绑定节点的位置属性, 用来控制节点处于画布的哪个位置
+            new go.Binding('position'),
+            $m(go.TextBlock, { margin: 0 },
+              new go.Binding("text", "key")
+            ),
+          ))
+          nodeDataArray.push({
+            key: id,
+            position: new go.Point(x, y),
+            category: `node_${id}`,
+          })
+      })
+      const DIREC = {
+        left: go.Spot.Left,
+        right: go.Spot.Right,
+        bottom:  go.Spot.Bottom,
+        top:  go.Spot.Top,
+      }
+      diagram.linkTemplate =
+        $m(go.Link,
+          { routing: go.Link.AvoidsNodes, fromSpot: DIREC[links[0].direc], toSpot: DIREC[links[1].direc] }, // 方向
+          new go.Binding("fromEndSegmentLength"),
+          new go.Binding("toEndSegmentLength"),
+          $m(go.Shape),
+          $m(go.Shape, { toArrow: "Standard" }) ,
+        );
+      linkDataArray = [ { key: `${links[0].id}_${links[1].id}`, from: links[0].id, to: links[1].id, fromEndSegmentLength: 60, toEndSegmentLength: 60  }]
+      
+      diagram.model = new go.GraphLinksModel(nodeDataArray, linkDataArray);
+      return new  Promise((resolve) => {
+        setTimeout(() => {
+          const link = diagram.findLinksByExample({ key: `${links[0].id}_${links[1].id}` });
+          if (link && Array.isArray(link.first().points.toArray())) {
+            console.log('Link found:', link.first().points.toArray());
+            resolve( link.first().points.toArray())
+          } else {
+            console.log('Link not found for key:');
+            resolve([])
+          }
+        }, 1000)
+      })
+      
+    
+  }
 </script>
