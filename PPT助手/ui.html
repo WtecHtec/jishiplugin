@@ -289,7 +289,7 @@
 			<input type="radio" name="onlineweb" value="yes">
 			<span class="radio-checkmark"></span>
 		</label>
-		<div id="onlinetip" class="title" style="color: red;display: none;">暂时没权限，可联系开发者。</div>
+		<div id="onlinetip" class="title" style="color: red;display: none;"></div>
 	</div>
 
 	<a href="#" class="button" id="exportPPT"> 立即生成PPT</a>
@@ -520,7 +520,7 @@
 	$('input[name="onlineweb"]').on('change', (item) => {
 		onlineStatus = $('input:radio[name=onlineweb]:checked').val();
 		console.log('-----', onlineStatus)
-		if (onlineStatus === 'yes' && (!Array.isArray(authusers) || !authusers.includes(currentId))) {
+		if (onlineStatus === 'yes') {
 			$('#onlinetip').show();
 		} else if (onlineStatus === 'no') {
 			$('#onlinetip').hide();
@@ -632,7 +632,7 @@
 		// 4. 保存ppt到本地
 		pres.writeFile({ fileName: "export.pptx" }).then(async (fileName) => {
 
-			if (Array.isArray(authusers) && onlineStatus === 'yes' && authusers.includes(currentId) && pptwebdata) {
+			if (Array.isArray(authusers) && onlineStatus === 'yes' && pptwebdata) {
 				exportPPT.innerText = '正在生成在线PPT...'
 				const res = await genWebPpt(pptwebdata, width, height)
 				gening = false

@@ -50,7 +50,7 @@ app.get('/export', function (req, res) {
 			.replace(EXP_WIDTH, pptw)
 			.replace(EXP_HEIGHT, ppth)
 		try {
-			const fileName = `${uid()}.html`
+			const fileName = `${infoid}.html`
 			fs.writeFileSync(`./pptfiles/${fileName}`, pptcontent);
 			// parse JSON string to JSON object
 			redisData[infoid] = '';
