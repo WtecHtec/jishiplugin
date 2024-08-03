@@ -8,7 +8,7 @@ let nodeDatas = []
 jsDesign.ui.onmessage = async (msg) => {
 	if (!msg) return;
 	const { type, pluginId, } = msg
-	if (pluginId !== "1_ZQp2EwQPLwdJ2ifcvUZ") return
+	// if (pluginId !== "1_ZQp2EwQPLwdJ2ifcvUZ") return
 	switch (type) {
 		case 'addppt:action':
 			const selection = jsDesign.currentPage.selection
@@ -25,6 +25,17 @@ jsDesign.ui.onmessage = async (msg) => {
 					})
 				})
 			}
+			// 批量
+			if (selection && selection.length > 1) {
+				console.log('批量 selection---', selection)
+				const array = [...selection].reverse()
+				for (let i = 0; i < array.length; i++) {
+					const item = array[i]
+					if (item.visible) {
+						await sendAddPPTArray(item)
+					}
+				}
+			}
 			break
 		case 'createppt:init':
 			// 解析数据
@@ -37,6 +48,21 @@ jsDesign.ui.onmessage = async (msg) => {
 			break
 	}
 };
+
+
+function sendAddPPTArray(selection) {
+	return  new Promise((resolve, reject) => {
+			const { name, width, height } = selection
+			selection.exportAsync().then(res => {
+				nodeDatas.push(selection)
+				jsDesign.ui.postMessage({
+					type: 'addppt:commit',
+					datas: { name, imgbytes: res, rect: { width, height } },
+				})
+				resolve(1)
+			})
+	})
+}
 
 
 

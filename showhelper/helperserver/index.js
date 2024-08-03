@@ -99,7 +99,6 @@ function getCode(userId, attoken) {
 		"scene": `${userId}`,
 		"page": `pkgVp/pages/index/index`,
 		"width": 430,
-		"env_version": "trial",
 		check_path: false,
 	}
 

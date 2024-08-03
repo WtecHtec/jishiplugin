@@ -711,14 +711,14 @@
 		// console.log("收到来自主线程脚本的消息", event.data, event.data.pluginMessage)
 		switch (type) {
 			case 'addppt:commit':
-				console.log('------------', pluginMessage)
+				console.log('批量 ------------', pluginMessage)
 				if (!updateItemTimer) {
 					addPptItem(datas)
 				}
-				updateItemTimer = setTimeout(() => {
-					clearTimeout(updateItemTimer)
-					updateItemTimer = null
-				}, 1000);
+				// updateItemTimer = setTimeout(() => {
+				// 	clearTimeout(updateItemTimer)
+				// 	updateItemTimer = null
+				// }, 1000);
 				break
 			case 'createppt:commit':
 				console.log('datas--- yes', datas)
