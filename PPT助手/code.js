@@ -17,6 +17,7 @@ function sortArray(arr) {
   return arr.sort((a, b) => {
     const numA = getNumByName(a.name)
     const numB = getNumByName(b.name)
+		
     return numA - numB;
   });
 }
