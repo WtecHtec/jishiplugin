@@ -1,8 +1,25 @@
 
 jsDesign.showUI(__html__, { width: 800, height: 680 });
 
+function getNumByName(name) {
+	let num = 9999999
+	try {
+		console.log(name.match(/【p(\d+)】|\[p(\d+)\]/))
+		const numMath = name.match(/【p(\d+)】|\[p(\d+)\]/)
+		num = parseInt(numMath[1] || numMath[2], 10)
+	} catch (error) {
+		
+	}
+	return num;
+}
 
-
+function sortArray(arr) {
+  return arr.sort((a, b) => {
+    const numA = getNumByName(a.name)
+    const numB = getNumByName(b.name)
+    return numA - numB;
+  });
+}
 let nodeDatas = []
 //监听从 插件ui 发过来的信息
 jsDesign.ui.onmessage = async (msg) => {
@@ -28,7 +45,9 @@ jsDesign.ui.onmessage = async (msg) => {
 			// 批量
 			if (selection && selection.length > 1) {
 				console.log('批量 selection---', selection)
-				const array = [...selection].reverse()
+				const array = [...selection]
+				sortArray(array);
+				console.log('array===', array)
 				for (let i = 0; i < array.length; i++) {
 					const item = array[i]
 					if (item.visible) {
