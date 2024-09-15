@@ -355,7 +355,7 @@
 		onChoose: function (evt) {
 
 			const { item, oldIndex } = evt
-			console.log(evt, pptIndex, oldIndex);
+			// console.log(evt, pptIndex, oldIndex);
 			// if (pptIndex === oldIndex) return
 			pptIndex = oldIndex
 			pptId = sortPptDatas[pptIndex]
@@ -375,7 +375,7 @@
 			//获取拖动后的排序
 			const arr = sortable.toArray();
 			sortPptDatas = arr
-			console.log('sortPptDatas---', sortPptDatas)
+			// console.log('sortPptDatas---', sortPptDatas)
 		},
 	};
 	//初始化
@@ -425,12 +425,12 @@
 		const arr = sortable.toArray();
 		sortPptDatas = arr
 
-		console.log('sortPptDatas----', sortPptDatas)
+		// console.log('sortPptDatas----', sortPptDatas)
 		const index = pptId
 		// sortPptDatas.splice(pptIndex, 1)
 		$('.list-item.active').css('display', 'none')
 
-		console.log('	pptDatas[index]--', pptId, pptDatas, index, pptDatas[index])
+		// console.log('	pptDatas[index]--', pptId, pptDatas, index, pptDatas[index])
 		pptDatas[index].show = false
 		const status = pptDatas.every(({ show }) => !show)
 		if (status) {
@@ -449,7 +449,7 @@
 				}
 			}
 		}
-		console.log('sortPptDatas[pptIndex]---', sortPptDatas, sortPptDatas[pptIndex], newIndex, pptId, pptIndex)
+		// console.log('sortPptDatas[pptIndex]---', sortPptDatas, sortPptDatas[pptIndex], newIndex, pptId, pptIndex)
 		$('.list-item.active').removeClass('active')
 		$(`.list-item[data-id="${sortPptDatas[pptIndex]}"]`).addClass('active')
 		const { imgUrl } = pptDatas[sortPptDatas[pptIndex]]
@@ -501,7 +501,7 @@
 		const index = getSelectValue(layoutselect)
 		if (layoutIndex === index) return
 		layoutIndex = index
-		console.log('layoutIndex---', layoutIndex)
+		// console.log('layoutIndex---', layoutIndex)
 		if (Number(layoutIndex) === 3) {
 			$('#setlayout').show()
 			if (cusWidth > 0 && cusHeight > 0) {
@@ -519,7 +519,7 @@
 
 	$('input[name="onlineweb"]').on('change', (item) => {
 		onlineStatus = $('input:radio[name=onlineweb]:checked').val();
-		console.log('-----', onlineStatus)
+		// console.log('-----', onlineStatus)
 		if (onlineStatus === 'yes') {
 			$('#onlinetip').show();
 		} else if (onlineStatus === 'no') {
@@ -534,9 +534,9 @@
 		contentMainDom.style.width = `${targetWidth}px`
 		contentMainDom.style.height = `${targetHeight}px`
 		if (pptDatas && pptDatas.length) {
-			console.log('------',)
+			// console.log('------',)
 			const { rect } = pptDatas[sortPptDatas[pptIndex]]
-			console.log('pptshow---', pptshow, rect, pptDatas, sortPptDatas, pptIndex)
+			// console.log('pptshow---', pptshow, rect, pptDatas, sortPptDatas, pptIndex)
 			const [w, h] = scaleImage(rect.width, rect.height, targetWidth, targetHeight)
 			pptshow.style.width = `${w}px`
 			pptshow.style.height = `${h}px`
@@ -564,7 +564,7 @@
 		if (gening) return
 		gening = true
 		exportPPT.innerText = '正在生成PPT...'
-		console.log(sortPptDatas, pptDatas)
+		// console.log(sortPptDatas, pptDatas)
 		const radioval = getRadioValue(radiosdom)
 		if (radioval === 'no') creatNotPpt(sortPptDatas, pptDatas)
 		if (radioval === 'yes') {
@@ -613,7 +613,7 @@
 				const [w, h, scale] = scaleImage(rect.width, rect.height, width, height)
 				const x = (width - w) / 2
 				const y = (height - h) / 2
-				console.log(' x, y, w, h,', x, y, w, h,)
+				// console.log(' x, y, w, h,', x, y, w, h,)
 				const base64 = uint8ArrayToBase64(imgbytes)
 				pptwebdata = `${pptwebdata || ''}
         <section>
@@ -631,7 +631,6 @@
 		}
 		// 4. 保存ppt到本地
 		pres.writeFile({ fileName: "export.pptx" }).then(async (fileName) => {
-
 			if (Array.isArray(authusers) && onlineStatus === 'yes' && pptwebdata) {
 				exportPPT.innerText = '正在生成在线PPT...'
 				const res = await genWebPpt(pptwebdata, width, height)
@@ -668,11 +667,11 @@
 				slide.addImage({ data: uint8ArrayToBase64(imgbytes), x: itemx, y: itemy, w, h, })
 			} else if (type === 'text') {
 				// slide.addText(` ${characters} Hello World!`, { x: 1.5, y: 1.5, fontSize: 18, color: '363636' });
-				console.log(' image === x: itemx, y: itemy, w, h,', x, y, scale, itemx, itemy)
+				// console.log(' image === x: itemx, y: itemy, w, h,', x, y, scale, itemx, itemy)
 				slide.addText(characters, { x: itemx, y: itemy, color: color || '000000', fontSize: fontSize * 0.75, });
 			} else {
 				if (type === 'paint') {
-					console.log('paint =====', color, itemx, itemy, w, h)
+					// console.log('paint =====', color, itemx, itemy, w, h)
 					slide.addShape(pres.ShapeType.rect, { fill: { color: color || 'ffffff', }, x: itemx, y: itemy, w, h, });
 				}
 				if (children && children.length) {
@@ -711,7 +710,7 @@
 		// console.log("收到来自主线程脚本的消息", event.data, event.data.pluginMessage)
 		switch (type) {
 			case 'addppt:commit':
-				console.log('批量 ------------', pluginMessage)
+				// console.log('批量 ------------', pluginMessage)
 				if (!updateItemTimer) {
 					addPptItem(datas)
 				}
@@ -721,13 +720,13 @@
 				// }, 1000);
 				break
 			case 'createppt:commit':
-				console.log('datas--- yes', datas)
+				// console.log('datas--- yes', datas)
 				if (gencommitiing) return
 				gencommitiing = true
 				exportEditPpt(datas)
 				break
 			case 'info:done':
-				console.log('info--- datas', datas)
+				// console.log('info--- datas', datas)
 				if (!datas) return
 				const { id, name } = datas
 				currentId = id
@@ -809,7 +808,7 @@
 				dataType: "json",
 				success: function (response) {
 					// 请求成功后执行的代码
-					console.log("请求成功，返回的数据：", response);
+					// console.log("请求成功，返回的数据：", response);
 					if (response && response.authusers) {
 						res(response.authusers)
 					} else {
@@ -828,10 +827,10 @@
 	// 递归请求
 	function genWebPpt(pptwebdata, width, height) {
 		const pdata = encodeURIComponent(pptwebdata)
-		const maxlen = 5000
+		const maxlen = 2048
 		const len = pdata.length
 		const pptlen = Number.parseInt(len / maxlen) + (len % maxlen > 0 ? 1 : 0)
-		console.log('genWebPpt-----------genWebPpt', len, pptlen)
+		// console.log('genWebPpt-----------genWebPpt', len, pptlen)
 		let pptcurrent = 1
 		const dg = function (res) {
 			const data = pdata.substr((pptcurrent - 1) * maxlen, maxlen)

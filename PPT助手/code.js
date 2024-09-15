@@ -4,7 +4,7 @@ jsDesign.showUI(__html__, { width: 800, height: 680 });
 function getNumByName(name) {
 	let num = 9999999
 	try {
-		console.log(name.match(/【p(\d+)】|\[p(\d+)\]/))
+		// console.log(name.match(/【p(\d+)】|\[p(\d+)\]/))
 		const numMath = name.match(/【p(\d+)】|\[p(\d+)\]/)
 		num = parseInt(numMath[1] || numMath[2], 10)
 	} catch (error) {
@@ -30,13 +30,13 @@ jsDesign.ui.onmessage = async (msg) => {
 	switch (type) {
 		case 'addppt:action':
 			const selection = jsDesign.currentPage.selection
-			console.log('selection---', selection)
+			// console.log('selection---', selection)
 			if (selection && selection.length === 1 && selection[0] && selection[0].visible) {
 				// console.log('selection---', selection[0])
 				const { name, width, height } = selection[0]
 				selection[0].exportAsync().then(res => {
 					nodeDatas.push(selection[0])
-					console.log('------------ ui - html')
+					// console.log('------------ ui - html')
 					jsDesign.ui.postMessage({
 						type: 'addppt:commit',
 						datas: { name, imgbytes: res, rect: { width, height } },
@@ -45,10 +45,10 @@ jsDesign.ui.onmessage = async (msg) => {
 			}
 			// 批量
 			if (selection && selection.length > 1) {
-				console.log('批量 selection---', selection)
+				// console.log('批量 selection---', selection)
 				const array = [...selection]
 				sortArray(array);
-				console.log('array===', array)
+				// console.log('array===', array)
 				for (let i = 0; i < array.length; i++) {
 					const item = array[i]
 					if (item.visible) {
@@ -96,7 +96,7 @@ async function tranformData() {
 		let result = { name, visible, width, height, id, x, y, type, fontSize, characters, fills, absoluteBoundingBox }
 		if (item.findAll && typeof item.findAll === 'function') {
 			const textNodes = item.findAll(item => {
-				return item.type === "TEXT" && item.visible
+				return item.visible
 			})
 			if (textNodes.length === 0) {
 				const imgbytes = await item.exportAsync()
@@ -139,6 +139,7 @@ async function tranformData() {
 		if (item.children && item.children.length) {
 			result.children = []
 			for (let i = 0; i < item.children.length; i++) {
+    if (!item.children[i].visible) continue
 				const res = await dg(item.children[i])
 				result.children.push(res)
 			}
@@ -175,7 +176,7 @@ async function tranformData() {
 		const res = await dg(nodeDatas[i])
 		result.push(res)
 	}
-	console.log('result----', nodeDatas, result)
+	// console.log('result----', [...nodeDatas], result)
 	// nodeDatas.forEach(async (item) => {
 	// 	const res = await dg(item)
 	// 	result.push(res)
@@ -194,7 +195,7 @@ function rgbaToHex(r, g, b) {
 
 jsDesign.on('run', () => {
   console.log('插件开始运行')
-  console.log(jsDesign.currentUser)
+  // console.log(jsDesign.currentUser)
   if (!jsDesign.currentUser) return
   jsDesign.ui.postMessage({
     type: 'info:done',
