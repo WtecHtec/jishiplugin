@@ -20,7 +20,7 @@ const sendEmail = async (toemail, emaildatas,) => {
     secureConnection: true,
     auth: {
       user: '1079463751@qq.com',
-      pass: 'zbqflmhkxccfhced',
+      pass: '',
     },
   });
   let html = ''
