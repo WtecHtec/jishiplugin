@@ -64,11 +64,11 @@ app.get('/getvp/:sourceId', (req, res) => {
 });
 
 function getWxKey() {
-	// const secret = 'a4d86cfd774e84d831b4ffa0fd498cff'
-	// const appid = 'wxa27a95e5f546c668'
+	// const secret = ''
+	// const appid = ''
 
-	const secret = 'cbfab2e36bce1252eb32035a3024da7d'
-	const appid = 'wx5b8c0dadaa80810d'
+	const secret = ''
+	const appid = ''
 	const getUrl = `https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=${appid}&secret=${secret}`
 	return new Promise((resolve) => {
 		getRequest(getUrl)
